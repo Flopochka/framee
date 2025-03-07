@@ -82,8 +82,9 @@ main{
     width: 100%;
     padding: 24px;
     gap: 28px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: repeat(3, auto) 1fr;
+    align-items: end;
 }
 .select-type {
     width: 100%;
