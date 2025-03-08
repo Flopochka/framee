@@ -78,54 +78,85 @@ body {
 }
 
 /* Layouts */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.grid { display: grid; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
+.grid-col { display: grid; grid-auto-flow: column; }
+.grid-row { display: grid; grid-auto-flow: row; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 
 /* Spacing */
-.gap-sm { gap: 4px; }
-.gap-md { gap: 8px; }
-.gap-lg { gap: 16px; }
-.p-sm { padding: 6px 12px; }
-.p-md { padding: 12px; }
-.p-lg { padding: 15px 12px; }
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-16 { gap: 16px; }
+.gap-28 { gap: 28px; }
+.p-12 { padding: 12px; }
+.p-24 { padding: 24px; }
+.pl-12 {padding-left: 12px;}
 
 /* Colors and Backgrounds */
-.bg-blue { background: var(--blue-900); }
-.bg-gradient {
+.bg-blue-900 { background: var(--blue-900); }
+.bg-blue-500 { background: var(--blue-500); }
+.bg-neutral-200 { background: var(--neutral-200); }
+.bg-gradient-blue {
     background: linear-gradient(129.45deg, var(--blue-400) 9.38%, var(--blue-600) 117.65%);
 }
 
 /* Typography */
 .text-white { color: var(--white-100); }
+.text-neutral-700 { color: var(--neutral-700); }
 .text-contrast { color: var(--contrast); }
-.font-md { font-size: 16px; }
-.font-lg { font-size: 17px; }
-.font-bold { font-weight: 600; }
+.font-geist { font-family: Geist; }
+.font-600 { font-weight: 600; }
+.text-14 { font-size: 14px; }
+.text-16 { font-size: 16px; }
+.text-17 { font-size: 17px; }
+.letter-spacing-04 { letter-spacing: -0.4px; }
 
 /* Borders and Shadows */
-.rounded { border-radius: 10px; }
-.rounded-lg { border-radius: 12px; }
+.rounded-8 { border-radius: 8px; }
+.rounded-10 { border-radius: 10px; }
+.rounded-12 { border-radius: 12px; }
+.shadow-25 { box-shadow: 0px 2px 6px 0px var(--shadow-25); }
 
 /* Buttons and Cards */
 .btn {
+    padding: 15px 12px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px 12px;
-    border-radius: 12px;
     gap: 4px;
 }
-
 .card {
     border-radius: 10px;
     padding: 12px;
 }
 
 /* Images */
-.icon { height: 16px; }
+.img-16 { height: 16px; }
 
+/* Custom styles */
+.custom-radio {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--neutral-300);
+    border-radius: 50%;
+}
+.custom-radio-active {
+    border-color: var(--blue-700-80);
+    position: relative;
+}
+.custom-radio-active::after {
+    content: "";
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--blue-700-80);
+    position: absolute;
+    left: calc(50% - 4.5px);
+    top: calc(50% - 4.5px);
+}
 @media (prefers-color-scheme: light) {
 }
