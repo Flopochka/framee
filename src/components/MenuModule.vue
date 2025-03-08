@@ -1,23 +1,34 @@
 <script setup>
 import { ref } from 'vue'
 
-defineProps({
-  msg: String,
-})
+defineProps(['switchScreen'])
+
+const activeScreen = ref(0)
+const PressswitchScreen = (type) => {
+    activeScreen.value = type
+    let btns = document.querySelectorAll('.menu .menu-item')
+    btns.forEach((item, key) => {
+        if (key == activeScreen.value) {
+            item.classList.add('menu-item-active')
+        } else {
+            item.classList.remove('menu-item-active')
+        }
+    })
+}
 </script>
 
 <template>
   <nav class="menu">
-    <div class="menu-item menu-item-active" id="menu-replenishment">
+    <div @click="PressswitchScreen(0),switchScreen(0)" class="menu-item menu-item-active" id="menu-replenishment">
         <img src="../assets/img/Icon.svg" alt="" class="menu-item-img replenishment-img">
     </div>
-    <div class="menu-item" id="menu-tasks">
+    <div @click="PressswitchScreen(1),switchScreen(1)" class="menu-item" id="menu-tasks">
         <img src="../assets/img/Tasks.svg" alt="" class="menu-item-img tasks-img">
     </div>
-    <div class="menu-item" id="menu-faq">
+    <div @click="PressswitchScreen(2),switchScreen(2)" class="menu-item" id="menu-faq">
         <img src="../assets/img/Question.svg" alt="" class="menu-item-img faq-img">
     </div>
-    <div class="menu-item" id="menu-user">
+    <div @click="PressswitchScreen(3),switchScreen(3)" class="menu-item" id="menu-user">
         <img src="../assets/img/User.svg" alt="" class="menu-item-img user-img">
     </div>
   </nav>
@@ -42,6 +53,12 @@ defineProps({
     align-items: center;
     justify-content: center;
     transition: background var(--default-time), border var(--default-time), box-shadow var(--default-time), transform var(--default-time);
+}
+.menu-item::before {
+    transition: background var(--default-time);
+}
+.menu-item::after {
+    transition: background var(--default-time);
 }
 .menu-item-active {
     position: relative;

@@ -50,39 +50,6 @@ const switchPremium = (type) => {
         }
     })
 }
-// const switchPremium = (type) => {
-//   currentPayment.value = type
-//   let Payments = document.querySelectorAll('.select-top-item .select-top-premium-card')
-//   if (currentPremium.value == '1') {
-//     Premiums[0].classList.add('select-top-premium-card-active')
-//     Premiums[0].querySelector('.custom-radio').classList.add('custom-radio-active')
-//     Premiums[1].classList.remove('select-top-premium-card-active')
-//     Premiums[1].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//     Premiums[2].classList.remove('select-top-premium-card-active')
-//     Premiums[2].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//   } else if (currentPremium.value == '2') {
-//     Premiums[0].classList.remove('select-top-premium-card-active')
-//     Premiums[0].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//     Premiums[1].classList.add('select-top-premium-card-active')
-//     Premiums[1].querySelector('.custom-radio').classList.add('custom-radio-active')
-//     Premiums[2].classList.remove('select-top-premium-card-active')
-//     Premiums[2].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//   } else if (currentPremium.value == '3') {
-//     Premiums[0].classList.remove('select-top-premium-card-active')
-//     Premiums[0].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//     Premiums[1].classList.remove('select-top-premium-card-active')
-//     Premiums[1].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//     Premiums[2].classList.add('select-top-premium-card-active')
-//     Premiums[2].querySelector('.custom-radio').classList.add('custom-radio-active')
-//   } else if (currentPremium.value == '3') {
-//     Premiums[0].classList.remove('select-top-premium-card-active')
-//     Premiums[0].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//     Premiums[1].classList.remove('select-top-premium-card-active')
-//     Premiums[1].querySelector('.custom-radio').classList.remove('custom-radio-active')
-//     Premiums[2].classList.add('select-top-premium-card-active')
-//     Premiums[2].querySelector('.custom-radio').classList.add('custom-radio-active')
-//   }
-// }
 const switchPayment = (type) => {
     currentPayment.value = type
     let Payments = document.querySelectorAll('.select-botoom-cards .select-bottom-card')
