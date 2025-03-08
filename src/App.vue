@@ -1,11 +1,13 @@
 <script setup>
-import Menu from './components/Menu.vue'
+import MenuModule from './components/MenuModule.vue'
 import MainStars from './components/MainStars.vue'
 </script>
 
 <template>
-    <MainStars />
-    <Menu />
+    <div class="screen">
+        <MainStars />
+    </div>
+    <MenuModule />
 </template>
 
 <style scoped>
