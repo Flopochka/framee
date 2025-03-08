@@ -1,9 +1,20 @@
 <script setup>
 import { ref } from 'vue'
 
-defineProps({
-  msg: String,
-})
+const currentAccordion = ref(0)
+const switchAccordion = (type) => {
+    currentAccordion.value = type
+    let Accordions = document.querySelectorAll('.aboutus-bottom-accordion .aboutus-bottom-accordion-item')
+    Accordions.forEach((item, key) => {
+        if (key == currentAccordion.value) {
+            item.querySelector('.accordion-checkbox').classList.add('accordion-checkbox-active')
+            item.querySelector('.aboutus-bottom-accordion-item-bottom').classList.add('aboutus-bottom-accordion-item-bottom-active')
+        } else {
+            item.querySelector('.accordion-checkbox').classList.remove('accordion-checkbox-active')
+            item.querySelector('.aboutus-bottom-accordion-item-bottom').classList.remove('aboutus-bottom-accordion-item-bottom-active')
+        }
+    })
+}
 </script>
 
 <template>
@@ -56,7 +67,7 @@ defineProps({
         <div class="aboutus-bottom">
             <p class="text-16 lh-120 mb-12">FAQ</p>
             <div class="aboutus-bottom-accordion flex-col">
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(0)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">Why are your prices up to 39.7% lower?</p>
                         <div class="accordion-checkbox jse accordion-checkbox-active">
@@ -70,7 +81,7 @@ defineProps({
                         </p>
                     </div>
                 </div>
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(1)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">What is the commission for purchasing through FRAME?</p>
                         <div class="accordion-checkbox jse">
@@ -84,7 +95,7 @@ defineProps({
                         </p>
                     </div>
                 </div>
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(2)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">What payment methods do you accept?</p>
                         <div class="accordion-checkbox jse">
@@ -98,7 +109,7 @@ defineProps({
                         </p>
                     </div>
                 </div>
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(3)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">How long does the delivery take?</p>
                         <div class="accordion-checkbox jse">
@@ -112,7 +123,7 @@ defineProps({
                         </p>
                     </div>
                 </div>
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(4)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">Is it safe to buy from FRAME?</p>
                         <div class="accordion-checkbox jse">
@@ -126,7 +137,7 @@ defineProps({
                         </p>
                     </div>
                 </div>
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(5)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">How can I send Stars to a friend?</p>
                         <div class="accordion-checkbox jse">
@@ -140,7 +151,7 @@ defineProps({
                         </p>
                     </div>
                 </div>
-                <div class="aboutus-bottom-accordion-item">
+                <div @click="switchAccordion(6)" class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
                         <p class="text-18 text-white">How can I get Telegram Stars for free?</p>
                         <div class="accordion-checkbox jse">
@@ -241,9 +252,12 @@ main{
 }
 .aboutus-bottom-accordion-item-bottom {
     max-height: 0px;
+    height: auto;
     overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
 }
 .aboutus-bottom-accordion-item-bottom-active{
-    max-height: max-content;
+    max-height: 200px;
+    transition: max-height 0.3s ease-in-out;
 }
 </style>
