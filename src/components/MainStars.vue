@@ -90,13 +90,13 @@ main{
     width: 100%;
     display: flex;
     gap: 4px;
-    background: var(--dark-blue3);
+    background: var(--blue-900);
     border-radius: 10px;
     padding: 2px;
 }
 .select-type-item {
     width: 100%;
-    color: var(--contrast);
+    color: var(--white-100);
     padding: 6px;
     border-radius: 8px;
     display: flex;
@@ -105,7 +105,7 @@ main{
     gap: 4px;
 }
 .select-type-item-selected {
-    background: var(--blue3);
+    background: var(--blue-500);
 }
 .select-type-item-img {
     height: 16px;
@@ -129,7 +129,8 @@ main{
 .select-top-item-input-text {
     border-radius: 12px;
     padding: 15px 12px;
-    background: #EBEEF3;
+    background: var(--neutral-200);
+    color: var(--neutral-700);
     border: 0;
     font-size: 14px;
 }
@@ -139,15 +140,15 @@ main{
 }
 .select-top-stars-card {
     width: 100%;
-    background: linear-gradient(129.45deg, #4DA9EC 9.38%, #0F67BE 117.65%);
+    background: linear-gradient(129.45deg, var(--blue-400) 9.38%, var(--but-blue-1) 117.65%);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 7px 12px;
     gap: 4px;
     border-radius: 12px;
-    color: var(--contrast);
-    box-shadow: 0px 2px 6px 0px #10141C40;
+    color: var(--white-100);
+    box-shadow: 0px 2px 6px 0px var(--shadow-25);
     letter-spacing: -0.4px;
     line-height: 22px;
 }
@@ -167,7 +168,7 @@ main{
 }
 .select-bottom-card {
     width: 100%;
-    background: #133E67;
+    background: var(--blue-900);
     border-radius: 10px;
     padding: 12px;
     display: grid;
@@ -181,11 +182,11 @@ main{
 .select-bottom-card-custom-radio {
     width: 18px;
     height: 18px;
-    border: 2px solid var(--text-icons-neutral-300, #B0B5BA);
+    border: 2px solid var(--neutral-300);
     border-radius: 50%;
 }
 .select-bottom-card-active .select-bottom-card-custom-radio{
-    border: 2px solid var(--System-azure-700, #007AFF);
+    border: 2px solid var(--System-azure-700, var(--blue-700-80));
     position: relative;
 }
 .select-bottom-card-active .select-bottom-card-custom-radio::after{
@@ -194,7 +195,7 @@ main{
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: #007AFF;
+    background: var(--blue-700-80);
     position: absolute;
     left: calc(50% - 4.5px);
     top: calc(50% - 4.5px);
@@ -209,7 +210,7 @@ main{
 }
 .bottom-button {
     width: 100%;
-    background: linear-gradient(129.45deg, #4DA9EC 9.38%, #0F67BE 117.65%);
+    background: linear-gradient(129.45deg, var(--blue-400) 9.38%, var(--blue-600) 117.65%);
     width: 354;
     min-width: 50px;
     padding: 15px 12px;
@@ -228,6 +229,6 @@ main{
     font-family: Geist;
     font-weight: 600;
     letter-spacing: -0.4px;
-    color: var(--contrast);
+    color: var(--white-100);
 }
 </style>

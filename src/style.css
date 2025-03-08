@@ -2,61 +2,130 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Geist;
 }
 
 @font-face {
-    font-family: Geist;
-    src: url(assets/fonts/Geist/Geist-VariableFont_wght.ttf);
+    font-family: 'Geist';
+    src: url('assets/fonts/Geist/Geist-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 125%;
+    font-style: oblique 0deg 12deg;
+    font-display: swap;
 }
 
 :root {
-    font-family: Geist;
+    font-family: 'Geist';
     font-weight: 500;
     font-size: 14px;
     line-height: 115%;
     vertical-align: middle;  
     letter-spacing: 0;  
 
-  --dark-blue1: #0C2745;
-  --dark-blue2: #1E2329;
-  --dark-blue3: #133E67;
-  --half-dark-blue: #274172;
-  --blue1: #0F67BE;
-  --blue2: #2B4E8E;
-  --blue3: #1D89DA;
-  --light-blue: #4DA9EC;
-  --contrast: #FFFFFF;
-  --default: #A1B0C0;
-  --gold: #FFC700;
+    --blue-50: #F1F8FE;
+    --blue-100: #E2EFFC;
+    --blue-200: #BEDEF9;
+    --blue-300: #86C4F3;
+    --blue-400: #4DA9EC;
+    --blue-500: #1D89DA;
+    --blue-600: #0F6CBA;
+    --blue-700: #0E5696;
+    --blue-700-80: #007AFFCC;
+    --blue-800: #0F497D;
+    --blue-900: #133E67;
+    --blue-950: #0C2745;
 
-  --default-time: 0.2s;
+    --neutral-50: #FAFAFA;
+    --neutral-100: #F5F5F5;
+    --neutral-200: #E5E5E5;
+    --neutral-300: #D4D4D4;
+    --neutral-400: #A3A3A3;
+    --neutral-500: #737373;
+    --neutral-600: #525252;
+    --neutral-700: #404040;
+    --neutral-800: #262626;
+    --neutral-900: #171717;
+    --neutral-950: #0A0A0A;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    --white-75: #FFFFFFBF;
+    --white-100: #FFFFFF;
+
+    --shadow-30: #10141C4D;
+    --shadow-25: #10141C40;
+
+    --back-blue-1: #2B4E8E;
+    --back-black-1: #1E2329;
+
+    --but-blue-1: #0F67BE;
+
+    --default-time: 0.2s;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: var(--dark-blue1);
-  color: var(--default);
+  background: var(--blue-950);
+  color: var(--neutral-300);
 }
 
 #app{
     min-height: 100vh;
 }
 
+/* Layouts */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.grid { display: grid; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+
+/* Spacing */
+.gap-sm { gap: 4px; }
+.gap-md { gap: 8px; }
+.gap-lg { gap: 16px; }
+.p-sm { padding: 6px 12px; }
+.p-md { padding: 12px; }
+.p-lg { padding: 15px 12px; }
+
+/* Colors and Backgrounds */
+.bg-blue { background: var(--blue-900); }
+.bg-gradient {
+    background: linear-gradient(129.45deg, var(--blue-400) 9.38%, var(--blue-600) 117.65%);
+}
+
+/* Typography */
+.text-white { color: var(--white-100); }
+.text-contrast { color: var(--contrast); }
+.font-md { font-size: 16px; }
+.font-lg { font-size: 17px; }
+.font-bold { font-weight: 600; }
+
+/* Borders and Shadows */
+.rounded { border-radius: 10px; }
+.rounded-lg { border-radius: 12px; }
+
+/* Buttons and Cards */
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 12px;
+    border-radius: 12px;
+    gap: 4px;
+}
+
+.card {
+    border-radius: 10px;
+    padding: 12px;
+}
+
+/* Images */
+.icon { height: 16px; }
+
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
