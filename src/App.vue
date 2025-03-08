@@ -3,6 +3,7 @@ import MenuModule from './components/MenuModule.vue'
 import MainStars from './components/MainStars.vue'
 import Tasks from './components/Tasks.vue'
 import AboutUs from './components/AboutUs.vue'
+import Profile from './components/Profile.vue'
 import { ref } from 'vue'
 const currentScreen = ref(0)
 const switchScreen = (type) => {
@@ -31,6 +32,9 @@ const switchScreen = (type) => {
         <div class="screen-item">
             <AboutUs />
         </div>
+        <div class="screen-item">
+            <Profile />
+        </div>
     </div>
     <MenuModule :switchScreen="switchScreen" />
 </template>
@@ -43,9 +47,11 @@ const switchScreen = (type) => {
         transition: transform 0.3s;
     }
     .screen-item {
-        overflow: hidden;
+        overflow-x: hidden;
+        max-height: 0;
+        transition: max-height 0.3s;
     }
     .screen-item-active{
-        max-height: max-content;
+        max-height: 500vh;
     }
 </style>
