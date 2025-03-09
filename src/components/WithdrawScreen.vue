@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['toggleModal', 'currentLanguage', 'switchScreen'])
+defineProps(['toggleModal', 'currentLanguage'])
 </script>
 
 <template>
@@ -16,7 +16,7 @@ defineProps(['toggleModal', 'currentLanguage', 'switchScreen'])
                 2.33
                 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20">
             </p>
-            <div @click="switchScreen(4)" class="user-stat-box-btn btn rounded-8">
+            <div class="user-stat-box-btn btn rounded-8">
                 <p class="user-stat-box-btn-text text-14 lh-22">Withdraw</p>
             </div>
         </div>

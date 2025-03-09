@@ -66,7 +66,6 @@ const PressswitchScreen = (type) => {
     box-shadow: 0px 16px 16px 0px var(--shadow-30);
     border-radius: 10px;
     transform: translateY(-8px);
-    z-index: 1;
 }
 .menu-item-active::before {
     content: "";
@@ -88,13 +87,12 @@ const PressswitchScreen = (type) => {
     bottom: 1px;
     background: inherit;
     border-radius: 9px;
-    z-index: 0;
+    z-index: -1;
 }
 .menu-item-img {
     height: 50%;
     width: 50%;
     object-fit: contain;
-    z-index: 2;
 }
 .replenishment-img {
 }
