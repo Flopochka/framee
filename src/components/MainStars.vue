@@ -1,78 +1,29 @@
 <script setup>
 import { ref } from 'vue'
-
-defineProps({
-  msg: String,
-})
+import { computed } from 'vue'
 
 const currentType = ref(0)
 const currentPremium = ref(0)
 const currentPayment = ref(0)
-const switchType = (type) => {
-    currentType.value = type
-    let swithBtns = document.querySelectorAll('.select-type .select-type-item')
-    let swtch = document.querySelector('.select-top-swith')
-    let boxes = [document.querySelector('.select-top-stars'), document.querySelector('.select-top-premium')]
-    let btns = [document.querySelector('.bottom-button-stars'), document.querySelector('.bottom-button-prem')]
-    for (let index = 0; index < swithBtns.length; index++) {
-        if (index == type) {
-            swithBtns[index].classList.add('select-type-item-selected')
-            boxes[index].style.maxHeight = '100vh';
-            boxes[index].style.transition = 'max-height 0.3s ease-in-out';
-            btns[index].style.maxHeight = '16px';
-            btns[index].style.transition = 'max-height 0.3s ease-in-out';
-        } else {
-            swithBtns[index].classList.remove('select-type-item-selected')
-            boxes[index].style.maxHeight = '0px';
-            boxes[index].style.transition = 'max-height 0.3s ease-in-out';
-            btns[index].style.maxHeight = '0px';
-            btns[index].style.transition = 'max-height 0.3s ease-in-out';
-        }
-    }
-    if (type == 0) {
-        swtch.style.transform = 'translateX(0)';
-        swtch.style.transition = 'transform 0.3s ease-in-out, max-height 0.3s ease-in-out';
-    } else {
-        swtch.style.transform = 'translateX(calc(-50% - 12px))';
-        swtch.style.transition = 'transform 0.3s ease-in-out, max-height 0.3s ease-in-out';
-    }
-}
-const switchPremium = (type) => {
-    currentPremium.value = type
-    let Premiums = document.querySelectorAll('.select-top-item .select-top-premium-card')
-    Premiums.forEach((item, key) => {
-        if (key == currentPremium.value) {
-            item.classList.add('select-top-premium-card-active')
-            item.querySelector('.custom-radio').classList.add('custom-radio-active')
-        } else {
-            item.classList.remove('select-top-premium-card-active')
-            item.querySelector('.custom-radio').classList.remove('custom-radio-active')
-        }
-    })
-}
-const switchPayment = (type) => {
-    currentPayment.value = type
-    let Payments = document.querySelectorAll('.select-botoom-cards .select-bottom-card')
-    Payments.forEach((item, key) => {
-        if (key == currentPayment.value) {
-            item.classList.add('select-bottom-card-active')
-            item.querySelector('.custom-radio').classList.add('custom-radio-active')
-        } else {
-            item.classList.remove('select-bottom-card-active')
-            item.querySelector('.custom-radio').classList.remove('custom-radio-active')
-        }
-    })
-}
+
+const isStarsSelected = computed(() => currentType.value === 0)
+const isPremiumSelected = computed(() => currentType.value === 1)
+const switchType = (type) => currentType.value = type
+const switchPremium = (type) => currentPremium.value = type
+const switchPayment = (type) => currentPayment.value = type
+const isPremiumActive = (index) => currentPremium.value === index
+const isPaymentActive = (index) => currentPayment.value === index
+
 </script>
 
 <template>
     <main class="flex-col gap-28 p-24">
         <div class="select-type flex-row gap-4 bg-blue-900 rounded-10 p-2">
-            <div @click="switchType(0)" class="select-type-item select-type-item-selected flex-row items-center justify-center gap-4 text-white p-6 rounded-8">
+            <div @click="switchType(0)" class="select-type-item flex-row items-center justify-center gap-4 text-white p-6 rounded-8" :class="{ 'select-type-item-selected': currentType === 0 }">
                 Stars
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
             </div>
-            <div @click="switchType(1)" class="select-type-item flex-row items-center justify-center gap-4 text-white p-6 rounded-8">
+            <div @click="switchType(1)" class="select-type-item flex-row items-center justify-center gap-4 text-white p-6 rounded-8" :class="{ 'select-type-item-selected': currentType === 1 }">
                 Premium
                 <img src="../assets/img/StarPremium.svg" alt="" class="img-16">
             </div>
@@ -82,11 +33,11 @@ const switchPayment = (type) => {
                 <p class="pl-12">Username</p>
                 <input type="text" class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@example">
             </div>
-            <div class="select-top-swith">
-                <div class="select-top-stars flex-col gap-16">
+            <div class="select-top-swith" :style="{transform: currentType === 0 ? 'translateX(0)' : 'translateX(calc(-50% - 12px))'}">
+                <div class="select-top-stars flex-col gap-16" :style="{maxHeight: currentType === 0 ? '100vh' : '0'}">
                     <div class="select-top-item flex-col gap-6">
-                        <p class="pl-12">Username</p>
-                        <input type="text" class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@example">
+                        <p class="pl-12">Amount</p>
+                        <input type="number" class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 100" min="100" max="1000000">
                     </div>
                     <div class="select-top-item select-top-stars-box">
                         <div class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
@@ -103,21 +54,16 @@ const switchPayment = (type) => {
                         </div>
                     </div>
                 </div>
-                <div class="select-top-premium flex-col gap-16">
+                <div class="select-top-premium flex-col gap-16" :style="{maxHeight: isPremiumSelected ? '100vh' : '0'}">
                     <p class="pl-12 text-14 text-neutral-300">Subscription</p>
                     <div class="select-top-item select-top-premium-box">
-                        <div @click="switchPremium(0)" class="select-top-premium-card select-top-premium-card-active flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12">
-                            <div class="custom-radio custom-radio-active"></div>
-                            <p class="text-16">3 months</p>
-                        </div>
-                        <div @click="switchPremium(1)" class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12">
-                            <div class="custom-radio"></div>
-                            <p class="text-16">6 months</p>
-                        </div>
-                        <div @click="switchPremium(2)" class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12">
-                            <div class="custom-radio"></div>
-                            <p class="text-16">12 months</p>
-                        </div>
+                    <div v-for="(premium, index) in ['3 months', '6 months', '12 months']" :key="index"
+                        @click="switchPremium(index)"
+                        class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12"
+                        :class="{ 'select-top-premium-card-active': isPremiumActive(index) }">
+                        <div class="custom-radio" :class="{ 'custom-radio-active': isPremiumActive(index) }"></div>
+                        <p class="text-16">{{ premium }}</p>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -125,35 +71,23 @@ const switchPayment = (type) => {
         <div class="select-bottomm flex-col gap-4">
             <p class="pl-12">Payment</p>
             <div class="select-botoom-cards grid-row gap-8">
-                <div @click="switchPayment(0)" class="select-bottom-card select-bottom-card-active card bg-blue-900 grid-col items-center gap-8">
-                    <div class="custom-radio custom-radio-active"></div>
-                    <p class="text-16 text-white">TON Network</p>
-                    <img src="../assets/img/TON.svg" alt="" class="img-28">
-                </div>
-                <div @click="switchPayment(1)" class="select-bottom-card card bg-blue-900 grid-col items-center gap-8">
-                    <div class="custom-radio"></div>
-                    <p class="text-16 text-white-75">USDT</p>
-                    <img src="../assets/img/Tether.svg" alt="" class="img-28">
-                </div>
-                <div @click="switchPayment(2)"class="select-bottom-card card bg-blue-900 grid-col items-center gap-8">
-                    <div class="custom-radio"></div>
-                    <p class="text-16">SBP</p>
-                    <img src="../assets/img/SBP.svg" alt="" class="img-28">
-                </div>
-                <div @click="switchPayment(3)" class="select-bottom-card card bg-blue-900 grid-col items-center gap-8">
-                    <div class="custom-radio"></div>
-                    <p class="text-16">VISA & MasterCard</p>
-                    <img src="../assets/img/VISA & MasterCard.svg" alt="" class="img-28">
+                <div v-for="(payment, index) in ['TON Network', 'USDT', 'SBP', 'VISA & MasterCard']" :key="index"
+                    @click="switchPayment(index)"
+                    class="select-bottom-card card bg-blue-900 grid-col items-center gap-8"
+                    :class="{ 'select-bottom-card-active': isPaymentActive(index) }">
+                    <div class="custom-radio" :class="{ 'custom-radio-active': isPaymentActive(index) }"></div>
+                    <p class="text-16 text-white">{{ payment }}</p>
+                    <img :src="`/src/assets/img/${payment.replace(/ /g, '%20')}.svg`" alt="" class="img-28">
                 </div>
             </div>
         </div>
         <div class="bottom-button btn bg-gradient-blue flex-col">
-            <div class="bottom-button-stars flex-row gap-4 items-center justify-center">
+            <div class="bottom-button-stars flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 0 ? '18px' : '0'}">
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
                 <p class="text-17 font-geist font-600 letter-spacing-04 text-white">Buy 3 500</p>
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
             </div>
-            <div class="bottom-button-prem flex-row gap-4 items-center justify-center">
+            <div class="bottom-button-prem flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 1 ? '18px' : '0'}">
                 <p class="text-17 font-geist font-600 letter-spacing-04 text-white">Buy Premium</p>
                 <img src="../assets/img/StarPremium.svg" alt="" class="img-16">
             </div>
@@ -195,6 +129,7 @@ main{
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     overflow-y: hidden;
+    transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
 }
 .select-top-item {
     gap: 6px;
@@ -207,6 +142,7 @@ main{
     outline: 2px solid var(--blue-500);
 }
 .select-top-stars{
+    transition: max-height 0.3s ease-in-out;
 }
 .select-top-stars-box {
     display: grid;
@@ -224,6 +160,7 @@ main{
 .select-top-premium {
     height: auto;
     max-height: 0;
+    transition: max-height 0.3s ease-in-out;
 }
 .select-top-premium-box {
     display: grid;
@@ -269,12 +206,15 @@ main{
 }
 .bottom-button {
     width: 100%;
+    gap: 0;
 }
 .bottom-button-stars{
     overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
 }
 .bottom-button-prem{
     max-height: 0px;
     overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
 }
 </style>

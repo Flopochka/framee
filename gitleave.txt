@@ -1,0 +1,4 @@
+git config --global --unset credential.helper
+git credential-manager reject https://your-repository-url
+git config --global --unset user.name
+git config --global --unset user.email

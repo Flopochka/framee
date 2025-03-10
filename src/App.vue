@@ -10,42 +10,26 @@ import { ref } from 'vue'
 const currentScreen = ref(0)
 const activeModal = ref(null)
 const currentLanguage = ref('English')
-const switchScreen = (type) => {
-    currentScreen.value = type
-    let Screens = document.querySelectorAll('.screen .screen-item')
-    let Screen = document.querySelector('.screen')
-    Screens.forEach((item, key) => {
-        if (key == currentScreen.value) {
-            item.classList.add('screen-item-active')
-            Screen.style.transform = `translateX(-${key * 100}vw)`
-        } else {
-            item.classList.remove('screen-item-active')
-        }
-    })
-}
-const toggleModal = (modalName) => {
-    activeModal.value = activeModal.value == modalName ? null : modalName
-}
-const switchLanguage = (lang) => {
-    currentLanguage.value = lang
-}
+const switchScreen = (type) => {currentScreen.value = type}
+const toggleModal = (modalName) => {activeModal.value = activeModal.value == modalName ? null : modalName}
+const switchLanguage = (lang) => {currentLanguage.value = lang}
 </script>
 
 <template>
-    <div class="screen">
-        <div class="screen-item screen-item-active">
+    <div class="screen" :style="{transform: `translateX(-${currentScreen * 100}vw)`}">
+        <div class="screen-item" :class="{ 'screen-item-active': currentScreen === 0 }">
             <MainStars />
         </div>
-        <div class="screen-item">
+        <div class="screen-item" :class="{ 'screen-item-active': currentScreen === 1 }">
             <Tasks />
         </div>
-        <div class="screen-item">
+        <div class="screen-item" :class="{ 'screen-item-active': currentScreen === 2 }">
             <AboutUs />
         </div>
-        <div class="screen-item">
+        <div class="screen-item" :class="{ 'screen-item-active': currentScreen === 3 }">
             <Profile :currentLanguage="currentLanguage" :toggleModal="toggleModal" :switchScreen="switchScreen"/>
         </div>
-        <div class="screen-item">
+        <div class="screen-item" :class="{ 'screen-item-active': currentScreen === 4 }">
             <WithdrawScreen/>
         </div>
     </div>

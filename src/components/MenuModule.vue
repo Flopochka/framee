@@ -4,31 +4,21 @@ import { ref } from 'vue'
 defineProps(['switchScreen'])
 
 const activeScreen = ref(0)
-const PressswitchScreen = (type) => {
-    activeScreen.value = type
-    let btns = document.querySelectorAll('.menu .menu-item')
-    btns.forEach((item, key) => {
-        if (key == activeScreen.value) {
-            item.classList.add('menu-item-active')
-        } else {
-            item.classList.remove('menu-item-active')
-        }
-    })
-}
+const PressswitchScreen = (type) => {activeScreen.value = type}
 </script>
 
 <template>
   <nav class="menu">
-    <div @click="PressswitchScreen(0),switchScreen(0)" class="menu-item menu-item-active" id="menu-replenishment">
+    <div @click="PressswitchScreen(0),switchScreen(0)" class="menu-item" :class="{ 'menu-item-active': activeScreen === 0 }">
         <img src="../assets/img/Icon.svg" alt="" class="menu-item-img replenishment-img">
     </div>
-    <div @click="PressswitchScreen(1),switchScreen(1)" class="menu-item" id="menu-tasks">
+    <div @click="PressswitchScreen(1),switchScreen(1)" class="menu-item" :class="{ 'menu-item-active': activeScreen === 1 }">
         <img src="../assets/img/Tasks.svg" alt="" class="menu-item-img tasks-img">
     </div>
-    <div @click="PressswitchScreen(2),switchScreen(2)" class="menu-item" id="menu-faq">
+    <div @click="PressswitchScreen(2),switchScreen(2)" class="menu-item" :class="{ 'menu-item-active': activeScreen === 2 }">
         <img src="../assets/img/Question.svg" alt="" class="menu-item-img faq-img">
     </div>
-    <div @click="PressswitchScreen(3),switchScreen(3)" class="menu-item" id="menu-user">
+    <div @click="PressswitchScreen(3),switchScreen(3)" class="menu-item" :class="{ 'menu-item-active': activeScreen > 2 }">
         <img src="../assets/img/User.svg" alt="" class="menu-item-img user-img">
     </div>
   </nav>
