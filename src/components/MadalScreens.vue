@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['activeModal', 'toggleModal', 'currentLanguage', 'switchLanguage'])
+defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switchLanguage'])
 </script>
 
 <template>
@@ -14,29 +14,12 @@ defineProps(['activeModal', 'toggleModal', 'currentLanguage', 'switchLanguage'])
         </div>
         <div @click.stop class="lang-menu-body madal-screen-body">
             <div class="lang-select-cards">
-                <div @click="switchLanguage('English')" class="lang-select-card flex-row">
-                    <p class="text-16">English</p>
-                    <img src="../assets/img/Check.svg" alt="" class="img-24" :class="{ 'hidden': currentLanguage != 'English' }">
-                </div>
-                <div @click="switchLanguage('Русский')" class="lang-select-card flex-row">
-                    <p class="text-16">Русский</p>
-                    <img src="../assets/img/Check.svg" alt="" class="img-24" :class="{ 'hidden': currentLanguage != 'Русский' }">
-                </div>
-                <div @click="switchLanguage('Español')" class="lang-select-card flex-row">
-                    <p class="text-16">Español</p>
-                    <img src="../assets/img/Check.svg" alt="" class="img-24" :class="{ 'hidden': currentLanguage != 'Español' }">
-                </div>
-                <div @click="switchLanguage('Deutsch')" class="lang-select-card flex-row">
-                    <p class="text-16">Deutsch</p>
-                    <img src="../assets/img/Check.svg" alt="" class="img-24" :class="{ 'hidden': currentLanguage != 'Deutsch' }">
-                </div>
-                <div @click="switchLanguage('فارسی')" class="lang-select-card flex-row">
-                    <p class="text-16">فارسی</p>
-                    <img src="../assets/img/Check.svg" alt="" class="img-24" :class="{ 'hidden': currentLanguage != 'فارسی' }">
-                </div>
-                <div @click="switchLanguage('العربية')" class="lang-select-card flex-row">
-                    <p class="text-16">العربية</p>
-                    <img src="../assets/img/Check.svg" alt="" class="img-24" :class="{ 'hidden': currentLanguage != 'العربية' }">
+                <div v-for="(label, key) in AppData.langs"
+                    :key="key"
+                    @click="switchLanguage(key)"
+                    class="lang-select-card flex-row" >
+                    <p class="text-16">{{ label }}</p>
+                    <img src="../assets/img/Check.svg" :alt="currentLanguage !== key ? 'Галочки нет' : 'Галочка'" class="img-24" :class="{ hidden: currentLanguage !== key }" />
                 </div>
             </div>
         </div>

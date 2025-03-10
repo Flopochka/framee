@@ -5,6 +5,7 @@ import { computed } from 'vue'
 const currentType = ref(0)
 const currentPremium = ref(0)
 const currentPayment = ref(0)
+const stars = ref(null)
 
 const isStarsSelected = computed(() => currentType.value === 0)
 const isPremiumSelected = computed(() => currentType.value === 1)
@@ -17,7 +18,7 @@ const isPaymentActive = (index) => currentPayment.value === index
 </script>
 
 <template>
-    <main class="flex-col gap-28 p-24">
+    <main class="gap-28 p-24">
         <div class="select-type flex-row gap-4 bg-blue-900 rounded-10 p-2">
             <div @click="switchType(0)" class="select-type-item flex-row items-center justify-center gap-4 text-white p-6 rounded-8" :class="{ 'select-type-item-selected': currentType === 0 }">
                 Stars
@@ -37,18 +38,18 @@ const isPaymentActive = (index) => currentPayment.value === index
                 <div class="select-top-stars flex-col gap-16" :style="{maxHeight: currentType === 0 ? '100vh' : '0'}">
                     <div class="select-top-item flex-col gap-6">
                         <p class="pl-12">Amount</p>
-                        <input type="number" class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 100" min="100" max="1000000">
+                        <input v-model.number="stars"  type="number" class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 100" min="100" max="1000000">
                     </div>
                     <div class="select-top-item select-top-stars-box">
-                        <div class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
+                        <div @click="stars+=100" class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
                             +100
                             <img src="../assets/img/Star.svg" alt="" class="img-16">
                         </div>
-                        <div class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
+                        <div @click="stars+=1000" class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
                             +1 000
                             <img src="../assets/img/Star.svg" alt="" class="img-16">
                         </div>
-                        <div class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
+                        <div @click="stars+=10000" class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04">
                             +10 000
                             <img src="../assets/img/Star.svg" alt="" class="img-16">
                         </div>
@@ -84,7 +85,7 @@ const isPaymentActive = (index) => currentPayment.value === index
         <div class="bottom-button btn bg-gradient-blue flex-col">
             <div class="bottom-button-stars flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 0 ? '18px' : '0'}">
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
-                <p class="text-17 font-geist font-600 letter-spacing-04 text-white">Buy 3 500</p>
+                <p class="text-17 font-geist font-600 letter-spacing-04 text-white">Buy {{ stars ? stars : 100}}</p>
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
             </div>
             <div class="bottom-button-prem flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 1 ? '18px' : '0'}">
@@ -97,10 +98,6 @@ const isPaymentActive = (index) => currentPayment.value === index
 
 <style scoped>
 main{
-    box-sizing: border-box;
-    min-height: 100vh;
-    padding-bottom: calc(84px + 24px);
-    width: 100%;
     display: grid;
     grid-template-rows: repeat(3, auto) 1fr;
     align-items: end;
@@ -121,6 +118,7 @@ main{
 }
 .select-top {
     width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
 }
 .select-top-swith{
@@ -137,9 +135,11 @@ main{
 .select-top-item-input-text {
     padding: 15px 12px;
     border: 0;
+    border: 2px solid #00000000;
 }
 .select-top-item-input-text:focus-visible{
-    outline: 2px solid var(--blue-500);
+    border: 2px solid var(--blue-500);
+    outline: none;
 }
 .select-top-stars{
     transition: max-height 0.3s ease-in-out;

@@ -1,24 +1,23 @@
 <script setup>
 import { ref } from 'vue'
 
+const AccordionData = [
+    ['Why are your prices up to 39.7% lower?','When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.'],
+    ['What is the commission for purchasing through FRAME?','All prices listed in our Telegram service @FrameStars_Bot and on our website are final. The only additional cost is a small network fee when transferring funds.'],
+    ['What payment methods do you accept?','We accept payments in TON, USDT, and bank cards. Choose the most convenient option during checkout.'],
+    ['How long does the delivery take?','Orders are typically processed instantly. In rare cases, it may take a few minutes. If your purchase hasn\'t arrived, please check your transaction details or contact our @framestars_support.'],
+    ['What happens if my purchase doesn’t arrive?','If you haven\'t received your Stars or Premium subscription within a reasonable time, please reach out to our @framestars_support with your payment details. We’ll assist you as quickly as possible.'],
+    ['Is it safe to buy from FRAME?','Yes, our service is secure and reliable. We process transactions without requiring personal data, ensuring privacy and safety.'],
+    ['How can I send Stars to a friend?','Simply enter the recipient’s Telegram @username during the purchase process, and the Stars or Premium subscription will be sent directly to their account.'],
+    ['How can I get Telegram Stars for free?','Our task page is currently in development. Soon, you’ll be able to earn Stars by watching short promotional videos.']
+]
 const currentAccordion = ref(0)
-const switchAccordion = (type) => {
-    currentAccordion.value = type
-    let Accordions = document.querySelectorAll('.aboutus-bottom-accordion .aboutus-bottom-accordion-item')
-    Accordions.forEach((item, key) => {
-        if (key == currentAccordion.value) {
-            item.querySelector('.accordion-checkbox').classList.add('accordion-checkbox-active')
-            item.querySelector('.aboutus-bottom-accordion-item-bottom').classList.add('aboutus-bottom-accordion-item-bottom-active')
-        } else {
-            item.querySelector('.accordion-checkbox').classList.remove('accordion-checkbox-active')
-            item.querySelector('.aboutus-bottom-accordion-item-bottom').classList.remove('aboutus-bottom-accordion-item-bottom-active')
-        }
-    })
-}
+const switchAccordion = (type) => currentAccordion.value = type
+const isAccordionActive = (index) => currentAccordion.value === index
 </script>
 
 <template>
-    <main class="flex-col gap-28 p-24">
+    <main class="gap-28 p-24">
         <div class="aboutus-cover flex-col gap-40">
             <div class="text-white aboutus-btn btn text-16">
                 Connect Wallet
@@ -59,102 +58,17 @@ const switchAccordion = (type) => {
         <div class="aboutus-bottom">
             <p class="text-16 lh-120 mb-12">FAQ</p>
             <div class="aboutus-bottom-accordion flex-col">
-                <div @click="switchAccordion(0)" class="aboutus-bottom-accordion-item">
+                <div v-for="(accordion, index) in AccordionData" :key="index"
+                    @click="switchAccordion(index)"
+                    class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">Why are your prices up to 39.7% lower?</p>
-                        <div class="accordion-checkbox jse accordion-checkbox-active">
+                        <p class="text-18 text-white">{{accordion[0]}}</p>
+                        <div class="accordion-checkbox jse" :class="{ 'accordion-checkbox-active': isAccordionActive(index) }">
                             <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
                         </div>
                     </div>
-                    <div class="aboutus-bottom-accordion-item-bottom aboutus-bottom-accordion-item-bottom-active">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
-                    </div>
-                </div>
-                <div @click="switchAccordion(1)" class="aboutus-bottom-accordion-item">
-                    <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">What is the commission for purchasing through FRAME?</p>
-                        <div class="accordion-checkbox jse">
-                            <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
-                        </div>
-                    </div>
-                    <div class="aboutus-bottom-accordion-item-bottom">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
-                    </div>
-                </div>
-                <div @click="switchAccordion(2)" class="aboutus-bottom-accordion-item">
-                    <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">What payment methods do you accept?</p>
-                        <div class="accordion-checkbox jse">
-                            <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
-                        </div>
-                    </div>
-                    <div class="aboutus-bottom-accordion-item-bottom">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
-                    </div>
-                </div>
-                <div @click="switchAccordion(3)" class="aboutus-bottom-accordion-item">
-                    <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">How long does the delivery take?</p>
-                        <div class="accordion-checkbox jse">
-                            <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
-                        </div>
-                    </div>
-                    <div class="aboutus-bottom-accordion-item-bottom">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
-                    </div>
-                </div>
-                <div @click="switchAccordion(4)" class="aboutus-bottom-accordion-item">
-                    <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">Is it safe to buy from FRAME?</p>
-                        <div class="accordion-checkbox jse">
-                            <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
-                        </div>
-                    </div>
-                    <div class="aboutus-bottom-accordion-item-bottom">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
-                    </div>
-                </div>
-                <div @click="switchAccordion(5)" class="aboutus-bottom-accordion-item">
-                    <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">How can I send Stars to a friend?</p>
-                        <div class="accordion-checkbox jse">
-                            <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
-                        </div>
-                    </div>
-                    <div class="aboutus-bottom-accordion-item-bottom">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
-                    </div>
-                </div>
-                <div @click="switchAccordion(6)" class="aboutus-bottom-accordion-item">
-                    <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-                        <p class="text-18 text-white">How can I get Telegram Stars for free?</p>
-                        <div class="accordion-checkbox jse">
-                            <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
-                        </div>
-                    </div>
-                    <div class="aboutus-bottom-accordion-item-bottom">
-                        <p class="text-16 lh-140">
-                            <br>
-                            When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.
-                        </p>
+                    <div class="aboutus-bottom-accordion-item-bottom" :class="{ 'aboutus-bottom-accordion-item-bottom-active': isAccordionActive(index) }">
+                        <p class="text-16 lh-140"><br>{{accordion[1]}}</p>
                     </div>
                 </div>
             </div>
@@ -163,15 +77,6 @@ const switchAccordion = (type) => {
 </template>
 
 <style scoped>
-main{
-    box-sizing: border-box;
-    min-height: 100vh;
-    padding-bottom: calc(84px + 24px);
-    width: 100%;
-    display: grid;
-    grid-template-rows: repeat(3, auto) 1fr;
-    align-items: end;
-}
 .aboutus-cover {
     padding: 0 24px;
 }

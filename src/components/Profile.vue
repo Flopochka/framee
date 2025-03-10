@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['toggleModal', 'currentLanguage', 'switchScreen'])
+defineProps(['AppData', 'toggleModal', 'currentLanguage', 'switchScreen'])
 </script>
 
 <template>
-    <main class="flex-col gap-28 p-24">
+    <main class="gap-28 p-24">
         <div class="user-stat-box rounded-12">
             <p class="text-16">Total Users</p>
             <p class="text-16">Total Earnings</p>
@@ -47,7 +47,7 @@ defineProps(['toggleModal', 'currentLanguage', 'switchScreen'])
         <div class="user-language flex-col gap-6">
             <p class="text-14 pl-12">Language</p>
             <div @click="toggleModal('lang')" class="user-language-item rounded-10 bg-blue-900 flex-row items-center">
-                <p class="text-16 text-neutral-200">{{ currentLanguage }}</p>
+                <p class="text-16 text-neutral-200">{{ AppData.langs[currentLanguage] }}</p>
                 <img src="../assets/img/Arrow down.svg" alt="" class="img-24">
             </div>
         </div>
@@ -55,12 +55,6 @@ defineProps(['toggleModal', 'currentLanguage', 'switchScreen'])
 </template>
 
 <style scoped>
-main{
-    box-sizing: border-box;
-    min-height: 100vh;
-    padding-bottom: calc(84px + 24px);
-    width: 100%;
-}
 .user-stat-box {
     padding: 28px 16px 12px 16px;
     display: grid;

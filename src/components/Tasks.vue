@@ -3,7 +3,7 @@ import { ref } from 'vue'
 </script>
 
 <template>
-    <main class="flex-col gap-28 p-24">
+    <main class="gap-28 p-24">
         <p class="text-20 text-white">Tasks</p>
         <div class="tasks-cards flex-col gap-8">
             <div class="task-card bg-blue-900 rounded-12 items-center">
@@ -44,13 +44,6 @@ import { ref } from 'vue'
 
 <style scoped>
 main{
-    box-sizing: border-box;
-    min-height: 100vh;
-    padding-bottom: calc(84px + 24px);
-    width: 100%;
-    display: grid;
-    grid-template-rows: repeat(3, auto) 1fr;
-    align-items: end;
 }
 .task-card {
     padding: 14px 12px;

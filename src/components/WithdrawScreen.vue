@@ -55,12 +55,6 @@ defineProps(['toggleModal', 'currentLanguage'])
 </template>
 
 <style scoped>
-main{
-    box-sizing: border-box;
-    min-height: 100vh;
-    padding-bottom: calc(84px + 24px);
-    width: 100%;
-}
 .user-stat-box {
     padding: 28px 16px 12px 16px;
     display: grid;
