@@ -6,8 +6,8 @@ defineProps(['AppData', 'toggleModal', 'currentLanguage', 'switchScreen'])
 <template>
     <main class="gap-28 p-24">
         <div class="user-stat-box rounded-12">
-            <p class="text-16">Total Users</p>
-            <p class="text-16">Total Earnings</p>
+            <p class="text-16">{{ AppData.text[currentLanguage].profilepage.totalUsers }}</p>
+            <p class="text-16">{{ AppData.text[currentLanguage].profilepage.totalEarnings }}</p>
             <p class="text-20 lh-120 flex-row items-center justify-center gap-4">
                 3
                 <img src="../assets/img/People.svg" alt="" class="img-24">
@@ -17,14 +17,14 @@ defineProps(['AppData', 'toggleModal', 'currentLanguage', 'switchScreen'])
                 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20">
             </p>
             <div @click="switchScreen(4)" class="user-stat-box-btn btn rounded-8">
-                <p class="user-stat-box-btn-text text-14 lh-22">Withdraw</p>
+                <p class="user-stat-box-btn-text text-14 lh-22">{{ AppData.text[currentLanguage].profilepage.Withdraw }}</p>
             </div>
         </div>
         <div class="user-referal-box">
-            <p class="user-referal-box-header text-12 tac lh-22">Invite friends and earn 5% from their purchases!</p>
+            <p class="user-referal-box-header text-12 tac lh-22">{{ AppData.text[currentLanguage].profilepage.Invitefriendsandearn5fromtheirpurchases }}</p>
             <div class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center">
                 <img src="../assets/img/Gift.svg" alt="" class="img-16">
-                <p class="text-17 text-white">Invite a friend</p>
+                <p class="text-17 text-white">{{ AppData.text[currentLanguage].profilepage.Inviteafriend }}</p>
             </div>
             <div class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row">
                 <img src="../assets/img/Copy.svg" alt="" class="img-28">
@@ -32,20 +32,20 @@ defineProps(['AppData', 'toggleModal', 'currentLanguage', 'switchScreen'])
         </div>
         <div class="user-buttons-1 flex-col gap-8">
             <div @click="toggleModal('history')" class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center">
-                <p class="text-16 text-neutral-200">History</p>
+                <p class="text-16 text-neutral-200">{{ AppData.text[currentLanguage].profilepage.History }}</p>
                 <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90">
             </div>
             <div class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center">
-                <p class="text-16 text-neutral-200">Support</p>
+                <p class="text-16 text-neutral-200">{{ AppData.text[currentLanguage].profilepage.Support }}</p>
                 <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90">
             </div>
             <div class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center">
-                <p class="text-16 text-neutral-200">Our Telegram</p>
+                <p class="text-16 text-neutral-200">{{ AppData.text[currentLanguage].profilepage.OurTelegram }}</p>
                 <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90">
             </div>
         </div>
         <div class="user-language flex-col gap-6">
-            <p class="text-14 pl-12">Language</p>
+            <p class="text-14 pl-12">{{ AppData.text[currentLanguage].profilepage.Language }}</p>
             <div @click="toggleModal('lang')" class="user-language-item rounded-10 bg-blue-900 flex-row items-center">
                 <p class="text-16 text-neutral-200">{{ AppData.langs[currentLanguage] }}</p>
                 <img src="../assets/img/Arrow down.svg" alt="" class="img-24">

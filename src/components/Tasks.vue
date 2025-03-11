@@ -1,38 +1,15 @@
 <script setup>
 import { ref } from 'vue'
+defineProps(['AppData', 'currentLanguage'])
 </script>
 
 <template>
     <main class="gap-28 p-24">
-        <p class="text-20 text-white">Tasks</p>
+        <p class="text-20 text-white">{{AppData.text[currentLanguage].taskspage.tasks}}</p>
         <div class="tasks-cards flex-col gap-8">
-            <div class="task-card bg-blue-900 rounded-12 items-center">
-                <p class="text-16 text-white">Follow in Telegram</p>
-                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">Start</div>
-                <p class="text-14 text-white">
-                    <img src="../assets/img/Star.svg" alt="" class="img-16">
-                    0.15
-                </p>
-            </div>
-            <div class="task-card bg-blue-900 rounded-12 items-center">
-                <p class="text-16 text-white">Follow in Telegram</p>
-                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">Start</div>
-                <p class="text-14 text-white">
-                    <img src="../assets/img/Star.svg" alt="" class="img-16">
-                    0.15
-                </p>
-            </div>
-            <div class="task-card bg-blue-900 rounded-12 items-center">
-                <p class="text-16 text-white">Follow in Telegram</p>
-                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">Start</div>
-                <p class="text-14 text-white">
-                    <img src="../assets/img/Star.svg" alt="" class="img-16">
-                    0.15
-                </p>
-            </div>
-            <div class="task-card bg-blue-900 rounded-12 items-center">
-                <p class="text-16 text-white">Follow in Telegram</p>
-                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">Start</div>
+            <div v-for="i in [0, 0, 0, 0]" class="task-card bg-blue-900 rounded-12 items-center">
+                <p class="text-16 text-white">{{AppData.text[currentLanguage].taskspage.followinTelegram}}</p>
+                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">{{AppData.text[currentLanguage].taskspage.start}}</div>
                 <p class="text-14 text-white">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     0.15

@@ -79,18 +79,18 @@ const isPaymentActive = (index) => currentPayment.value === index
                     :class="{ 'select-bottom-card-active': isPaymentActive(index) }">
                     <div class="custom-radio" :class="{ 'custom-radio-active': isPaymentActive(index) }"></div>
                     <p class="text-16 text-white">{{ payment }}</p>
-                    <img :src="`/src/assets/img/${payment.replace(/ /g, '%20')}.svg`" alt="" class="img-28">
+                    <img :src="`/src/assets/img/${AppData.text['en'].mainstarspage.paymentmetdods[index].replace(/ /g, '%20')}.svg`" alt="" class="img-28">
                 </div>
             </div>
         </div>
         <div class="bottom-button btn bg-gradient-blue flex-col">
             <div class="bottom-button-stars flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 0 ? '18px' : '0'}">
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
-                <p class="text-17 font-geist font-600 letter-spacing-04 text-white">Buy {{ stars ? stars : 100}}</p>
+                <p class="text-17 font-geist font-600 letter-spacing-04 text-white">{{AppData.text[currentLanguage].mainstarspage.buy}} {{ stars ? stars : 100}}</p>
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
             </div>
             <div class="bottom-button-prem flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 1 ? '18px' : '0'}">
-                <p class="text-17 font-geist font-600 letter-spacing-04 text-white">Buy Premium</p>
+                <p class="text-17 font-geist font-600 letter-spacing-04 text-white">{{AppData.text[currentLanguage].mainstarspage.buyPremium}}</p>
                 <img src="../assets/img/StarPremium.svg" alt="" class="img-16">
             </div>
         </div>
