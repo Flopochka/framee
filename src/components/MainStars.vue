@@ -59,7 +59,7 @@ const isPaymentActive = (index) => currentPayment.value === index
                 <div class="select-top-premium flex-col gap-16" :style="{maxHeight: isPremiumSelected ? '100vh' : '0'}">
                     <p class="pl-12 text-14 text-neutral-300">{{ AppData.text[currentLanguage].mainstarspage.subscription }}</p>
                     <div class="select-top-item select-top-premium-box">
-                    <div v-for="(premium, index) in {{ AppData.text[currentLanguage].mainstarspage.subscriptions }}" :key="index"
+                    <div v-for="(premium, index) in AppData.text[currentLanguage].mainstarspage.subscriptions" :key="index"
                         @click="switchPremium(index)"
                         class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12"
                         :class="{ 'select-top-premium-card-active': isPremiumActive(index) }">
