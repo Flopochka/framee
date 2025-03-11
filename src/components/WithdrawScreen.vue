@@ -1,18 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['toggleModal', 'currentLanguage'])
+defineProps(['TextData', 'toggleModal'])
 </script>
 
 <template>
     <main class="flex-col gap-28 p-24">
         <div class="withdraw-info">
-            <p class="text-20 text-white">Your balance</p>
+            <p class="text-20 text-white">{{ TextData.Yourbalance }}</p>
             <p class="text-24 text-white jse">10.23<img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
-            <div @click="toggleModal('withdrawton')" style="grid-area: C;" class="withdraw-ton-btn btn text-17 text-white letter-spacing-04">Withdraw in TON</div>
-            <div @click="toggleModal('withdrawstars')" style="grid-area: D;" class="withdraw-stars-btn btn"><p class="wis text-17 letter-spacing-04">Withdraw in Stars</p></div>
+            <div @click="toggleModal('withdrawton')" style="grid-area: C;" class="withdraw-ton-btn btn text-17 text-white letter-spacing-04">{{ TextData.WithdrawinTON }}</div>
+            <div @click="toggleModal('withdrawstars')" style="grid-area: D;" class="withdraw-stars-btn btn"><p class="wis text-17 letter-spacing-04">{{ TextData.WithdrawinStars }}</p></div>
         </div>
         <div class="referal-info flex-col">
-            <p class="text-20 text-white">Your Referals</p>
+            <p class="text-20 text-white">{{ TextData.YourReferals }}</p>
             <div class="referal-cards gap-8">
                 <div class="referal-card-head items-center">
                     <img style="grid-area: A;" src="../assets/img/testuserphoto.png" alt="" class="img-44 rounded-22">

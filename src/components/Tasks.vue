@@ -1,15 +1,15 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['AppData', 'currentLanguage'])
+defineProps(['TextData'])
 </script>
 
 <template>
     <main class="gap-28 p-24">
-        <p class="text-20 text-white">{{AppData.text[currentLanguage].taskspage.tasks}}</p>
+        <p class="text-20 text-white">{{TextData.tasks}}</p>
         <div class="tasks-cards flex-col gap-8">
             <div v-for="i in [0, 0, 0, 0]" class="task-card bg-blue-900 rounded-12 items-center">
-                <p class="text-16 text-white">{{AppData.text[currentLanguage].taskspage.followinTelegram}}</p>
-                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">{{AppData.text[currentLanguage].taskspage.start}}</div>
+                <p class="text-16 text-white">{{TextData.followinTelegram}}</p>
+                <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">{{TextData.start}}</div>
                 <p class="text-14 text-white">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     0.15

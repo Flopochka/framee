@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['AppData', 'currentLanguage'])
+defineProps(['TextData'])
 
 const currentAccordion = ref(0)
 const switchAccordion = (type) => currentAccordion.value = type
@@ -11,45 +11,45 @@ const isAccordionActive = (index) => currentAccordion.value === index
     <main class="gap-28 p-24">
         <div class="aboutus-cover flex-col gap-40">
             <div class="text-white aboutus-btn btn text-16">
-                {{ AppData.text[currentLanguage].aboutuspage.connectWallet }}
+                {{ TextData.connectWallet }}
                 <img src="../assets/img/wallet.svg" alt="" class="img-20">
             </div>
-            <p class="aboutus-cover-header text-32 lh-110 tac">{{ AppData.text[currentLanguage].aboutuspage.theBestChoiceforPurchasingTelegramStarsandPremium }}</p>
+            <p class="aboutus-cover-header text-32 lh-110 tac">{{ TextData.theBestChoiceforPurchasingTelegramStarsandPremium }}</p>
             <div class="aboutus-cover-card rounded-18 flex-col items-center justify-center gap-32">
                 <img src="../assets/img/Duck.svg" alt="" class="aboutus-cover-card-img">
-                <p class="text-white text-24 lh-100 tac">{{ AppData.text[currentLanguage].aboutuspage.paywithTONUSDTorcardpayments }}</p>
-                <p class="text-16 lh-120 tac">{{ AppData.text[currentLanguage].aboutuspage.enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired }}</p>
+                <p class="text-white text-24 lh-100 tac">{{ TextData.paywithTONUSDTorcardpayments }}</p>
+                <p class="text-16 lh-120 tac">{{ TextData.enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired }}</p>
             </div>
         </div>
         <div class="aboutus-other">
-            <p class="text-16 lh-120 mb-12">{{ AppData.text[currentLanguage].aboutuspage.aboutus }}</p>
+            <p class="text-16 lh-120 mb-12">{{ TextData.aboutus }}</p>
             <div class="aboutus-other-cards">
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughttoday }}</p>
+                    <p class="text-14 lh-120 jse">{{ TextData.boughttoday }}</p>
                 </div>
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughtyesterday }}</p>
+                    <p class="text-14 lh-120 jse">{{ TextData.boughtyesterday }}</p>
                 </div>
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughtalltime }}</p>
+                    <p class="text-14 lh-120 jse">{{ TextData.boughtalltime }}</p>
                 </div>
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughtmonthpremium }}</p>
+                    <p class="text-14 lh-120 jse">{{ TextData.boughtmonthpremium }}</p>
                 </div>
             </div>
         </div>
         <div class="aboutus-bottom">
-            <p class="text-16 lh-120 mb-12">{{ AppData.text[currentLanguage].aboutuspage.FAQ }}</p>
+            <p class="text-16 lh-120 mb-12">{{ TextData.FAQ }}</p>
             <div class="aboutus-bottom-accordion flex-col">
-                <div v-for="(accordion, index) in AppData.text[currentLanguage].aboutuspage.FAQData" :key="index"
+                <div v-for="(accordion, index) in TextData.FAQData" :key="index"
                     @click="switchAccordion(index)"
                     class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">

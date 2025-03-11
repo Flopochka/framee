@@ -1,20 +1,20 @@
 <script setup>
 import { ref } from 'vue'
-defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switchLanguage'])
+defineProps(['TextData', 'langs', 'activeModal', 'toggleModal', 'currentLanguage', 'switchLanguage'])
 </script>
 
 <template>
     <div @click="toggleModal(null)" class="lang-menu madal-screen" :class="{ 'madal-active': activeModal == 'lang' }">
         <div @click.stop class="lang-menu-head madal-screen-head">
             <div class="madal-screen-swipka"></div>
-            <p class="text-20 madal-screen-title">System language</p>
+            <p class="text-20 madal-screen-title">{{ TextData.Systemlanguage }}</p>
             <div @click="toggleModal(null)" class="madal-screen-close">
                 <img src="../assets/img/Cross.svg" alt="" class="img-24">
             </div>
         </div>
         <div @click.stop class="lang-menu-body madal-screen-body">
             <div class="lang-select-cards">
-                <div v-for="(label, key) in AppData.langs"
+                <div v-for="(label, key) in langs"
                     :key="key"
                     @click="switchLanguage(key)"
                     class="lang-select-card flex-row" >
@@ -27,40 +27,40 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
     <div @click="toggleModal(null)" class="user-history madal-screen" :class="{ 'madal-active': activeModal == 'history' }">
         <div @click.stop class="user-history-head madal-screen-head">
             <div class="madal-screen-swipka"></div>
-            <p class="text-20 madal-screen-title">History:</p>
+            <p class="text-20 madal-screen-title">{{ TextData.History }}</p>
             <div @click="toggleModal(null)" class="madal-screen-close">
                 <img src="../assets/img/Cross.svg" alt="" class="img-24">
             </div>
         </div>
         <div @click.stop class="user-history-body madal-screen-body madal-screen-body-high">
-            <p class="text-14 pl-12">Apr, 17</p>
+            <p class="text-14 pl-12">{{ TextData.Apr }}, 17</p>
             <div class="history-cards flex-col rounded-24">
                 <div class="history-card flex-row items-center">
                     <div class="history-img flex-row justify-center items-center"><img src="../assets/img/stargold.svg" alt="" class="img-20"></div>
-                    <p class="text-14">Buy 100 Stars for @ahillary</p>
+                    <p class="text-14">{{ TextData.Buy }} 100 {{ TextData.Stars }} {{ TextData.for }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
                     <div class="history-img flex-row justify-center items-center"><img src="../assets/img/starpremium.svg" alt="" class="img-20"></div>
-                    <p class="text-14">Buy Premium 3 months for @ahillary</p>
+                    <p class="text-14">{{ TextData.Buy }} {{ TextData.Premium3months }} {{ TextData.for }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
                     <div class="history-img flex-row justify-center items-center"><img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></div>
-                    <p class="text-14">Withdraw 24.02 TON</p>
+                    <p class="text-14">{{ TextData.Withdraw }} 24.02 TON</p>
                 </div>
             </div>
-            <p class="text-14 pl-12">Apr, 17</p>
+            <p class="text-14 pl-12">{{ TextData.Apr }}, 17</p>
             <div class="history-cards flex-col rounded-24">
                 <div class="history-card flex-row items-center">
                     <div class="history-img flex-row justify-center items-center"><img src="../assets/img/stargold.svg" alt="" class="img-20"></div>
-                    <p class="text-14">Buy 100 Stars for @ahillary</p>
+                    <p class="text-14">{{ TextData.Buy }} 100 {{ TextData.Stars }} {{ TextData.for }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
                     <div class="history-img flex-row justify-center items-center"><img src="../assets/img/starpremium.svg" alt="" class="img-20"></div>
-                    <p class="text-14">Buy Premium 3 months for @ahillary</p>
+                    <p class="text-14">{{ TextData.Buy }} {{ TextData.Premium3months }} {{ TextData.for }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
                     <div class="history-img flex-row justify-center items-center"><img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></div>
-                    <p class="text-14">Withdraw 24.02 TON</p>
+                    <p class="text-14">{{ TextData.Withdraw }} 24.02 TON</p>
                 </div>
             </div>
         </div>
@@ -68,47 +68,47 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
     <div @click="toggleModal(null)" class="withdrawton madal-screen" :class="{ 'madal-active': activeModal == 'withdrawton' }">
         <div @click.stop class="withdrawton-head madal-screen-head">
             <div class="madal-screen-swipka"></div>
-            <p class="text-20 madal-screen-title">Your balance: 10.23 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
+            <p class="text-20 madal-screen-title">{{ TextData.Yourbalance }}: 10.23 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
             <div @click="toggleModal(null)" class="madal-screen-close">
                 <img src="../assets/img/Cross.svg" alt="" class="img-24">
             </div>
         </div>
         <div @click.stop class="withdrawton-body madal-screen-body madal-screen-body-high jcsb">
             <div class="withdraw-inputs flex-col gap-8">
-                <p class="pl-12 text-14">Ammount</p>
-                <input v-model.number="stars"  type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 0.3" min="0.3" max="1000000">
-                <p class="pl-12 text-14">Wallet</p>
-                <input v-model.number="stars"  type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2">
+                <p class="pl-12 text-14">{{ TextData.Ammount }}</p>
+                <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 0.3" min="0.3" max="1000000">
+                <p class="pl-12 text-14">{{ TextData.Wallet }}</p>
+                <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2">
                 <div class="withdraw-info gap-12">
-                    <p style="grid-area: A;" class="text-16 text-white">You get</p>
+                    <p style="grid-area: A;" class="text-16 text-white">{{ TextData.Youget }}</p>
                     <p class="text-24 text-white">0.35 TON</p>
-                    <p class="text-14 text-white-60 jse">Fee  0.3 TON</p>
+                    <p class="text-14 text-white-60 jse">{{ TextData.Fee }}  0.3 TON</p>
                 </div>
             </div>
-            <div @click="toggleModal('popupwalletnc')" class="withdraw-btn btn text-17">Withdraw in TON</div>
+            <div @click="toggleModal('popupwalletnc')" class="withdraw-btn btn text-17">{{ TextData.WithdrawinTON }}</div>
         </div>
     </div>
     <div @click="toggleModal(null)" class="withdrawstars madal-screen" :class="{ 'madal-active': activeModal == 'withdrawstars' }">
         <div @click.stop class="withdrawstars-head madal-screen-head">
             <div class="madal-screen-swipka"></div>
-            <p class="text-20 madal-screen-title">Your balance: 10.23 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
+            <p class="text-20 madal-screen-title">{{ TextData.Yourbalance }}: 10.23 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
             <div @click="toggleModal(null)" class="madal-screen-close">
                 <img src="../assets/img/Cross.svg" alt="" class="img-24">
             </div>
         </div>
         <div @click.stop class="withdrawstars-body madal-screen-body madal-screen-body-high jcsb">
             <div class="withdraw-inputs flex-col gap-8">
-                <p class="pl-12 text-14">Ammount</p>
-                <input v-model.number="stars"  type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 100" min="100" max="1000000">
-                <p class="pl-12 text-14">Username</p>
-                <input v-model.number="stars"  type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@example">
+                <p class="pl-12 text-14">{{ TextData.Ammount }}</p>
+                <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 100" min="100" max="1000000">
+                <p class="pl-12 text-14">{{ TextData.Username }}</p>
+                <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@example">
                 <div class="withdrawton-info gap-12">
-                    <p style="grid-area: A;" class="text-16 text-white">You get for 0.3 TON ≈</p>
+                    <p style="grid-area: A;" class="text-16 text-white">{{ TextData.Yougetfor }} 0.3 TON ≈</p>
                     <p class="text-24 text-white">100 <img src="../assets/img/Star.svg" alt="" class="img-20"></p>
-                    <p class="text-14 text-white-60 jse">Fee  0.3 TON</p>
+                    <p class="text-14 text-white-60 jse">{{ TextData.Fee }}  0.3 TON</p>
                 </div>
             </div>
-            <div @click="toggleModal('popupstars')" class="withdraw-btn btn text-17">Withdraw in Stars</div>
+            <div @click="toggleModal('popupstars')" class="withdraw-btn btn text-17">{{ TextData.WithdrawinStars }}</div>
         </div>
     </div>
     <div class="popup" :class="{ 'popup-active': activeModal == 'popupstars' }">
@@ -116,9 +116,9 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
             <img src="../assets/img/Star.svg" alt="" class="img-32">
         </div>
         <div class="popup-block flex-col">
-            <p class="text-16 text-white">Stars have been sent</p>
-            <p class="text-14 lh-120">Your account will be updated within a few minutes</p>
-            <div @click="toggleModal(null)" class="popup-btn btn rounded-12">Close</div>
+            <p class="text-16 text-white">{{ TextData.Starshavebeensent }}</p>
+            <p class="text-14 lh-120">{{ TextData.Youraccountwillbeupdatedwithinafewminutes }}</p>
+            <div @click="toggleModal(null)" class="popup-btn btn rounded-12">{{ TextData.Close }}</div>
         </div>
     </div>
     <div class="popup" :class="{ 'popup-active': activeModal == 'popuppremium' }">
@@ -126,9 +126,9 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
             <img src="../assets/img/Star.svg" alt="" class="img-32">
         </div>
         <div class="popup-block flex-col">
-            <p class="text-16 text-white">Premium have been sent</p>
-            <p class="text-14 lh-120">Your account will be updated within a few minutes</p>
-            <div @click="toggleModal(null)" class="popup-btn btn rounded-12">Close</div>
+            <p class="text-16 text-white">{{ TextData.Premiumhavebeensent }}</p>
+            <p class="text-14 lh-120">{{ TextData.Youraccountwillbeupdatedwithinafewminutes }}</p>
+            <div @click="toggleModal(null)" class="popup-btn btn rounded-12">{{ TextData.Close }}</div>
         </div>
     </div>
     <div class="popup" :class="{ 'popup-active': activeModal == 'popupwalletnc' }">
@@ -136,9 +136,9 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
             <img src="../assets/img/Star.svg" alt="" class="img-32">
         </div>
         <div class="popup-block flex-col">
-            <p class="text-16 text-white">Wallet not connected</p>
-            <p class="text-14 lh-120">Please connect your TON wallet on the main page to start purchasing</p>
-            <div @click="toggleModal(null)" class="popup-btn btn rounded-12">Close</div>
+            <p class="text-16 text-white">{{ TextData.Walletnotconnected }}</p>
+            <p class="text-14 lh-120">{{ TextData.PleaseconnectyourTONwalletonthemainpagetostartpurchasing }}</p>
+            <div @click="toggleModal(null)" class="popup-btn btn rounded-12">{{ TextData.Close }}</div>
         </div>
     </div>
 </template>
