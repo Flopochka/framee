@@ -411,7 +411,7 @@ const switchLanguage = (lang) => {currentLanguage.value = lang}
     </span>
     <div class="screen" :style="{transform: `translateX(-${currentScreen * 100}vw)`}">
         <div class="screen-item">
-            <MainStars :AppData="AppData" :currentLanguage="currentLanguage"/>
+            <MainStars :AppData="AppData" :currentLanguage="currentLanguage" :toggleModal="toggleModal"/>
         </div>
         <div class="screen-item">
             <Tasks :AppData="AppData" :currentLanguage="currentLanguage"/>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { computed } from 'vue'
-defineProps(['AppData', 'currentLanguage'])
+defineProps(['AppData', 'currentLanguage', 'toggleModal'])
 
 const currentType = ref(0)
 const currentPremium = ref(0)
@@ -83,7 +83,7 @@ const isPaymentActive = (index) => currentPayment.value === index
                 </div>
             </div>
         </div>
-        <div class="bottom-button btn bg-gradient-blue flex-col">
+        <div @click="currentType ? toggleModal('popuppremium') :toggleModal('popupstars')" class="bottom-button btn bg-gradient-blue flex-col">
             <div class="bottom-button-stars flex-row gap-4 items-center justify-center" :style="{maxHeight: currentType === 0 ? '18px' : '0'}">
                 <img src="../assets/img/StarGold.svg" alt="" class="img-16">
                 <p class="text-17 font-geist font-600 letter-spacing-04 text-white">{{AppData.text[currentLanguage].mainstarspage.buy}} {{ stars ? stars : 100}}</p>
