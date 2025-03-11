@@ -1,16 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+defineProps(['AppData', 'currentLanguage'])
 
-const AccordionData = [
-    ['Why are your prices up to 39.7% lower?','When purchasing Telegram Stars & Premium through the Telegram app, the price includes Apple/Google Store commissions of approximately 40%. By using our service, you bypass these fees and get a better deal.'],
-    ['What is the commission for purchasing through FRAME?','All prices listed in our Telegram service @FrameStars_Bot and on our website are final. The only additional cost is a small network fee when transferring funds.'],
-    ['What payment methods do you accept?','We accept payments in TON, USDT, and bank cards. Choose the most convenient option during checkout.'],
-    ['How long does the delivery take?','Orders are typically processed instantly. In rare cases, it may take a few minutes. If your purchase hasn\'t arrived, please check your transaction details or contact our @framestars_support.'],
-    ['What happens if my purchase doesn’t arrive?','If you haven\'t received your Stars or Premium subscription within a reasonable time, please reach out to our @framestars_support with your payment details. We’ll assist you as quickly as possible.'],
-    ['Is it safe to buy from FRAME?','Yes, our service is secure and reliable. We process transactions without requiring personal data, ensuring privacy and safety.'],
-    ['How can I send Stars to a friend?','Simply enter the recipient’s Telegram @username during the purchase process, and the Stars or Premium subscription will be sent directly to their account.'],
-    ['How can I get Telegram Stars for free?','Our task page is currently in development. Soon, you’ll be able to earn Stars by watching short promotional videos.']
-]
 const currentAccordion = ref(0)
 const switchAccordion = (type) => currentAccordion.value = type
 const isAccordionActive = (index) => currentAccordion.value === index
@@ -20,45 +11,45 @@ const isAccordionActive = (index) => currentAccordion.value === index
     <main class="gap-28 p-24">
         <div class="aboutus-cover flex-col gap-40">
             <div class="text-white aboutus-btn btn text-16">
-                Connect Wallet
+                {{ AppData.text[currentLanguage].aboutuspage.connectWallet }}
                 <img src="../assets/img/wallet.svg" alt="" class="img-20">
             </div>
-            <p class="aboutus-cover-header text-32 lh-110 tac">The Best Choice for Purchasing Telegram Stars and Premium</p>
+            <p class="aboutus-cover-header text-32 lh-110 tac">{{ AppData.text[currentLanguage].aboutuspage.theBestChoiceforPurchasingTelegramStarsandPremium }}</p>
             <div class="aboutus-cover-card rounded-18 flex-col items-center justify-center gap-32">
                 <img src="../assets/img/Duck.svg" alt="" class="aboutus-cover-card-img">
-                <p class="text-white text-24 lh-100 tac">Pay with TON, USDT or card payments. </p>
-                <p class="text-16 lh-120 tac">Enjoy lower prices than the official Telegram bot with no KYC verification required</p>
+                <p class="text-white text-24 lh-100 tac">{{ AppData.text[currentLanguage].aboutuspage.paywithTONUSDTorcardpayments }}</p>
+                <p class="text-16 lh-120 tac">{{ AppData.text[currentLanguage].aboutuspage.enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired }}</p>
             </div>
         </div>
         <div class="aboutus-other">
-            <p class="text-16 lh-120 mb-12">About us</p>
+            <p class="text-16 lh-120 mb-12">{{ AppData.text[currentLanguage].aboutuspage.aboutus }}</p>
             <div class="aboutus-other-cards">
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">bought today</p>
+                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughttoday }}</p>
                 </div>
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">bought yesterday</p>
+                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughtyesterday }}</p>
                 </div>
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">bought all time</p>
+                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughtalltime }}</p>
                 </div>
                 <div class="aboutus-other-card">
                     <img src="../assets/img/Star.svg" alt="" class="img-16">
                     <p class="text-24 text-white">100 000</p>
-                    <p class="text-14 lh-120 jse">bought month premium</p>
+                    <p class="text-14 lh-120 jse">{{ AppData.text[currentLanguage].aboutuspage.boughtmonthpremium }}</p>
                 </div>
             </div>
         </div>
         <div class="aboutus-bottom">
-            <p class="text-16 lh-120 mb-12">FAQ</p>
+            <p class="text-16 lh-120 mb-12">{{ AppData.text[currentLanguage].aboutuspage.FAQ }}</p>
             <div class="aboutus-bottom-accordion flex-col">
-                <div v-for="(accordion, index) in AccordionData" :key="index"
+                <div v-for="(accordion, index) in AppData.text[currentLanguage].aboutuspage.FAQData" :key="index"
                     @click="switchAccordion(index)"
                     class="aboutus-bottom-accordion-item">
                     <div class="aboutus-bottom-accordion-item-top flex-row items-center">
