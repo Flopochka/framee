@@ -65,6 +65,29 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
             </div>
         </div>
     </div>
+    <div @click="toggleModal(null)" class="lang-menu madal-screen" :class="{ 'madal-active': activeModal == 'withdrawton' }">
+        <div @click.stop class="lang-menu-head madal-screen-head">
+            <div class="madal-screen-swipka"></div>
+            <p class="text-20 madal-screen-title">Your balance: 10.23 <img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
+            <div @click="toggleModal(null)" class="madal-screen-close">
+                <img src="../assets/img/Cross.svg" alt="" class="img-24">
+            </div>
+        </div>
+        <div @click.stop class="lang-menu-body madal-screen-body madal-screen-body-high jcsb">
+            <div class="withdrawton-inputs flex-col gap-8">
+                <p class="pl-12 text-14">Ammount</p>
+                <input v-model.number="stars"  type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 0.3" min="0.3" max="1000000">
+                <p class="pl-12 text-14">Wallet</p>
+                <input v-model.number="stars"  type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2">
+                <div class="withdrawton-info gap-12">
+                    <p style="grid-area: A;" class="text-16 text-white">You get</p>
+                    <p class="text-24 text-white">0.35 TON</p>
+                    <p class="text-14 text-white-60 jse">Fee  0.3 TON</p>
+                </div>
+            </div>
+            <div class="withdraw-btn btn text-17">Withdraw in TON</div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -91,5 +114,22 @@ defineProps(['AppData', 'activeModal', 'toggleModal', 'currentLanguage', 'switch
     width: 40px;
     border-radius: 50%;
     background: var(--Surface-white-20, #FFFFFF33);
+}
+.withdraw-inp {
+    padding: 15px 12px;
+    border: 0;
+    border: 2px solid #00000000;
+}
+.withdraw-inp:focus-visible{
+    border: 2px solid var(--blue-500);
+    outline: none;
+}
+.withdrawton-info{
+    display: grid;
+    grid-template-areas: "A A""B C";
+}
+.withdraw-btn{
+    background: linear-gradient(129.45deg, #4DA9EC 9.38%, #0F67BE 117.65%);
+
 }
 </style>

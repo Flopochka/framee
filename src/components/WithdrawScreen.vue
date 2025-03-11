@@ -8,8 +8,8 @@ defineProps(['toggleModal', 'currentLanguage'])
         <div class="withdraw-info">
             <p class="text-20 text-white">Your balance</p>
             <p class="text-24 text-white jse">10.23<img src="../assets/img/TONMinimal.svg" alt="" class="img-20"></p>
-            <div style="grid-area: C;" class="withdraw-ton-btn btn text-17 text-white letter-spacing-04">Withdraw in TON</div>
-            <div style="grid-area: D;" class="withdraw-stars-btn btn"><p class="wis text-17 letter-spacing-04">Withdraw in Stars</p></div>
+            <div @click="toggleModal('withdrawton')" style="grid-area: C;" class="withdraw-ton-btn btn text-17 text-white letter-spacing-04">Withdraw in TON</div>
+            <div @click="toggleModal('withdrawstars')" style="grid-area: D;" class="withdraw-stars-btn btn"><p class="wis text-17 letter-spacing-04">Withdraw in Stars</p></div>
         </div>
         <div class="referal-info flex-col">
             <p class="text-20 text-white">Your Referals</p>
@@ -19,10 +19,10 @@ defineProps(['toggleModal', 'currentLanguage'])
                     <p class="text-20 text-white">Alex Makit</p>
                     <p class="text-16 text-white-60">@alexafani</p>
                 </div>
-                <div class="referal-card">
-                    <img src="../assets/img/TESTReferalPhoto.png" alt="" class="img-16">
-                    <p class="text-16">Pavel</p>
-                    <p class="text-16">+ 15000<img src="../assets/img/TONMinimal.svg" alt="" class="img-16"></p>
+                <div v-for="i in [,,,,]" class="referal-card items-center gap-8">
+                    <img src="../assets/img/TESTReferalPhoto.png" alt="" class="img-40 rounded-20">
+                    <p class="text-16 text-white-60">Pavel</p>
+                    <p class="text-16 jse">+ 15000<img src="../assets/img/TONMinimal.svg" alt="" class="img-16"></p>
                 </div>
             </div>
         </div>
@@ -69,6 +69,19 @@ defineProps(['toggleModal', 'currentLanguage'])
     gap: 12px;
 }
 .referal-card {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
     padding: 0 16px;
+    width: 100%;
+    position: relative;
+}
+.referal-card:nth-child(n + 3)::after {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 1px;
+    background: var(--blue-900-60);
+    left: 10%;
+    top: -4px;
 }
 </style>

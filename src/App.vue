@@ -404,6 +404,11 @@ const switchLanguage = (lang) => {currentLanguage.value = lang}
 </script>
 
 <template>
+    <span class="smosh">
+      <div class="smosh1"></div>
+      <div class="smosh2"></div>
+      <div class="smosh3"></div>
+    </span>
     <div class="screen" :style="{transform: `translateX(-${currentScreen * 100}vw)`}">
         <div class="screen-item">
             <MainStars :AppData="AppData" :currentLanguage="currentLanguage"/>
@@ -418,7 +423,7 @@ const switchLanguage = (lang) => {currentLanguage.value = lang}
             <Profile :AppData="AppData" :currentLanguage="currentLanguage" :toggleModal="toggleModal" :switchScreen="switchScreen"/>
         </div>
         <div class="screen-item">
-            <WithdrawScreen :AppData="AppData" :currentLanguage="currentLanguage"/>
+            <WithdrawScreen :AppData="AppData" :currentLanguage="currentLanguage" :toggleModal="toggleModal"/>
         </div>
     </div>
     <MenuModule :switchScreen="switchScreen" />
@@ -433,6 +438,7 @@ const switchLanguage = (lang) => {currentLanguage.value = lang}
         transition: transform 0.3s;
         position: relative;
         height: 100vh;
+        backdrop-filter: blur(165.10000610351562px)
     }
     .screen-item {
         overflow-x: hidden;
@@ -441,6 +447,42 @@ const switchLanguage = (lang) => {currentLanguage.value = lang}
         transition: max-height 0.3s;
         width: 100%;
         position: relative;
-        backdrop-filter: blur(225.8000030517578px)
+    }
+    .smosh {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        z-index: -1;
+        /* backdrop-filter: blur(165.10000610351562px) */
+    }
+    .smosh1 {
+        position: absolute;
+        width: 534px;
+        height: 470px;
+        top: -290px;
+        left: -71px;
+        background: #D9D9D94D;
+    }
+    .smosh2 {
+        position: absolute;
+        width: 207px;
+        height: 182px;
+        top: 401px;
+        left: 252px;    
+        background: #D9D9D94D;
+        backdrop-filter: blur(300px)
+    }
+    .smosh3 {
+        position: absolute;
+        width: 207px;
+        height: 182px;
+        top: 692px;
+        left: -59px;
+        background: #D9D9D94D;
     }
 </style>
