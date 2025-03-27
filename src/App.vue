@@ -6,14 +6,9 @@ import AboutUs from "./components/AboutUs.vue";
 import Profile from "./components/Profile.vue";
 import MadalScreens from "./components/MadalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
-import { ref } from "vue";
+import { useScreenStore } from "./stores/screen";
 
-const currentScreen = ref(0);
-
-// Переключение экрана и модального окна
-const switchScreen = (type) => {
-  currentScreen.value = type;
-};
+const { getCurrentScreen } = useScreenStore();
 </script>
 
 <template>
@@ -24,10 +19,10 @@ const switchScreen = (type) => {
   </span>
   <div
     class="screen"
-    :style="{ transform: `translateX(-${currentScreen * 100}vw)` }"
+    :style="{ transform: `translateX(-${getCurrentScreen() * 100}vw)` }"
   >
     <div class="screen-item">
-      <MainStars/>
+      <MainStars />
     </div>
     <div class="screen-item">
       <Tasks />
@@ -36,14 +31,14 @@ const switchScreen = (type) => {
       <AboutUs />
     </div>
     <div class="screen-item">
-      <Profile :switchScreen="switchScreen" />
+      <Profile />
     </div>
     <div class="screen-item">
-      <WithdrawScreen/>
+      <WithdrawScreen />
     </div>
   </div>
-  <MenuModule :switchScreen="switchScreen" />
-  <MadalScreens/>
+  <MenuModule />
+  <MadalScreens />
 </template>
 
 <style scoped>

@@ -36,7 +36,7 @@ const { getTranslation } = useLanguageStore();
         <div class="referal-card-head items-center">
           <img
             style="grid-area: A"
-            src="../assets/img/testuserphoto.png"
+            src="../assets/img/TESTUserPhoto.png"
             alt=""
             class="img-44 rounded-22"
           />

@@ -1,10 +1,11 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
+import { useScreenStore } from "../stores/screen";
 
+const { switchScreen } = useScreenStore();
 const { toggleModal } = useModalStore();
-const { getTranslation, langs, getCurrentLanguage} = useLanguageStore();
-defineProps(["switchScreen"]);
+const { getTranslation, langs, getCurrentLanguage } = useLanguageStore();
 </script>
 
 <template>
@@ -71,7 +72,9 @@ defineProps(["switchScreen"]);
         @click="toggleModal('lang')"
         class="user-language-item rounded-10 bg-blue-900 flex-row items-center"
       >
-        <p class="text-16 text-neutral-200">{{ langs[getCurrentLanguage()] }}</p>
+        <p class="text-16 text-neutral-200">
+          {{ langs[getCurrentLanguage()] }}
+        </p>
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24" />
       </div>
     </div>
@@ -102,6 +105,7 @@ defineProps(["switchScreen"]);
 .user-stat-box-btn-text {
   display: table;
   background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: #0b2349;
@@ -135,13 +139,9 @@ defineProps(["switchScreen"]);
   padding: 13px;
   background: var(--white-100);
 }
-.user-buttons-1 {
-}
 .user-buttons-1-item {
   justify-content: space-between;
   padding: 12px;
-}
-.user-language {
 }
 .user-language-item {
   justify-content: space-between;
