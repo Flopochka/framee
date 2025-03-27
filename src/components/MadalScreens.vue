@@ -39,11 +39,11 @@ const {getTranslation, switchLanguage, langs, getCurrentLanguage} = useLanguageS
             <p class="text-14 pl-12">{{ getTranslation('Apr') }}, 17</p>
             <div class="history-cards flex-col rounded-24">
                 <div class="history-card flex-row items-center">
-                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/Stargold.svg" alt="" class="img-20"></div>
+                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/StarGold.svg" alt="" class="img-20"></div>
                     <p class="text-14">{{ getTranslation('Buy') }} 100 {{ getTranslation('Stars') }} {{ getTranslation('for') }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
-                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/Starpremium.svg" alt="" class="img-20"></div>
+                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/StarPremium.svg" alt="" class="img-20"></div>
                     <p class="text-14">{{ getTranslation('Buy') }} {{ getTranslation('Premium3months') }} {{ getTranslation('for') }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
@@ -54,11 +54,11 @@ const {getTranslation, switchLanguage, langs, getCurrentLanguage} = useLanguageS
             <p class="text-14 pl-12">{{ getTranslation('Apr') }}, 17</p>
             <div class="history-cards flex-col rounded-24">
                 <div class="history-card flex-row items-center">
-                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/Stargold.svg" alt="" class="img-20"></div>
+                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/StarGold.svg" alt="" class="img-20"></div>
                     <p class="text-14">{{ getTranslation('Buy') }} 100 {{ getTranslation('Stars') }} {{ getTranslation('for') }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
-                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/Starpremium.svg" alt="" class="img-20"></div>
+                    <div class="history-img flex-row justify-center items-center"><img src="../assets/img/StarPremium.svg" alt="" class="img-20"></div>
                     <p class="text-14">{{ getTranslation('Buy') }} {{ getTranslation('Premium3months') }} {{ getTranslation('for') }} @ahillary</p>
                 </div>
                 <div class="history-card flex-row items-center">
