@@ -6,13 +6,17 @@ import { useScreenStore } from "../stores/screen";
 const { switchScreen } = useScreenStore();
 const { toggleModal } = useModalStore();
 const { getTranslation, langs, getCurrentLanguage } = useLanguageStore();
+
+function linkTo(e) {
+  window.location.href = e
+}
 </script>
 
 <template>
   <main class="gap-28 p-24">
     <div class="user-stat-box rounded-12">
-      <p class="text-16">{{ getTranslation("totalUsers") }}</p>
-      <p class="text-16">{{ getTranslation("totalEarnings") }}</p>
+      <p class="text-16 tac">{{ getTranslation("totalUsers") }}</p>
+      <p class="text-16 tac">{{ getTranslation("totalEarnings") }}</p>
       <p class="text-20 lh-120 flex-row items-center justify-center gap-4">
         3
         <img src="../assets/img/People.svg" alt="" class="img-24" />
@@ -53,12 +57,14 @@ const { getTranslation, langs, getCurrentLanguage } = useLanguageStore();
       </div>
       <div
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center"
+        @click="linkTo('https://t.me/leshaweb')"
       >
         <p class="text-16 text-neutral-200">{{ getTranslation("Support") }}</p>
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center"
+        @click="linkTo('https://t.me/leshaweb')"
       >
         <p class="text-16 text-neutral-200">
           {{ getTranslation("OurTelegram") }}
