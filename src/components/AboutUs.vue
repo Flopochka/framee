@@ -14,7 +14,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
     <div class="aboutus-cover flex-col gap-40">
       <div class="text-white aboutus-btn btn text-16">
         {{ getTranslation("connectWallet") }}
-        <img src="../assets/img/wallet.svg" alt="" class="img-20" />
+        <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
       </div>
       <p class="aboutus-cover-header text-32 lh-110 tac">
         {{
