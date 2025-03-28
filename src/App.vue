@@ -12,10 +12,13 @@ const { getCurrentScreen } = useScreenStore();
 </script>
 
 <template>
-  <span class="smosh">
-    <div class="smosh1"></div>
-    <div class="smosh2"></div>
-    <div class="smosh3"></div>
+  <span class="blur-box">
+    <span class="land-fill"></span>
+    <span class="smosh">
+      <div class="smosh1"></div>
+      <div class="smosh2"></div>
+      <div class="smosh3"></div>
+    </span>
   </span>
   <div
     class="screen"
@@ -49,7 +52,7 @@ const { getCurrentScreen } = useScreenStore();
   transition: transform 0.3s;
   position: relative;
   height: 100vh;
-  backdrop-filter: blur(165.10000610351562px);
+  /* backdrop-filter: blur(165.10000610351562px); */
 }
 .screen-item {
   overflow-x: hidden;
@@ -59,41 +62,57 @@ const { getCurrentScreen } = useScreenStore();
   width: 100%;
   position: relative;
 }
-.smosh {
+.blur-box{
   position: fixed;
   width: 100%;
   height: 100vh;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
+  left: 0;
   overflow: hidden;
   z-index: -1;
-  /* backdrop-filter: blur(165.10000610351562px) */
+  filter: blur(225.8px);
+}
+.land-fill {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  bottom: 0;
+  left: 0;
+  background: var(--blue-950);
+}
+.smosh {
+  position: fixed;
+  width: 133%;
+  height: 133vh;
+  bottom: 0;
+  left: -16.5%;
+  filter: blur(165.1px);
 }
 .smosh1 {
   position: absolute;
-  width: 534px;
-  height: 470px;
-  top: -290px;
-  left: -71px;
+  width: 100%;
+  height: 40%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
   background: #d9d9d94d;
 }
 .smosh2 {
   position: absolute;
-  width: 207px;
-  height: 182px;
-  top: 401px;
-  left: 252px;
+  width: 39%;
+  height: 15.6%;
+  border-radius: 50%;
+  bottom: 0;
+  left: 0;
   background: #d9d9d94d;
-  backdrop-filter: blur(300px);
 }
 .smosh3 {
   position: absolute;
-  width: 207px;
-  height: 182px;
-  top: 692px;
-  left: -59px;
+  width: 39%;
+  height: 15.6%;
+  border-radius: 50%;
+  bottom: 25%;
+  right: 0;
   background: #d9d9d94d;
 }
 </style>
