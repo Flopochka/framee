@@ -52,7 +52,6 @@ const { getCurrentScreen } = useScreenStore();
   transition: transform 0.3s;
   position: relative;
   height: 100vh;
-  /* backdrop-filter: blur(165.10000610351562px); */
 }
 .screen-item {
   overflow-x: hidden;
@@ -73,46 +72,37 @@ const { getCurrentScreen } = useScreenStore();
   filter: blur(225.8px);
 }
 .land-fill {
-  position: fixed;
   width: 100%;
   height: 100vh;
-  bottom: 0;
-  left: 0;
   background: var(--blue-950);
 }
 .smosh {
-  position: fixed;
+  position: absolute;
   width: 133%;
   height: 133vh;
   bottom: 0;
   left: -16.5%;
   filter: blur(165.1px);
 }
-.smosh1 {
+.smosh1,.smosh2,.smosh3{
+  width: 39%;
+  height: 15.6%;
   position: absolute;
+  border-radius: 50%;
+  background: #d9d9d94d;
+}
+.smosh1 {
   width: 100%;
   height: 40%;
   top: 0;
   left: 0;
-  border-radius: 50%;
-  background: #d9d9d94d;
 }
 .smosh2 {
-  position: absolute;
-  width: 39%;
-  height: 15.6%;
-  border-radius: 50%;
   bottom: 0;
   left: 0;
-  background: #d9d9d94d;
 }
 .smosh3 {
-  position: absolute;
-  width: 39%;
-  height: 15.6%;
-  border-radius: 50%;
   bottom: 25%;
   right: 0;
-  background: #d9d9d94d;
 }
 </style>

@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { computed } from "vue";
 import tonsvg from "../assets/img/TON Network.svg";
 import usdtsvg from "../assets/img/USDT.svg";
@@ -7,6 +6,7 @@ import sbpsvg from "../assets/img/SBP.svg";
 import visamastercardsvg from "../assets/img/VISA & MasterCard.svg";
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
+import { ref, onMounted, watch, nextTick } from "vue";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -17,12 +17,58 @@ const currentPayment = ref(0);
 const stars = ref(null);
 const paymentsvg = ref([tonsvg, usdtsvg, sbpsvg, visamastercardsvg]);
 
-const isPremiumSelected = computed(() => currentType.value === 1);
+const isPremiumSelected = computed(() => currentType.value == 1);
 const switchType = (type) => (currentType.value = type);
 const switchPremium = (type) => (currentPremium.value = type);
 const switchPayment = (type) => (currentPayment.value = type);
 const isPremiumActive = (index) => currentPremium.value === index;
 const isPaymentActive = (index) => currentPayment.value === index;
+
+const premiumBox = ref(null); // Ref для premiumBox
+const premiumBoxHeight = ref(0); // Реактивная высота premiumBox
+
+const starBox = ref(null); // Ref
+const starBoxHeight = ref(0); //
+
+// Функция для получения высоты premiumBox
+const updatePremiumBoxHeight = () => {
+  if (premiumBox.value) {
+    premiumBoxHeight.value = premiumBox.value.offsetHeight;
+  }
+  if (starBox.value) {
+    starBoxHeight.value = starBox.value.offsetHeight;
+  }
+  console.log(premiumBoxHeight.value, starBoxHeight.value)
+};
+
+// Вызываем при монтировании
+onMounted(async () => {
+  // Ждём, пока DOM обновится
+  await nextTick();
+  updatePremiumBoxHeight();
+});
+
+// Отслеживаем изменения currentType
+watch(currentType, async () => {
+  // Ждём, пока DOM обновится после изменения currentType
+  await nextTick();
+  updatePremiumBoxHeight();
+});
+
+// Отслеживаем изменения размеров premiumBox (например, при изменении содержимого)
+onMounted(() => {
+  if (premiumBox.value) {
+    const resizeObserver = new ResizeObserver(() => {
+      updatePremiumBoxHeight();
+    });
+    resizeObserver.observe(premiumBox.value);
+
+    // Очищаем наблюдатель при размонтировании
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }
+});
 </script>
 
 <template>
@@ -57,15 +103,18 @@ const isPaymentActive = (index) => currentPayment.value === index;
       <div
         class="select-top-swith"
         :style="{
-          transform:
-            currentType === 0
-              ? 'translateX(0)'
-              : 'translateX(calc(-50% - 12px))',
+          transform: currentType === 0 ? 'translateX(0)' : 'translateX(-100vw)',
+          maxHeight: currentType === 0
+            ? starBoxHeight + 'px'
+            : premiumBoxHeight + 'px',
+            paddingBottom: currentType === 0
+              ? '0px'
+              : premiumBoxHeight-starBoxHeight + 'px',
         }"
       >
         <div
           class="select-top-stars flex-col gap-16"
-          :style="{ maxHeight: currentType === 0 ? '100vh' : '0' }"
+          ref="starBox"
         >
           <div class="select-top-item flex-col gap-6">
             <p class="pl-12">{{ getTranslation("amount") }}</p>
@@ -102,10 +151,7 @@ const isPaymentActive = (index) => currentPayment.value === index;
             </div>
           </div>
         </div>
-        <div
-          class="select-top-premium flex-col gap-16"
-          :style="{ maxHeight: isPremiumSelected ? '100vh' : '0' }"
-        >
+        <div class="select-top-premium flex-col gap-16" ref="premiumBox">
           <p class="pl-12 text-14 text-neutral-300">
             {{ getTranslation("subscription") }}
           </p>
@@ -179,6 +225,7 @@ const isPaymentActive = (index) => currentPayment.value === index;
 
 <style scoped>
 main {
+  width: 100%;
   display: grid;
   grid-template-rows: repeat(3, auto) 1fr;
   align-items: end;
@@ -199,16 +246,11 @@ main {
 }
 .select-top {
   width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+  max-width: 100vw;
 }
 .select-top-swith {
-  display: grid;
-  width: calc(200% + 24px);
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  overflow-y: hidden;
-  transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
+  position: relative;
+  transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
 }
 .select-top-item {
   gap: 6px;
@@ -223,7 +265,8 @@ main {
   outline: none;
 }
 .select-top-stars {
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s;
+  height: fit-content;
 }
 .select-top-stars-box {
   display: grid;
@@ -243,9 +286,12 @@ main {
   line-height: 22px;
 }
 .select-top-premium {
+  position: absolute;
+  top: 0;
+  left: 100vw;
+  width: 100%;
   height: auto;
-  max-height: 0;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s;
 }
 .select-top-premium-box {
   display: grid;
@@ -277,10 +323,6 @@ main {
 .select-top-premium-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
 }
-.select-top-premium-card-img {
-}
-.select-bottom {
-}
 .select-botoom-cards {
   grid-template-rows: repeat(4, 1fr);
 }
@@ -298,11 +340,11 @@ main {
 }
 .bottom-button-stars {
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s;
 }
 .bottom-button-prem {
   max-height: 0px;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s;
 }
 </style>

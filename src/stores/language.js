@@ -55,7 +55,6 @@ export const useLanguageStore = defineStore("language", () => {
     if(localSavedLang)Object.assign(langsData.value, localSavedLang)
 
     // Устанавливаем начальные данные для текущего языка
-    console.log(localSavedLang, localSavedLang ? "Use data from storage" : "Use English as default")
     TextData.value =
       localSavedLang || langsData.value["en"];
 
@@ -67,7 +66,6 @@ export const useLanguageStore = defineStore("language", () => {
     results.forEach((langData) => Object.assign(langsData.value, langData));
 
     // Обновляем TextData после загрузки всех языков
-    console.log(langsData.value[currentLanguage.value] ? "Чёт загрузилось" : "Кукиш", langsData.value)
     TextData.value =
       langsData.value[currentLanguage.value] || langsData.value["en"];
 
