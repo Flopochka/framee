@@ -10,6 +10,7 @@ const {getTranslation, switchLanguage, langs, getCurrentLanguage} = useLanguageS
 const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } = useUserStore();
 
 const userId = ref(null);
+const withdrawTonAmmount = ref(null);
 
 const fetchUserHistory = async () => {
   const payload = {
@@ -110,12 +111,12 @@ onMounted(() => {
         <div @click.stop class="withdrawton-body madal-screen-body madal-screen-body-high jcsb">
             <div class="withdraw-inputs flex-col gap-8">
                 <p class="pl-14 text-neutral-300 text-14">{{ getTranslation('Ammount') }}</p>
-                <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 0.3" min="0.3" max="1000000">
+                <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="Min 0.3" :min="getUserBalance() > 0.3? 0.3 : 0" :max="getUserBalance() > 0.3 ? min(getUserBalance(), 1000000) : 0" v-model="withdrawTonAmmount">
                 <p class="pl-14 text-neutral-300 text-14">{{ getTranslation('Wallet') }}</p>
                 <input type="number" class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16" placeholder="@UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2">
-                <div class="withdraw-info gap-12">
+                <div class="withdraw-info gap-12" v-if="withdrawTonAmmount">
                     <p style="grid-area: A;" class="text-16 font-400 text-white">{{ getTranslation('Youget') }}</p>
-                    <p class="text-24 text-white">0.35 TON</p>
+                    <p class="text-24 text-white">{{withdrawTonAmmount}} TON</p>
                     <p class="text-14 font-400 text-white-60 jse">{{ getTranslation('Fee') }}  0.3 TON</p>
                 </div>
             </div>
