@@ -135,13 +135,12 @@ onMounted(() => {
 .wis {
   display: table;
   background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .referal-info {
   gap: 13px;
-}
-.text-16 {
 }
 .referal-cards {
   display: grid;
