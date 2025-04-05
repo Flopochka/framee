@@ -65,7 +65,7 @@ onMounted(() => {
       <div
         @click="toggleModal('withdrawton')"
         style="grid-area: C"
-        class="withdraw-ton-btn btn text-17 text-white letter-spacing-04"
+        class="withdraw-ton-btn font-600 btn text-17 text-white letter-spacing-04"
       >
         {{ getTranslation("WithdrawinTON") }}
       </div>
@@ -74,7 +74,7 @@ onMounted(() => {
         style="grid-area: D"
         class="withdraw-stars-btn btn"
       >
-        <p class="wis text-17 letter-spacing-04">
+        <p class="wis text-17 font-600 letter-spacing-04">
           {{ getTranslation("WithdrawinStars") }}
         </p>
       </div>
@@ -110,7 +110,7 @@ onMounted(() => {
             class="img-40 rounded-20"
           />
           <p class="text-16 text-white-60">{{ referal.name }}</p>
-          <p class="text-16 jse">
+          <p class="text-16 text-neutral-200 jse flex-row">
             + {{ referal.income
             }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
           </p>

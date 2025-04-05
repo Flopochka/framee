@@ -5,11 +5,11 @@ const { getTranslation } = useLanguageStore();
 </script>
 
 <template>
-  <main class="gap-28 p-24">
+  <main class="gap-12 p-24">
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
     <div class="tasks-cards flex-col gap-8">
       <div
-        v-for="i in [, , ,]"
+        v-for="i in [, , , ,]"
         class="task-card bg-blue-900 rounded-12 items-center"
       >
         <p class="text-16 text-white">
@@ -34,10 +34,11 @@ main {
   padding: 14px 12px;
   display: grid;
   grid-template-areas: "A B" "C B";
+  gap: 6px;
 }
 .task-btn {
   background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
-  padding: 4px 11px;
+  padding: 3px 11px;
   grid-area: B;
   width: fit-content;
   justify-self: end;

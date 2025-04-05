@@ -118,7 +118,7 @@ onMounted(() => {
     <div class="select-type flex-row gap-4 bg-blue-900 rounded-10 p-2">
       <div
         @click="switchType(0)"
-        class="select-type-item flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
+        class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
         :class="{ 'select-type-item-selected': currentType === 0 }"
       >
         {{ getTranslation("stars") }}
@@ -126,7 +126,7 @@ onMounted(() => {
       </div>
       <div
         @click="switchType(1)"
-        class="select-type-item flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
+        class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
         :class="{ 'select-type-item-selected': currentType === 1 }"
       >
         {{ getTranslation("premium") }}
@@ -174,21 +174,21 @@ onMounted(() => {
           <div class="select-top-item select-top-stars-box">
             <div
               @click="stars += 100"
-              class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
             >
               +100
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
             </div>
             <div
               @click="stars += 1000"
-              class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
             >
               +1 000
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
             </div>
             <div
               @click="stars += 10000"
-              class="select-top-stars-card flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
             >
               +10 000
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
@@ -220,7 +220,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="select-bottomm flex-col gap-4">
-      <p class="pl-12">{{ getTranslation("payment") }}</p>
+      <p class="pl-12 text-white-70">{{ getTranslation("payment") }}</p>
       <div class="select-botoom-cards grid-row gap-8">
         <div
           v-for="(payment, index) in getTranslation('paymentmetdods')"
@@ -233,7 +233,7 @@ onMounted(() => {
             class="custom-radio"
             :class="{ 'custom-radio-active': isPaymentActive(index) }"
           ></div>
-          <p class="text-16 text-white">{{ payment }}</p>
+          <p class="text-16 font-400 text-white-75">{{ payment }}</p>
           <img :src="paymentsvg[index]" alt="" class="img-28" />
         </div>
       </div>
@@ -403,6 +403,10 @@ main {
 }
 .select-bottom-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
+}
+.select-bottom-card-active p{
+  font-weight: 500;
+  color: var(--white-100);
 }
 .bottom-button {
   width: 100%;
