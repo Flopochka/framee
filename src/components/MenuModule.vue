@@ -18,7 +18,7 @@ const PressswitchScreen = (type) => {
       :class="{ 'menu-item-active': activeScreen === 0 }"
     >
       <img
-        src="../assets/img/Icon.svg"
+        src="../assets/img/Icon.webp"
         alt=""
         class="menu-item-img replenishment-img"
       />

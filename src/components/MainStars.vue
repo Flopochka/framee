@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import tonsvg from "../assets/img/TON Network.svg";
 import usdtsvg from "../assets/img/USDT.svg";
-import sbpsvg from "../assets/img/SBP.svg";
+import sbpsvg from "../assets/img/SBP.webp";
 import visamastercardsvg from "../assets/img/VISA & MasterCard.svg";
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
@@ -134,7 +134,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="select-top flex-col gap-16">
-      <div class="select-top-item with-dog flex-col gap-6">
+      <div :class="targetUserName ? 'with-dog-inputed':''" class="select-top-item with-dog flex-col gap-6">
         <p class="pl-12">{{ getTranslation("username") }}</p>
         <input
           type="text"
@@ -309,15 +309,17 @@ main {
 .with-dog {
   position: relative;
 }
-
 .with-dog::after{
   content: '@';
   position: absolute;
   font-size: 16px;
   bottom: 18px;
   left: 12px;
-  color: var(--neutral-700);
+  color: var(--neutral-500);
   font-family: Geist;
+}
+.with-dog-inputed::after{
+  color: var(--neutral-700);
 }
 .select-top-item-input-recipient{
   position: absolute;
