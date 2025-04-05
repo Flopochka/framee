@@ -7,15 +7,22 @@ import visamastercardsvg from "../assets/img/VISA & MasterCard.svg";
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { ref, onMounted, watch, nextTick } from "vue";
+import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 
+const targetUserName = ref(null);
+const targetUserNameChanged = ref(0);
 const currentType = ref(0);
 const currentPremium = ref(0);
 const currentPayment = ref(0);
 const stars = ref(null);
 const paymentsvg = ref([tonsvg, usdtsvg, sbpsvg, visamastercardsvg]);
+const recipientName = ref(null);
+const recipientPhoto = ref(null);
+const recipient = ref(null);
+const recipientCorrect = ref(true);
 
 const isPremiumSelected = computed(() => currentType.value == 1);
 const switchType = (type) => (currentType.value = type);
@@ -30,6 +37,42 @@ const premiumBoxHeight = ref(0); // Реактивная высота premiumBox
 const starBox = ref(null); // Ref
 const starBoxHeight = ref(0); //
 
+const searchRecipient = async (username) => {
+  console.log("Searching for:", username); // Заглушка
+  const payload = { username: username  };
+  try {
+    const result = await sendToBackend("/search_recipient", payload);
+    console.log("Response:", result);
+    var data = result.data.data;
+    if (result.data.status.message != "Пользователь не найден") {
+      recipientName.value = data.name
+      recipientPhoto.value = data.photo
+      recipient.value = data.recipient
+      recipientCorrect.value = true
+    } else {
+      recipient.value = null
+      recipientCorrect.value = false
+    }
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+watch(targetUserName, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    targetUserNameChanged.value = Date.now(); // Записываем время изменения
+
+    // Debounce: ждём 300 мс перед запросом
+    clearTimeout(window.searchTimeout); // Очищаем предыдущий таймер
+    window.searchTimeout = setTimeout(async () => {
+      if (newValue) {
+        // Проверяем, что значение не пустое
+        await searchRecipient(newValue);
+      }
+    }, 300);
+  }
+});
+
 // Функция для получения высоты premiumBox
 const updatePremiumBoxHeight = () => {
   if (premiumBox.value) {
@@ -38,7 +81,6 @@ const updatePremiumBoxHeight = () => {
   if (starBox.value) {
     starBoxHeight.value = starBox.value.offsetHeight;
   }
-  console.log(premiumBoxHeight.value, starBoxHeight.value)
 };
 
 // Вызываем при монтировании
@@ -92,30 +134,32 @@ onMounted(() => {
       </div>
     </div>
     <div class="select-top flex-col gap-16">
-      <div class="select-top-item flex-col gap-6">
+      <div class="select-top-item with-dog flex-col gap-6">
         <p class="pl-12">{{ getTranslation("username") }}</p>
         <input
           type="text"
+          :class="recipientCorrect ? '' : 'incorrect'"
           class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
-          placeholder="@example"
+          style="padding-left: 24px;"
+          placeholder="example"
+          v-model="targetUserName"
         />
+        <div class="select-top-item-input-recipient flex-row gap-16 items-center text-neutral-700" v-if="recipient">
+          <p>{{ recipientName }}</p>
+          <img class="img-32 rounded-50p" :src="'data:image/png;base64,'+recipientPhoto" alt="">
+        </div>
       </div>
       <div
         class="select-top-swith"
         :style="{
           transform: currentType === 0 ? 'translateX(0)' : 'translateX(-100vw)',
-          maxHeight: currentType === 0
-            ? starBoxHeight + 'px'
-            : premiumBoxHeight + 'px',
-            paddingBottom: currentType === 0
-              ? '0px'
-              : premiumBoxHeight-starBoxHeight + 'px',
+          maxHeight:
+            currentType === 0 ? starBoxHeight + 'px' : premiumBoxHeight + 'px',
+          paddingBottom:
+            currentType === 0 ? '0px' : premiumBoxHeight - starBoxHeight + 'px',
         }"
       >
-        <div
-          class="select-top-stars flex-col gap-16"
-          ref="starBox"
-        >
+        <div class="select-top-stars flex-col gap-16" ref="starBox">
           <div class="select-top-item flex-col gap-6">
             <p class="pl-12">{{ getTranslation("amount") }}</p>
             <input
@@ -250,18 +294,42 @@ main {
 }
 .select-top-swith {
   position: relative;
-  transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out,
+    padding-bottom 0.3s ease-in-out;
 }
 .select-top-item {
   gap: 6px;
+  position: relative;
 }
 .select-top-item-input-text {
   padding: 15px 12px;
   border: 0;
   border: 2px solid #00000000;
 }
+.with-dog {
+  position: relative;
+}
+
+.with-dog::after{
+  content: '@';
+  position: absolute;
+  font-size: 16px;
+  bottom: 18px;
+  left: 12px;
+  color: var(--neutral-700);
+  font-family: Geist;
+}
+.select-top-item-input-recipient{
+  position: absolute;
+  right: 12px;
+  bottom: 11.5px;
+}
 .select-top-item-input-text:focus-visible {
   border: 2px solid var(--blue-500);
+  outline: none;
+}
+.incorrect{
+  border: 2px solid var(--red) !important;
   outline: none;
 }
 .select-top-stars {

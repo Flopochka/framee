@@ -1,0 +1,7 @@
+[build]
+  publish = "dist"          # Папка сборки Vite
+  command = "npm run build" # Команда сборки
+  functions = "netlify/functions" # Папка с функциями
+
+[dev]
+  command = "vite"          # Для локальной разработки

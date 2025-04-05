@@ -1,9 +1,38 @@
 <script setup>
 import { useLanguageStore } from '../stores/language';
 import { useModalStore } from "../stores/modal";
+import { sendToBackend } from "../modules/fetch";
+import { ref, onMounted } from "vue";
 
 const { toggleModal, activeModal, getActiveModal } = useModalStore();
 const {getTranslation, switchLanguage, langs, getCurrentLanguage} = useLanguageStore();
+
+const userId = ref(null);
+
+const fetchUserHistory = async () => {
+  const payload = {
+    user_id: userId.value,
+  };
+  try {
+    const result = await sendToBackend("/get_user_history", payload);
+    const data = result.data.data;
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+// Инициализация user_id после загрузки компонента
+onMounted(() => {
+  if (window.Telegram?.WebApp?.initData) {
+    userId.value = window.Telegram.WebApp.initData.user.id;
+  } else {
+    userId.value = 1341978600; // Значение по умолчанию для отладки 227363776
+    // userId.value = 227363776; // Значение по умолчанию для отладки
+  }
+
+//   fetchUserHistory(); // Вызываем запрос после установки userId
+});
 </script>
 
 <template>
@@ -147,8 +176,6 @@ const {getTranslation, switchLanguage, langs, getCurrentLanguage} = useLanguageS
 </template>
 
 <style scoped>
-.lang-select-cards {
-}
 .lang-select-card {
     justify-content: space-between;
     padding: 12px 6px 12px 0;
@@ -186,9 +213,5 @@ const {getTranslation, switchLanguage, langs, getCurrentLanguage} = useLanguageS
 }
 .withdraw-btn{
     background: linear-gradient(129.45deg, #4DA9EC 9.38%, #0F67BE 117.65%);
-}
-.popup-block {
-}
-.popup-btn {
 }
 </style>

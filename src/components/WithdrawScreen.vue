@@ -1,9 +1,58 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
+import { sendToBackend } from "../modules/fetch";
+import { useUserStore } from "../stores/user";
+import { ref, onMounted } from "vue";
+import refPhoto from "../assets/img/TESTReferalPhoto.png";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
+const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } = useUserStore();
+
+const userId = ref(null);
+const referals = ref(null);
+
+const fetchUserReferals = async () => {
+  const payload = {
+    user_id: userId.value,
+  };
+  try {
+    const result = await sendToBackend("/get_user_referrals", payload);
+    const data = result.data.data;
+    console.log("Response:", result.data);
+    referals.value = data.income;
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+const fetchWithdraw = async () => {
+  const payload = {
+    user_id: userId.value,
+  };
+  try {
+    const result = await sendToBackend("/page_withdraw_info", payload);
+    const data = result.data.data;
+    console.log("Response:", result.data);
+    updateUser(data.user_profile.name, 'example', data.user_profile.photo, data.balance);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+// Инициализация user_id после загрузки компонента
+onMounted(() => {
+  if (window.Telegram?.WebApp?.initData) {
+    userId.value = window.Telegram.WebApp.initData.user.id;
+  } else {
+    // userId.value = 1341978600; // Значение по умолчанию для отладки
+    userId.value = 227363776; // Значение по умолчанию для отладки
+  }
+
+  fetchUserReferals(); // Вызываем запрос после установки userId
+  fetchWithdraw()
+});
 </script>
 
 <template>
@@ -11,7 +60,7 @@ const { getTranslation } = useLanguageStore();
     <div class="withdraw-info">
       <p class="text-20 text-white">{{ getTranslation("Yourbalance") }}</p>
       <p class="text-24 text-white jse">
-        10.23<img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
+        {{getUserBalance()}}<img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
       </p>
       <div
         @click="toggleModal('withdrawton')"
@@ -36,26 +85,34 @@ const { getTranslation } = useLanguageStore();
         <div class="referal-card-head items-center">
           <img
             style="grid-area: A"
-            src="../assets/img/TESTUserPhoto.png"
+            :src="
+              getUserPhoto()
+                ? 'data:image/png;base64,' + getUserPhoto()
+                : refPhoto
+            "
             alt=""
             class="img-44 rounded-22"
           />
-          <p class="text-20 text-white">Alex Makit</p>
-          <p class="text-16 text-white-60">@alexafani</p>
+          <p class="text-20 text-white">{{ getUserName() }}</p>
+          <p class="text-16 text-white-60">@{{getUser()}}</p>
         </div>
-        <div v-for="i in [, , , ,]" class="referal-card items-center gap-8">
+        <div
+          v-for="referal in referals"
+          class="referal-card items-center gap-8"
+        >
           <img
-            src="../assets/img/TESTReferalPhoto.png"
+            :src="
+              referal.photo
+                ? 'data:image/png;base64,' + referal.photo
+                : refPhoto
+            "
             alt=""
             class="img-40 rounded-20"
           />
-          <p class="text-16 text-white-60">Pavel</p>
+          <p class="text-16 text-white-60">{{ referal.name }}</p>
           <p class="text-16 jse">
-            + 15000<img
-              src="../assets/img/TONMinimal.svg"
-              alt=""
-              class="img-16"
-            />
+            + {{ referal.income
+            }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
           </p>
         </div>
       </div>

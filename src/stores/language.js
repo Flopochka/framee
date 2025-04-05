@@ -17,26 +17,35 @@ export const useLanguageStore = defineStore("language", () => {
     fa: "العربية",
   });
 
-  const tryParse = async (data) => {
-    if (data) {
-      try {
-        const parsedData = JSON.parse(data);
-        // Проверяем, что данные корректны
-        if (parsedData && typeof parsedData === "object") {
-          return parsedData;
-        }
-      } catch (error) {
-        console.error("Ошибка при загрузке languageData из localStorage:", error);
-        localStorage.removeItem("languageData"); // Удаляем некорректные данные
+  // Вспомогательная функция для парсинга данных из localStorage
+  const tryParse = (data) => {
+    if (!data) return null;
+    try {
+      const parsedData = JSON.parse(data);
+      if (parsedData && typeof parsedData === "object") {
+        return parsedData;
       }
+    } catch (error) {
+      console.error("Ошибка парсинга данных из localStorage:", error);
     }
-  }
+    return null;
+  };
 
   // Функция загрузки одного языка
   const loadLanguage = async (lang) => {
+    // Проверяем, есть ли язык в localStorage
+    const cachedData = tryParse(localStorage.getItem(`lang_${lang}`));
+    if (cachedData) {
+      return { [lang]: cachedData };
+    }
+
+    // Если в кэше нет, загружаем с сервера
     try {
-      const language = await import(`../assets/langs/${lang}.js`); // Путь относительно stores
-      return { [lang]: language.default };
+      const language = await import(`../assets/langs/${lang}.js`);
+      const langData = language.default;
+      // Сохраняем в localStorage
+      localStorage.setItem(`lang_${lang}`, JSON.stringify(langData));
+      return { [lang]: langData };
     } catch (error) {
       console.error(`Ошибка загрузки языка ${lang}:`, error);
       return { [lang]: null };
@@ -45,50 +54,71 @@ export const useLanguageStore = defineStore("language", () => {
 
   // Функция загрузки всех языков
   const loadAllLanguages = async () => {
-    const localSavedLang = {[localStorage.getItem("language")]:tryParse(localStorage.getItem("languageData"))}
-
     isLoading.value = true;
 
-    // Сначала загружаем английский язык (en)
-    const enData = await loadLanguage("en");
-    Object.assign(langsData.value, enData);
-    if(localSavedLang)Object.assign(langsData.value, localSavedLang)
+    // Получаем сохраненный текущий язык
+    const savedLangKey = localStorage.getItem("language") || "en";
+    const savedLangData = tryParse(
+      localStorage.getItem(`lang_${savedLangKey}`)
+    );
 
-    // Устанавливаем начальные данные для текущего языка
-    TextData.value =
-      localSavedLang || langsData.value["en"];
+    // Устанавливаем начальный язык
+    if (savedLangData) {
+      langsData.value[savedLangKey] = savedLangData;
+      TextData.value = savedLangData;
+      currentLanguage.value = savedLangKey;
+    } else {
+      const enData = await loadLanguage("en");
+      langsData.value["en"] = enData["en"];
+      TextData.value = enData["en"];
+      currentLanguage.value = "en";
+      localStorage.setItem("language", "en");
+    }
 
-    // Загружаем остальные языки
-    const langKeys =
-      Object.keys(langsData.value).filter((lang) => lang !== "en") || [];
-    const promises = langKeys.map((lang) => loadLanguage(lang));
-    const results = await Promise.all(promises);
-    results.forEach((langData) => Object.assign(langsData.value, langData));
+    // Загружаем остальные доступные языки
+    const languagesToLoad = Object.keys(langs).filter(
+      (lang) => !langsData.value[lang]
+    );
 
-    // Обновляем TextData после загрузки всех языков
-    TextData.value =
-      langsData.value[currentLanguage.value] || langsData.value["en"];
+    if (languagesToLoad.length > 0) {
+      const promises = languagesToLoad.map((lang) => loadLanguage(lang));
+      const results = await Promise.all(promises);
+      results.forEach((langData) => {
+        if (langData) {
+          Object.assign(langsData.value, langData);
+        }
+      });
+    }
 
     isLoading.value = false;
   };
 
   // Переключение языка
   const switchLanguage = async (lang) => {
+    if (!langs[lang]) {
+      console.warn(`Язык ${lang} не поддерживается`);
+      return;
+    }
+
     if (!langsData.value[lang]) {
-      // Если язык ещё не загружен, загружаем его
       isLoading.value = true;
       const langData = await loadLanguage(lang);
-      Object.assign(langsData.value, langData);
+      if (langData[lang]) {
+        langsData.value[lang] = langData[lang];
+      }
       isLoading.value = false;
     }
 
     if (langsData.value[lang]) {
       currentLanguage.value = lang;
       TextData.value = langsData.value[lang];
-      localStorage.setItem("language", lang); // Сохраняем выбранный язык
-      localStorage.setItem("languageData", JSON.stringify(langsData.value[lang]));
+      localStorage.setItem("language", lang);
     } else {
-      console.warn(`Language ${lang} not found`);
+      console.warn(`Не удалось загрузить язык ${lang}`);
+      // Возвращаемся к английскому в случае ошибки
+      if (lang !== "en") {
+        await switchLanguage("en");
+      }
     }
   };
 
@@ -97,12 +127,10 @@ export const useLanguageStore = defineStore("language", () => {
 
   // Геттер для получения конкретного перевода
   const getTranslation = (key) => {
-    return (
-      TextData.value[key] || tryParse(localStorage.getItem("languageData"))[key] || key
-    ); // Возвращаем ключ, если перевод не найден
+    return TextData.value[key] || langsData.value["en"]?.[key] || key;
   };
 
-  // Инициализация: загружаем языки при создании хранилища
+  // Инициализация
   loadAllLanguages();
 
   return {

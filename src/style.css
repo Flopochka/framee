@@ -48,6 +48,8 @@
     --neutral-900: #171717;
     --neutral-950: #0A0A0A;
 
+    --red: rgb(241, 79, 79);
+
     --white-60: #FFFFFF99;
     --white-75: #FFFFFFBF;
     --white-100: #FFFFFF;
@@ -149,6 +151,7 @@ body {
 .rounded-20 { border-radius: 20px; }
 .rounded-22 { border-radius: 22px; }
 .rounded-24 { border-radius: 24px; }
+.rounded-50p { border-radius: 50%; }
 .shadow-25 { box-shadow: 0px 2px 6px 0px var(--shadow-25); }
 
 /* Buttons and Cards */

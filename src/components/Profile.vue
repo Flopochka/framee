@@ -2,14 +2,47 @@
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useScreenStore } from "../stores/screen";
+import { sendToBackend } from "../modules/fetch";
+import { ref, onMounted } from "vue";
+
+const userId = ref(null);
+const referals_count = ref(0);
+const income = ref(0);
 
 const { switchScreen } = useScreenStore();
 const { toggleModal } = useModalStore();
-const { getTranslation, langs, getCurrentLanguage } = useLanguageStore();
+const { getTranslation, langs, getCurrentLanguage, switchLanguage } =
+  useLanguageStore();
 
 function linkTo(e) {
-  window.location.href = e
+  window.location.href = e;
 }
+
+const fetchUserInfo = async () => {
+  const payload = {
+    user_id: userId.value,
+  };
+  try {
+    const result = await sendToBackend("/get_user_info", payload);
+    const data = result.data.data;
+    referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
+    switchLanguage(data.language.slice(0, 2));
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+// Инициализация user_id после загрузки компонента
+onMounted(() => {
+  if (window.Telegram?.WebApp?.initData) {
+    userId.value = window.Telegram.WebApp.initData.user.id;
+  } else {
+    // userId.value = 1341978600; // Значение по умолчанию для отладки 227363776
+    userId.value = 227363776; // Значение по умолчанию для отладки
+  }
+  fetchUserInfo(); // Вызываем запрос после установки userId
+});
 </script>
 
 <template>
@@ -18,11 +51,11 @@ function linkTo(e) {
       <p class="text-16 tac">{{ getTranslation("totalUsers") }}</p>
       <p class="text-16 tac">{{ getTranslation("totalEarnings") }}</p>
       <p class="text-20 lh-120 flex-row items-center justify-center gap-4">
-        3
+        {{ referals_count }}
         <img src="../assets/img/People.svg" alt="" class="img-24" />
       </p>
       <p class="text-20 lh-120 flex-row items-center justify-center">
-        2.33
+        {{ income }}
         <img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
       </p>
       <div @click="switchScreen(4)" class="user-stat-box-btn btn rounded-8">
