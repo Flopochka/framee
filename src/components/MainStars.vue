@@ -374,6 +374,7 @@ main {
   letter-spacing: -0.4px;
   line-height: 22px;
   justify-content: space-between;
+  border: 2px solid var(--blue-900);
 }
 .select-top-premium-card:nth-of-type(1) {
   background: url("../assets/img/Premium1.svg") no-repeat center,
@@ -400,6 +401,7 @@ main {
   width: 100%;
   grid-template-columns: auto auto 1fr;
   justify-items: end;
+  border: 2px solid var(--blue-900);
 }
 .select-bottom-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
