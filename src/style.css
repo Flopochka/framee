@@ -224,6 +224,12 @@ body {
 .text-32 {
   font-size: 32px;
 }
+.twp{
+  text-wrap: pretty;
+}
+.twb{
+  text-wrap: balance;
+}
 .letter-spacing-2 {
   letter-spacing: -2%;
 }

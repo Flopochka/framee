@@ -16,7 +16,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
         {{ getTranslation("connectWallet") }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
       </div>
-      <p class="aboutus-cover-header letter-spacing-01 font-600 text-32 lh-110 tac">
+      <p class="aboutus-cover-header letter-spacing-01 font-600 text-32 lh-110 tac twb">
         {{
           getTranslation("theBestChoiceforPurchasingTelegramStarsandPremium")
         }}
@@ -29,10 +29,10 @@ const isAccordionActive = (index) => currentAccordion.value === index;
           alt=""
           class="aboutus-cover-card-img"
         />
-        <p class="text-white text-24 font-600 letter-spacing-05 lh-100 tac">
+        <p class="text-white text-24 font-600 letter-spacing-05 lh-100 tac twb">
           {{ getTranslation("paywithTONUSDTorcardpayments") }}
         </p>
-        <p class="text-16 font-400 lh-120 letter-spacing-05 tac">
+        <p class="text-16 font-400 lh-120 letter-spacing-05 tac twb">
           {{
             getTranslation(
               "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired"
@@ -82,7 +82,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
           class="aboutus-bottom-accordion-item"
         >
           <div class="aboutus-bottom-accordion-item-top flex-row items-center">
-            <p class="text-18 lh-120 letter-spacing-05 text-white">{{ accordion[0] }}</p>
+            <p class="text-18 lh-120 letter-spacing-05 text-white twp">{{ accordion[0] }}</p>
             <div
               class="accordion-checkbox jse"
               :class="{ 'accordion-checkbox-active': isAccordionActive(index) }"
@@ -97,7 +97,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
                 isAccordionActive(index),
             }"
           >
-            <p class="text-16 lh-140 font-400 letter-spacing-05"><br />{{ accordion[1] }}</p>
+            <p class="text-16 lh-140 font-400 letter-spacing-05 twp"><br />{{ accordion[1] }}</p>
           </div>
         </div>
       </div>
