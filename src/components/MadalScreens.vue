@@ -231,6 +231,8 @@ onMounted(() => {
 }
 .madal-screen-body {
   width: 100%;
+  max-height: 60vh;
+  overflow: auto;
   padding: 24px;
   padding-top: 0;
   padding-bottom: 52px;
@@ -239,10 +241,6 @@ onMounted(() => {
   flex-direction: column;
   transform: translatey(100vh);
   transition: transform 0.3s;
-}
-.madal-screen-body-high {
-  max-height: 60vh;
-  overflow: auto;
 }
 .madal-active .madal-screen-body {
   transform: translateY(0);
@@ -346,6 +344,7 @@ onMounted(() => {
     grid-template-areas: "A A""B C";
 }
 .withdraw-btn{
+    margin-top: 18px;
     background: linear-gradient(129.45deg, #4DA9EC 9.38%, #0F67BE 117.65%);
 }
 </style>
