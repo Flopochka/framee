@@ -115,7 +115,7 @@ onMounted(() => {
 
 <template>
   <main class="gap-28 p-24">
-    <div class="select-type flex-row gap-4 bg-blue-900 rounded-10 p-2">
+    <div class="select-type flex-row gap-10 bg-blue-900 rounded-10 p-2">
       <div
         @click="switchType(0)"
         class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
@@ -195,7 +195,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="select-top-premium flex-col gap-16" ref="premiumBox">
+        <div class="select-top-premium flex-col gap-6" ref="premiumBox">
           <p class="pl-12 text-14 text-neutral-300">
             {{ getTranslation("subscription") }}
           </p>

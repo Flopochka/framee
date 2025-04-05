@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="gap-28 p-24">
+  <main class="gap-20 p-24">
     <div class="user-stat-box rounded-12">
       <p class="text-16 tac">{{ getTranslation("totalUsers") }}</p>
       <p class="text-16 tac">{{ getTranslation("totalEarnings") }}</p>
@@ -138,7 +138,7 @@ onMounted(() => {
   width: 100%;
   background: var(--white-100);
   box-shadow: 0px 2px 6px 0px #10141c40;
-  padding: 15px 12px;
+  padding: 5px 12px;
   margin-top: 30px;
 }
 .user-stat-box-btn-text {
@@ -156,15 +156,16 @@ onMounted(() => {
   grid-template-columns: 1fr auto;
   gap: 8px;
   position: relative;
+  padding-bottom: 21px;
 }
 .user-referal-box::after {
   content: "";
   position: absolute;
-  width: 80%;
+  width: 90%;
   height: 1px;
   background: var(--blue-900-60);
-  bottom: -14px;
-  left: 10%;
+  bottom: 0;
+  left: 5%;
 }
 .user-referal-box-header {
   grid-area: A;
@@ -181,6 +182,9 @@ onMounted(() => {
 .user-buttons-1-item {
   justify-content: space-between;
   padding: 12px;
+}
+.user-language{
+  padding-top: 8px;
 }
 .user-language-item {
   justify-content: space-between;

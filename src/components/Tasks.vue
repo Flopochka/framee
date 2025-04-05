@@ -18,7 +18,7 @@ const { getTranslation } = useLanguageStore();
         <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">
           {{ getTranslation("start") }}
         </div>
-        <p class="text-14 text-white">
+        <p class="text-14 text-white flex-row gap-2">
           <img src="../assets/img/Star.svg" alt="" class="img-16" />
           0.15
         </p>

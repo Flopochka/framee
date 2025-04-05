@@ -43,28 +43,28 @@ const isAccordionActive = (index) => currentAccordion.value === index;
     </div>
     <div class="aboutus-other">
       <p class="text-16 lh-120 mb-12 text-neutral-300 letter-spacing-05">{{ getTranslation("aboutus") }}</p>
-      <div class="aboutus-other-cards">
-        <div class="aboutus-other-card items-center">
-          <img src="../assets/img/Star.svg" alt="" class="img-16" />
+      <div class="aboutus-other-cards gap-26">
+        <div class="aboutus-other-card items-center gap-2">
+          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
           <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">100 000</p>
           <p class="text-14 lh-120 letter-spacing-05 font-400 text-neutral-300 jse">{{ getTranslation("boughttoday") }}</p>
         </div>
-        <div class="aboutus-other-card items-center">
-          <img src="../assets/img/Star.svg" alt="" class="img-16" />
+        <div class="aboutus-other-card items-center gap-2">
+          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
           <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">100 000</p>
           <p class="text-14 letter-spacing-05 lh-120 font-400 text-neutral-300 jse">
             {{ getTranslation("boughtyesterday") }}
           </p>
         </div>
-        <div class="aboutus-other-card items-center">
-          <img src="../assets/img/Star.svg" alt="" class="img-16" />
+        <div class="aboutus-other-card items-center gap-2">
+          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
           <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">100 000</p>
           <p class="text-14 letter-spacing-05 lh-120 font-400 text-neutral-300 jse">
             {{ getTranslation("boughtalltime") }}
           </p>
         </div>
-        <div class="aboutus-other-card items-center">
-          <img src="../assets/img/Star.svg" alt="" class="img-16" />
+        <div class="aboutus-other-card items-center gap-2">
+          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
           <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">100 000</p>
           <p class="text-14 letter-spacing-05 lh-120 font-400 text-neutral-300 jse">
             {{ getTranslation("boughtmonthpremium") }}
@@ -74,7 +74,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
     </div>
     <div class="aboutus-bottom">
       <p class="text-16 lh-120 mb-12 text-neutral-300 letter-spacing-05">{{ getTranslation("FAQ") }}</p>
-      <div class="aboutus-bottom-accordion flex-col">
+      <div class="aboutus-bottom-accordion gap-42 flex-col">
         <div
           v-for="(accordion, index) in getTranslation('FAQData')"
           :key="index"
@@ -140,7 +140,6 @@ const isAccordionActive = (index) => currentAccordion.value === index;
 .aboutus-other-cards {
   display: grid;
   grid-template-rows: repeat(4, 1fr);
-  gap: 36px;
 }
 .aboutus-other-card {
   display: grid;
@@ -153,12 +152,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
   position: absolute;
   height: 2px;
   background: var(--blue-900);
-  top: -19px;
-}
-.aboutus-bottom {
-}
-.aboutus-bottom-accordion {
-  gap: 36px;
+  top: -14px;
 }
 .aboutus-bottom-accordion-item {
   position: relative;
@@ -169,7 +163,7 @@ const isAccordionActive = (index) => currentAccordion.value === index;
   position: absolute;
   height: 2px;
   background: var(--blue-900);
-  top: -19px;
+  top: -22px;
 }
 .aboutus-bottom-accordion-item-top {
   width: 100%;
