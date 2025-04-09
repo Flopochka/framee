@@ -14,7 +14,6 @@ export const useUserStore = defineStore("user", () => {
     userPhoto.value = photo || userPhoto.value;
     userBalance.value = balance || userBalance.value;
     userId.value = id || userId.value;
-    console.log(userName.value, userLogin.value, userBalance.value, userId.value)
   };
   const getUserName = () => userName.value;
   const getUser = () => userLogin.value;

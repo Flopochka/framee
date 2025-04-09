@@ -126,19 +126,6 @@ export const useLanguageStore = defineStore("language", () => {
     isLoading.value = false;
   };
 
-  const convertLangCode = (twoLetterCode) => {
-    const langMap = {
-      en: 'eng', // Английский
-      ru: 'rus', // Русский
-      ar: 'ara', // Арабский
-      de: 'deu', // Немецкий (ISO 639-2 использует "deu" вместо "ger")
-      es: 'spa', // Испанский
-      fa: 'fas'  // Персидский (фарси)
-    };
-  
-    return langMap[twoLetterCode.toLowerCase()] || twoLetterCode; // Возвращаем трёхзначный код или исходный, если не найден
-  };
-
   // Переключение языка
   const switchLanguage = async (lang) => {
     if (!langs[lang]) {
@@ -162,7 +149,7 @@ export const useLanguageStore = defineStore("language", () => {
       userId.value = getUserId()
       const payload = {
         user_id: userId.value,
-        lang: convertLangCode(lang),
+        lang: lang,
       };
       console.log(payload)
       try {

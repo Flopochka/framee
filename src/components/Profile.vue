@@ -26,7 +26,9 @@ const fetchUserInfo = async () => {
     const result = await sendToBackend("/get_user_info", payload);
     const data = result.data.data;
     referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    switchLanguage(data.language.slice(0, 2));
+    if(getCurrentLanguage()!=data.language.slice(0, 2)){
+      switchLanguage(data.language.slice(0, 2));
+    }
     console.log("Response:", result.data);
   } catch (error) {
     console.error("Failed:", error);
