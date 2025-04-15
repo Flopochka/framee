@@ -35,7 +35,7 @@ const fetchWithdraw = async () => {
     const result = await sendToBackend("/page_withdraw_info", payload);
     const data = result.data.data;
     console.log("Response:", result.data);
-    updateUser(data.user_profile.name, 'example', data.user_profile.photo, data.balance);
+    updateUser(data.user_profile.name, data.username, data.user_profile.photo, data.balance, userId.value);
   } catch (error) {
     console.error("Failed:", error);
   }
