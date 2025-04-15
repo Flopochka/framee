@@ -1,5 +1,13 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
+import { ref, onMounted } from 'vue'
+
+const userJson = ref('Загрузка...')
+
+onMounted(() => {
+  const user = window.Telegram?.WebApp?.initDataUnsafe?.user
+  userJson.value = user ? JSON.stringify(user, null, 2) : 'Нет данных о пользователе'
+})
 
 const { getTranslation } = useLanguageStore();
 </script>
@@ -8,6 +16,7 @@ const { getTranslation } = useLanguageStore();
   <main class="gap-12 p-24">
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
     <div class="tasks-cards flex-col gap-8">
+      {{ userJson  }}
       <div
         v-for="i in [, , , ,]"
         class="task-card bg-blue-900 rounded-12 items-center"

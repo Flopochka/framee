@@ -40,11 +40,9 @@ const fetchUserInfo = async () => {
 onMounted(() => {
   if (window.Telegram?.WebApp?.initData) {
     userId.value = window.Telegram.WebApp.initData.user.id;
-    alert(window.Telegram.WebApp.initData.user)
   } else {
     // userId.value = 1341978600; // Значение по умолчанию для отладки 227363776
     userId.value = 227363776; // Значение по умолчанию для отладки
-    alert('tg web app undefinded')
   }
   fetchUserInfo(); // Вызываем запрос после установки userId
 });
