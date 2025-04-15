@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
+import { sendToBackend } from "../modules/fetch";
 
 // Хранилище для языковых данных
 export const useLanguageStore = defineStore("language", () => {
@@ -8,6 +9,7 @@ export const useLanguageStore = defineStore("language", () => {
   const currentLanguage = ref(localStorage.getItem("language") || "en"); // Текущий язык
   const TextData = ref({}); // Текущие переводы
   const isLoading = ref(false); // Состояние загрузки
+  const userId = ref(null);
   const langs = reactive({
     en: "English",
     ru: "Русский",
@@ -16,6 +18,13 @@ export const useLanguageStore = defineStore("language", () => {
     ar: "فارسی",
     fa: "العربية",
   });
+
+  if (window.Telegram?.WebApp?.initData) {
+    userId.value = window.Telegram.WebApp.initData.user.id;
+  } else {
+    // userId.value = 1341978600; // Значение по умолчанию для отладки
+    userId.value = 227363776; // Значение по умолчанию для отладки
+  }
 
   // Вспомогательная функция для парсинга данных из localStorage
   const tryParse = (data) => {
@@ -119,6 +128,16 @@ export const useLanguageStore = defineStore("language", () => {
       if (lang !== "en") {
         await switchLanguage("en");
       }
+    }
+    const payload = {
+      user_id: userId.value,
+      lang: lang
+    };
+    try {
+      const result = await sendToBackend("/change_user_lang", payload);
+      console.log("Response:", result.data);
+    } catch (error) {
+      console.error("Failed:", error);
     }
   };
 

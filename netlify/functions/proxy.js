@@ -3,7 +3,7 @@ const querystring = require('querystring');
 const { isValid } = require('@telegram-apps/init-data-node');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const BASE_BACKEND_URL = 'http://185.105.90.37:8005';
+const BASE_BACKEND_URL = 'http://185.105.90.37:8008';
 
 // Проверка подписи Telegram initData с использованием библиотеки
 function verifyTelegramInitData(initData) {

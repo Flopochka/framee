@@ -3,6 +3,7 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useScreenStore } from "../stores/screen";
 import { sendToBackend } from "../modules/fetch";
+
 import { ref, onMounted } from "vue";
 
 const userId = ref(null);
@@ -26,7 +27,7 @@ const fetchUserInfo = async () => {
     const result = await sendToBackend("/get_user_info", payload);
     const data = result.data.data;
     referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    switchLanguage(data.language.slice(0, 2));
+    data.language.slice(0, 2)!=getCurrentLanguage()?switchLanguage(data.language.slice(0, 2)):''
     console.log("Response:", result.data);
   } catch (error) {
     console.error("Failed:", error);
