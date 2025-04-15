@@ -166,6 +166,16 @@ export const useLanguageStore = defineStore("language", () => {
         await switchLanguage("en");
       }
     }
+    const payload = {
+      user_id: userId.value,
+      lang: lang
+    };
+    try {
+      const result = await sendToBackend("/change_user_lang", payload);
+      console.log("Response:", result.data);
+    } catch (error) {
+      console.error("Failed:", error);
+    }
   };
 
   // Геттер для получения текущего языка

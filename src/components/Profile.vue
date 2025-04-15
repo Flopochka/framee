@@ -3,6 +3,7 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useScreenStore } from "../stores/screen";
 import { sendToBackend } from "../modules/fetch";
+
 import { ref, onMounted } from "vue";
 
 const userId = ref(null);
