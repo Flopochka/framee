@@ -20,7 +20,7 @@ window.onload = () => {
 
   if (
     window.innerWidth <= 768 &&
-    window.Telegram.WebApp.initData == ""
+    !window.Telegram.WebApp.initDataUnsafe
     // &&
     // !window.location.pathname.includes("about")
   ) {
