@@ -1,13 +1,12 @@
-const axios = require("axios");
-const querystring = require("querystring");
-const { isValid } = require("@telegram-apps/init-data-node");
+import axios from "axios";
+import querystring from "querystring";
+import { isValid } from "@telegram-apps/init-data-node";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const BASE_BACKEND_URL = "http://185.105.90.37:8008";
 
 // Проверка подписи Telegram initData с использованием библиотеки
 function verifyTelegramInitData(initData) {
-  return true;
   console.log("Verifying initData:", JSON.stringify(initData, null, 2));
 
   if (!BOT_TOKEN) {
@@ -59,7 +58,7 @@ function verifyTelegramInitData(initData) {
   return valid;
 }
 
-exports.handler = async (event) => {
+export async function handler(event){
   console.log("Event received:", JSON.stringify(event, null, 2));
 
   if (event.httpMethod !== "POST") {
