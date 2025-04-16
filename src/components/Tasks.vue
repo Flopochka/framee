@@ -5,7 +5,8 @@ import { ref, onMounted } from 'vue'
 const userJson = ref('Загрузка...')
 
 onMounted(() => {
-  const user = window.Telegram?.WebApp?.initDataUnsafe?.user
+  const user = window.Telegram?.WebApp
+   console.log(user)
   userJson.value = user ? JSON.stringify(user, null, 2) : 'Нет данных о пользователе'
 })
 
@@ -37,8 +38,6 @@ const { getTranslation } = useLanguageStore();
 </template>
 
 <style scoped>
-main {
-}
 .task-card {
   padding: 14px 12px;
   display: grid;
