@@ -43,12 +43,8 @@ const fetchWithdraw = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  if (window.Telegram?.WebApp?.initDataUnsafe) {
-    userId.value = window.Telegram.WebApp.initDataUnsafe.user.id;
-  } else {
-    // userId.value = 1341978600; // Значение по умолчанию для отладки
-    userId.value = 227363776; // Значение по умолчанию для отладки
-  }
+  // userId.value = 227363776
+  userId.value = window.Telegram.WebApp.initDataUnsafe.user.id
 
   fetchUserReferals(); // Вызываем запрос после установки userId
   fetchWithdraw()

@@ -27,7 +27,7 @@ const fetchUserInfo = async () => {
     const result = await sendToBackend("/get_user_info", payload);
     const data = result.data.data;
     referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    if(getCurrentLanguage()!=data.language.slice(0, 2)){
+    if (getCurrentLanguage() != data.language.slice(0, 2)) {
       switchLanguage(data.language.slice(0, 2));
     }
     console.log("Response:", result.data);
@@ -38,12 +38,8 @@ const fetchUserInfo = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  if (window.Telegram?.WebApp?.initDataUnsafe) {
-    userId.value = window.Telegram.WebApp.initDataUnsafe.user.id;
-  } else {
-    // userId.value = 1341978600; // Значение по умолчанию для отладки 227363776
-    userId.value = 227363776; // Значение по умолчанию для отладки
-  }
+  // userId.value = 227363776
+  userId.value = window.Telegram.WebApp.initDataUnsafe.user.id 
   fetchUserInfo(); // Вызываем запрос после установки userId
 });
 </script>
@@ -53,7 +49,9 @@ onMounted(() => {
     <div class="user-stat-box rounded-12">
       <p class="text-16 tac">{{ getTranslation("totalUsers") }}</p>
       <p class="text-16 tac">{{ getTranslation("totalEarnings") }}</p>
-      <p class="text-20 font-600 lh-120 flex-row items-center justify-center gap-4">
+      <p
+        class="text-20 font-600 lh-120 flex-row items-center justify-center gap-4"
+      >
         {{ referals_count }}
         <img src="../assets/img/People.svg" alt="" class="img-24" />
       </p>
@@ -68,14 +66,18 @@ onMounted(() => {
       </div>
     </div>
     <div class="user-referal-box">
-      <p class="user-referal-box-header text-14 letter-spacing-04 letter-spacing-04 tac lh-22">
+      <p
+        class="user-referal-box-header text-14 letter-spacing-04 letter-spacing-04 tac lh-22"
+      >
         {{ getTranslation("Invitefriendsandearn5fromtheirpurchases") }}
       </p>
       <div
         class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center"
       >
         <img src="../assets/img/Gift.svg" alt="" class="img-16" />
-        <p class="text-17 letter-spacing-04 text-white">{{ getTranslation("Inviteafriend") }}</p>
+        <p class="text-17 letter-spacing-04 text-white">
+          {{ getTranslation("Inviteafriend") }}
+        </p>
       </div>
       <div
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row"
@@ -88,14 +90,18 @@ onMounted(() => {
         @click="toggleModal('history')"
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center"
       >
-        <p class="text-16 font-400 text-neutral-200">{{ getTranslation("History") }}</p>
+        <p class="text-16 font-400 text-neutral-200">
+          {{ getTranslation("History") }}
+        </p>
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center"
         @click="linkTo('https://t.me/leshaweb')"
       >
-        <p class="text-16 font-400 text-neutral-200">{{ getTranslation("Support") }}</p>
+        <p class="text-16 font-400 text-neutral-200">
+          {{ getTranslation("Support") }}
+        </p>
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
@@ -186,7 +192,7 @@ onMounted(() => {
   justify-content: space-between;
   padding: 12px;
 }
-.user-language{
+.user-language {
   padding-top: 8px;
 }
 .user-language-item {
