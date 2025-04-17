@@ -12,9 +12,11 @@ import { onMounted } from "vue";
 
 const { getCurrentScreen } = useScreenStore();
 const { updateUser } = useUserStore();
-
-updateUser(null,null,null,null,window.Telegram.WebApp.initDataUnsafe.user.id);
-// updateUser(null,null,null,null,227363776);
+try {
+  updateUser(null,null,null,null,window.Telegram.WebApp.initDataUnsafe.user.id);
+} catch (error) {
+  updateUser(null,null,null,null,227363776);
+}
 </script>
 
 <template>

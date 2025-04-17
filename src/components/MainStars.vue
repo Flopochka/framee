@@ -12,7 +12,7 @@ import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const {getUser} = useUserStore();
+const { getUser, getUserId } = useUserStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -20,6 +20,8 @@ const currentType = ref(0);
 const currentPremium = ref(0);
 const currentPayment = ref(0);
 const stars = ref(null);
+const paymentlist = ["TON", "USDT", "SBP", "VM"];
+const paymentlistanother = ["TON", "PUNK", "USDT"];
 const paymentsvg = ref([tonsvg, usdtsvg, sbpsvg, visamastercardsvg]);
 const recipientName = ref(null);
 const recipientPhoto = ref(null);
@@ -41,28 +43,62 @@ const starBoxHeight = ref(0); //
 
 const searchRecipient = async (username) => {
   console.log("Searching for:", username); // Заглушка
-  const payload = { username: username  };
+  const payload = { username: username };
   try {
     const result = await sendToBackend("/search_recipient", payload);
     console.log("Response:", result);
     var data = result.data.data;
     if (result.data.status.message != "Пользователь не найден") {
-      recipientName.value = data.name
-      recipientPhoto.value = data.photo
-      recipient.value = data.recipient
-      recipientCorrect.value = true
+      recipientName.value = data.name;
+      recipientPhoto.value = data.photo;
+      recipient.value = data.recipient;
+      recipientCorrect.value = true;
     } else {
-      recipient.value = null
-      recipientCorrect.value = false
+      recipient.value = null;
+      recipientCorrect.value = false;
     }
   } catch (error) {
     console.error("Failed:", error);
   }
 };
 
+const createorder = async () => {
+  const payload = {
+    sender_id: getUserId(),
+    count:
+      currentType.value == 0
+        ? stars.value
+        : 3 * Math.pow(2, currentPremium.value),
+    to_user: targetUserName.value,
+    payment_method: paymentlistanother[0],
+    payment_network: paymentlist[currentPayment.value],
+  };
+  console.log(payload);
+  try {
+    const result = await sendToBackend("/create_order", payload);
+    console.log("Response:", result);
+    var data = result.data.data;
+    window.location.href = data.payment_link;
+    setTimeout(getorderinfo(data.order_id), 1000);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+const getorderinfo = async (order_id) => {
+  console.log("Searching for:", order_id); // Заглушка
+  const payload = { order_id: order_id };
+  try {
+    const result = await sendToBackend("/get_status_order", payload);
+    console.log("Response:", result);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
 const buyformyself = async () => {
-  targetUserName.value = getUser()
-}
+  targetUserName.value = getUser();
+};
 
 watch(targetUserName, (newValue, oldValue) => {
   if (newValue !== oldValue) {
@@ -140,21 +176,33 @@ onMounted(() => {
       </div>
     </div>
     <div class="select-top flex-col gap-16">
-      <div :class="targetUserName ? 'with-dog-inputed':''" class="select-top-item with-dog flex-col gap-6">
+      <div
+        :class="targetUserName ? 'with-dog-inputed' : ''"
+        class="select-top-item with-dog flex-col gap-6"
+      >
         <p class="pl-12">{{ getTranslation("username") }}</p>
         <input
           type="text"
           :class="recipientCorrect ? '' : 'incorrect'"
           class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
-          style="padding-left: 24px;"
+          style="padding-left: 24px"
           placeholder="example"
           v-model="targetUserName"
         />
-        <div class="select-top-item-input-recipient flex-row gap-16 items-center text-neutral-700" v-if="recipient">
+        <div
+          class="select-top-item-input-recipient flex-row gap-16 items-center text-neutral-700"
+          v-if="recipient"
+        >
           <p>{{ recipientName }}</p>
-          <img class="img-32 rounded-50p" :src="'data:image/png;base64,'+recipientPhoto" alt="">
+          <img
+            class="img-32 rounded-50p"
+            :src="'data:image/png;base64,' + recipientPhoto"
+            alt=""
+          />
         </div>
-        <p class="select-top-formyself" @click="buyformyself()">Buy for myself</p>
+        <p class="select-top-formyself" @click="buyformyself()">
+          Buy for myself
+        </p>
       </div>
       <div
         class="select-top-swith"
@@ -246,9 +294,7 @@ onMounted(() => {
       </div>
     </div>
     <div
-      @click="
-        currentType ? toggleModal('popuppremium') : toggleModal('popupstars')
-      "
+      @click="createorder()"
       class="bottom-button btn bg-gradient-blue flex-col"
     >
       <div
@@ -308,7 +354,7 @@ main {
   gap: 6px;
   position: relative;
 }
-.select-top-formyself{
+.select-top-formyself {
   position: absolute;
   right: 12px;
   color: var(--blue-400);
@@ -321,8 +367,8 @@ main {
 .with-dog {
   position: relative;
 }
-.with-dog::after{
-  content: '@';
+.with-dog::after {
+  content: "@";
   position: absolute;
   font-size: 16px;
   bottom: 18px;
@@ -330,10 +376,10 @@ main {
   color: var(--neutral-500);
   font-family: Geist;
 }
-.with-dog-inputed::after{
+.with-dog-inputed::after {
   color: var(--neutral-700);
 }
-.select-top-item-input-recipient{
+.select-top-item-input-recipient {
   position: absolute;
   right: 12px;
   bottom: 11.5px;
@@ -342,7 +388,7 @@ main {
   border: 2px solid var(--blue-500);
   outline: none;
 }
-.incorrect{
+.incorrect {
   border: 2px solid var(--red) !important;
   outline: none;
 }
@@ -418,7 +464,7 @@ main {
 .select-bottom-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
 }
-.select-bottom-card-active p{
+.select-bottom-card-active p {
   font-weight: 500;
   color: var(--white-100);
 }
