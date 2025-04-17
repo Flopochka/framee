@@ -8,9 +8,11 @@ import ModalScreens from "./components/ModalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
 import { useScreenStore } from "./stores/screen";
 import { initInputNumberHandler } from './modules/inputNumber'
+import { initInputTextHandler } from './modules/inputText'
 
 const { getCurrentScreen } = useScreenStore();
 initInputNumberHandler()
+initInputTextHandler()
 </script>
 
 <template>
