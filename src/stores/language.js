@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
-import { useUserStore } from "../stores/user";
 import { sendToBackend } from "../modules/fetch";
 
 // Хранилище для языковых данных
@@ -18,8 +17,7 @@ export const useLanguageStore = defineStore("language", () => {
     ar: "فارسی",
     fa: "العربية",
   });
-  const { getUserId } = useUserStore();
-  const userId = ref(null)
+  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id)
 
   // Вспомогательная функция для парсинга данных из localStorage
   const tryParse = (data) => {
@@ -146,7 +144,6 @@ export const useLanguageStore = defineStore("language", () => {
       currentLanguage.value = lang;
       TextData.value = langsData.value[lang];
       localStorage.setItem("language", lang);
-      userId.value = getUserId()
       const payload = {
         user_id: userId.value,
         lang: lang,

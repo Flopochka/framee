@@ -12,7 +12,7 @@ import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const { getUser, getUserId } = useUserStore();
+const { getUser } = useUserStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -63,7 +63,7 @@ const searchRecipient = async (username) => {
 
 const createorder = async () => {
   const payload = {
-    sender_id: getUserId(),
+    sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
     count:
       currentType.value == 0
         ? stars.value

@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', () => {
   const userLogin = ref(null);
   const userPhoto = ref(null);
   const userBalance = ref(0);
-  const userId = ref(null);
+  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
   const isLoading = ref(false); // Для отслеживания загрузки
 
   // Инициализация: загрузка данных из localStorage
@@ -20,7 +20,6 @@ export const useUserStore = defineStore('user', () => {
         userLogin.value = parsed.userLogin ?? null;
         userPhoto.value = parsed.userPhoto ?? null;
         userBalance.value = parsed.userBalance ?? 0;
-        userId.value = parsed.userId ?? null;
         console.log('Loaded cached user data:', parsed);
       } catch (error) {
         console.error('Failed to parse cached user data:', error);
