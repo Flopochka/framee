@@ -59,8 +59,6 @@ function verifyTelegramInitData(initData) {
 }
 
 export async function handler(event){
-  console.log("Event received:", JSON.stringify(event, null, 2));
-
   if (event.httpMethod !== "POST") {
     console.log("Invalid method:", event.httpMethod);
     return {
