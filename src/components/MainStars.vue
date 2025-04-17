@@ -4,6 +4,7 @@ import tonsvg from "../assets/img/TON Network.svg";
 import usdtsvg from "../assets/img/USDT.svg";
 import sbpsvg from "../assets/img/SBP.webp";
 import visamastercardsvg from "../assets/img/VISA & MasterCard.svg";
+import { useUserStore } from "../stores/user";
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { ref, onMounted, watch, nextTick } from "vue";
@@ -11,6 +12,7 @@ import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
+const {getUser} = useUserStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -57,6 +59,10 @@ const searchRecipient = async (username) => {
     console.error("Failed:", error);
   }
 };
+
+const buyformyself = async () => {
+  targetUserName.value = getUser()
+}
 
 watch(targetUserName, (newValue, oldValue) => {
   if (newValue !== oldValue) {
@@ -148,6 +154,7 @@ onMounted(() => {
           <p>{{ recipientName }}</p>
           <img class="img-32 rounded-50p" :src="'data:image/png;base64,'+recipientPhoto" alt="">
         </div>
+        <p class="select-top-formyself" @click="buyformyself()">Buy for myself</p>
       </div>
       <div
         class="select-top-swith"
@@ -300,6 +307,11 @@ main {
 .select-top-item {
   gap: 6px;
   position: relative;
+}
+.select-top-formyself{
+  position: absolute;
+  right: 12px;
+  color: var(--blue-400);
 }
 .select-top-item-input-text {
   padding: 15px 12px;

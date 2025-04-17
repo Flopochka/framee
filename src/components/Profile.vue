@@ -3,7 +3,7 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useScreenStore } from "../stores/screen";
 import { sendToBackend } from "../modules/fetch";
-
+import { useUserStore } from "../stores/user";
 import { ref, onMounted } from "vue";
 
 const userId = ref(null);
@@ -12,6 +12,7 @@ const income = ref(0);
 
 const { switchScreen } = useScreenStore();
 const { toggleModal } = useModalStore();
+const { getUserId } = useUserStore();
 const { getTranslation, langs, getCurrentLanguage, switchLanguage } =
   useLanguageStore();
 
@@ -38,8 +39,7 @@ const fetchUserInfo = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  // userId.value = 227363776
-  userId.value = window.Telegram.WebApp.initDataUnsafe.user.id 
+  userId.value = getUserId()
   fetchUserInfo(); // Вызываем запрос после установки userId
 });
 </script>

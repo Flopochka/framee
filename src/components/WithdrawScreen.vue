@@ -8,7 +8,7 @@ import refPhoto from "../assets/img/TESTReferalPhoto.png";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } = useUserStore();
+const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance, getUserId } = useUserStore();
 
 const userId = ref(null);
 const referals = ref(null);
@@ -43,8 +43,7 @@ const fetchWithdraw = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  // userId.value = 227363776
-  userId.value = window.Telegram.WebApp.initDataUnsafe.user.id
+  userId.value = getUserId()
 
   fetchUserReferals(); // Вызываем запрос после установки userId
   fetchWithdraw()

@@ -7,8 +7,14 @@ import Profile from "./components/Profile.vue";
 import MadalScreens from "./components/MadalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
 import { useScreenStore } from "./stores/screen";
+import { useUserStore } from "./stores/user";
+import { onMounted } from "vue";
 
 const { getCurrentScreen } = useScreenStore();
+const { updateUser } = useUserStore();
+
+updateUser(null,null,null,null,window.Telegram.WebApp.initDataUnsafe.user.id);
+// updateUser(null,null,null,null,227363776);
 </script>
 
 <template>
@@ -61,7 +67,7 @@ const { getCurrentScreen } = useScreenStore();
   width: 100%;
   position: relative;
 }
-.blur-box{
+.blur-box {
   position: fixed;
   width: 100%;
   height: 100vh;
@@ -84,7 +90,9 @@ const { getCurrentScreen } = useScreenStore();
   left: -16.5%;
   filter: blur(165.1px);
 }
-.smosh1,.smosh2,.smosh3{
+.smosh1,
+.smosh2,
+.smosh3 {
   width: 39%;
   height: 15.6%;
   position: absolute;

@@ -6,7 +6,6 @@ const userJson = ref('Загрузка...')
 
 onMounted(() => {
   const user = window.Telegram?.WebApp
-   console.log(user)
   userJson.value = user ? JSON.stringify(user, null, 2) : 'Нет данных о пользователе'
 })
 

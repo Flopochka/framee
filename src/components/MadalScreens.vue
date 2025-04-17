@@ -11,7 +11,7 @@ import TONMinimal from "../assets/img/TONMinimal.svg";
 const { toggleModal, getActiveModal } = useModalStore();
 const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
   useLanguageStore();
-const { getUserBalance} = useUserStore();
+const { getUserBalance, getUserId } = useUserStore();
 
 const userId = ref(null);
 const withdrawTonAmmount = ref(null);
@@ -106,8 +106,7 @@ const fetchUserHistory = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  // userId.value = 227363776
-  userId.value = window.Telegram.WebApp.initDataUnsafe.user.id
+  userId.value = getUserId()
 
   fetchUserHistory(); // Вызываем запрос после установки userId
 });
