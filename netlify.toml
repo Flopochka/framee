@@ -5,3 +5,10 @@
 
 [dev]
   command = "vite"          # Для локальной разработки
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["axios"]
+
+[build.environment]
+  NODE_VERSION = "18"
