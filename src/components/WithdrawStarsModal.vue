@@ -3,14 +3,11 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 
 const { toggleModal } = useModalStore();
-const { getTranslation } =
-  useLanguageStore();
-const { getUserBalance, getUserId, getUser } = useUserStore();
-
-const userId = ref(null);
+const { getTranslation } = useLanguageStore();
+const { getUserBalance, getUser } = useUserStore();
 
 // Переменные для withdrawstars (уже есть)
 const targetUserName = ref(""); // Имя пользователя для withdrawstars
@@ -42,25 +39,13 @@ const searchRecipient = async (username, context) => {
     console.log("Response:", result);
     var data = result.data.data;
     if (result.data.status.message != "Пользователь не найден") {
-      if (context === "stars") {
-        recipientName.value = data.name;
-        recipientPhoto.value = data.photo;
-        recipient.value = data.recipient;
-        recipientCorrect.value = true;
-      } else if (context === "ton") {
-        recipientNameTon.value = data.name;
-        recipientPhotoTon.value = data.photo;
-        recipientTon.value = data.recipient;
-        recipientCorrectTon.value = true;
-      }
+      recipientName.value = data.name;
+      recipientPhoto.value = data.photo;
+      recipient.value = data.recipient;
+      recipientCorrect.value = true;
     } else {
-      if (context === "stars") {
-        recipient.value = null;
-        recipientCorrect.value = false;
-      } else if (context === "ton") {
-        recipientTon.value = null;
-        recipientCorrectTon.value = false;
-      }
+      recipient.value = null;
+      recipientCorrect.value = false;
     }
   } catch (error) {
     console.error("Failed:", error);
@@ -70,25 +55,6 @@ const searchRecipient = async (username, context) => {
 const buyformyself = async () => {
   targetUserName.value = getUser(); // Для withdrawstars
 };
-
-const buyformyselfTon = async () => {
-  targetUserNameTon.value = getUser(); // Для withdrawton
-};
-
-watch(targetUserName, (newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    targetUserNameChanged.value = Date.now(); // Записываем время изменения
-
-    // Debounce: ждём 300 мс перед запросом
-    clearTimeout(window.searchTimeout); // Очищаем предыдущий таймер
-    window.searchTimeout = setTimeout(async () => {
-      if (newValue) {
-        // Проверяем, что значение не пустое
-        await searchRecipient(newValue);
-      }
-    }, 300);
-  }
-});
 </script>
 
 <template>

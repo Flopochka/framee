@@ -2,18 +2,14 @@
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user";
 import { ref, onMounted } from "vue";
 import StarGold from "../assets/img/StarGold.svg";
 import StarPremium from "../assets/img/StarPremium.svg";
 import TONMinimal from "../assets/img/TONMinimal.svg";
 
 const { toggleModal } = useModalStore();
-const { getTranslation } =
-  useLanguageStore();
-const { getUserId } = useUserStore();
+const { getTranslation } = useLanguageStore();
 
-const userId = ref(null);
 const history = ref([]);
 
 // Определяем константы вне функций
@@ -67,7 +63,9 @@ const fetchUserHistory = async () => {
   if (historyCache.value) {
     history.value = historyCache.value;
   }
-  const payload = { user_id: userId.value };
+  const payload = {
+    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+  };
   try {
     const result = await sendToBackend("/get_user_history", payload);
     const data = result.data.data;
@@ -98,9 +96,7 @@ const fetchUserHistory = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  userId.value = getUserId();
-
-  fetchUserHistory(); // Вызываем запрос после установки userId
+  fetchUserHistory();
 });
 </script>
 

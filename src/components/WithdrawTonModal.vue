@@ -5,25 +5,14 @@ import { useUserStore } from "../stores/user";
 import { ref } from "vue";
 
 const { toggleModal } = useModalStore();
-const { getTranslation } =
-  useLanguageStore();
-const { getUserBalance, getUser } = useUserStore();
+const { getTranslation } = useLanguageStore();
+const { getUserBalance } = useUserStore();
 
-const userId = ref(null);
 const withdrawTonAmmount = ref(null);
 const targetUserName = ref(null);
 
 // Новые переменные для withdrawton
 const targetUserNameTon = ref(""); // Имя пользователя для withdrawton
-
-const buyformyself = async () => {
-  targetUserName.value = getUser(); // Для withdrawstars
-};
-
-const buyformyselfTon = async () => {
-  targetUserNameTon.value = getUser(); // Для withdrawton
-};
-
 </script>
 
 <template>

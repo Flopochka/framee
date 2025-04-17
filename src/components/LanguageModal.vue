@@ -1,50 +1,10 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
-import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user";
-import { ref, onMounted } from "vue";
 
 const { toggleModal } = useModalStore();
 const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
   useLanguageStore();
-const { getUserId } = useUserStore();
-
-const userId = ref(null);
-const withdrawTonAmmount = ref(null);
-const history = ref([]);
-
-// Определяем константы вне функций
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-const currentYear = new Date().getFullYear();
-
-function normalizeDate(dateString) {
-  const date = new Date(dateString);
-
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-
-  return {
-    day: day,
-    month: month,
-    // year: year === currentYear ? 0 : year,
-    year: year,
-  };
-}
 </script>
 
 <template>

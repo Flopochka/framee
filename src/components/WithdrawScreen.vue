@@ -8,9 +8,10 @@ import refPhoto from "../assets/img/TESTReferalPhoto.png";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance, getUserId } = useUserStore();
+const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } =
+  useUserStore();
 
-const userId = ref(null);
+const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 const referals = ref(null);
 
 const fetchUserReferals = async () => {
@@ -35,7 +36,13 @@ const fetchWithdraw = async () => {
     const result = await sendToBackend("/page_withdraw_info", payload);
     const data = result.data.data;
     console.log("Response:", result.data);
-    updateUser(data.user_profile.name, data.username, data.user_profile.photo, data.balance, userId.value);
+    updateUser(
+      data.user_profile.name,
+      data.username,
+      data.user_profile.photo,
+      data.balance,
+      userId.value
+    );
   } catch (error) {
     console.error("Failed:", error);
   }
@@ -43,10 +50,8 @@ const fetchWithdraw = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  userId.value = getUserId()
-
-  fetchUserReferals(); // Вызываем запрос после установки userId
-  fetchWithdraw()
+  fetchUserReferals();
+  fetchWithdraw();
 });
 </script>
 
@@ -55,7 +60,8 @@ onMounted(() => {
     <div class="withdraw-info">
       <p class="text-20 text-white">{{ getTranslation("Yourbalance") }}</p>
       <p class="text-24 text-white jse">
-        {{getUserBalance()}}<img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
+        {{ getUserBalance()
+        }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
       </p>
       <div
         @click="toggleModal('withdrawton')"
@@ -89,7 +95,7 @@ onMounted(() => {
             class="img-44 rounded-22"
           />
           <p class="text-20 text-white">{{ getUserName() }}</p>
-          <p class="text-16 text-white-60">@{{getUser()}}</p>
+          <p class="text-16 text-white-60">@{{ getUser() }}</p>
         </div>
         <div
           v-for="referal in referals"

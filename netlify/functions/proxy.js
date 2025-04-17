@@ -88,17 +88,17 @@ export async function handler(event){
   console.log("Parsed body:", { initData, target, payload });
 
   // Проверка initData
-  if (!initData || !verifyTelegramInitData(initData)) {
-    return {
-      statusCode: 403,
-      body: JSON.stringify({
-        error: "Invalid Telegram signature or data",
-        initDataProvided: !!initData,
-        signatureValid: initData ? verifyTelegramInitData(initData) : false,
-        initData: initData || "none",
-      }),
-    };
-  }
+  // if (!initData || !verifyTelegramInitData(initData)) {
+  //   return {
+  //     statusCode: 403,
+  //     body: JSON.stringify({
+  //       error: "Invalid Telegram signature or data",
+  //       initDataProvided: !!initData,
+  //       signatureValid: initData ? verifyTelegramInitData(initData) : false,
+  //       initData: initData || "none",
+  //     }),
+  //   };
+  // }
 
   // Проверка target
   if (!target || typeof target !== "string" || !target.startsWith("/")) {

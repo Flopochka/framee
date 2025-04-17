@@ -28,7 +28,6 @@ const recipientPhoto = ref(null);
 const recipient = ref(null);
 const recipientCorrect = ref(true);
 
-const isPremiumSelected = computed(() => currentType.value == 1);
 const switchType = (type) => (currentType.value = type);
 const switchPremium = (type) => (currentPremium.value = type);
 const switchPayment = (type) => (currentPayment.value = type);
@@ -78,7 +77,7 @@ const createorder = async () => {
     const result = await sendToBackend("/create_order", payload);
     console.log("Response:", result);
     var data = result.data.data;
-    window.location.href  = data.payment_link;
+    window.location.href = data.payment_link;
     setTimeout(getorderinfo(data.order_id), 1000);
   } catch (error) {
     console.error("Failed:", error);
@@ -200,9 +199,7 @@ onMounted(() => {
             alt=""
           />
         </div>
-        <p class="buyformyself" @click="buyformyself()">
-          Buy for myself
-        </p>
+        <p class="buyformyself" @click="buyformyself()">Buy for myself</p>
       </div>
       <div
         class="select-top-swith"

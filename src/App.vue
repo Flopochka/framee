@@ -4,17 +4,11 @@ import MainStars from "./components/MainStars.vue";
 import Tasks from "./components/Tasks.vue";
 import AboutUs from "./components/AboutUs.vue";
 import Profile from "./components/Profile.vue";
-import MadalScreens from "./components/MadalScreens.vue";
+import ModalScreens from "./components/ModalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
 import { useScreenStore } from "./stores/screen";
-import { useUserStore } from "./stores/user";
-import { onMounted } from "vue";
 
 const { getCurrentScreen } = useScreenStore();
-const { updateUser } = useUserStore();
-
-updateUser(null,null,null,null,window.Telegram.WebApp.initDataUnsafe.user.id);
-// updateUser(null,null,null,null,227363776);
 </script>
 
 <template>
@@ -47,7 +41,7 @@ updateUser(null,null,null,null,window.Telegram.WebApp.initDataUnsafe.user.id);
     </div>
   </div>
   <MenuModule />
-  <MadalScreens />
+  <ModalScreens />
 </template>
 
 <style scoped>

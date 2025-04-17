@@ -6,7 +6,7 @@ import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
 import { ref, onMounted } from "vue";
 
-const userId = ref(null);
+const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 const referals_count = ref(0);
 const income = ref(0);
 
@@ -39,7 +39,7 @@ const fetchUserInfo = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  userId.value = getUserId()
+  userId.value = getUserId();
   fetchUserInfo(); // Вызываем запрос после установки userId
 });
 </script>
