@@ -121,6 +121,7 @@ const withdraw = async () => {
           style="padding-left: 24px"
           placeholder="example"
           v-model="targetUserName"
+          maxlength="45"
         />
         <div
           class="input-recipient flex-row gap-16 items-center text-neutral-700"

@@ -79,6 +79,7 @@ const withdraw = async () => {
           style="padding-left: 24px"
           placeholder="UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2"
           v-model="targetUserName"
+          maxlength="90"
         />
       </span>
       <div class="withdraw-info gap-12" v-if="withdrawTonAmmount">
