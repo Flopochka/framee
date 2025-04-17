@@ -78,7 +78,7 @@ const createorder = async () => {
     const result = await sendToBackend("/create_order", payload);
     console.log("Response:", result);
     var data = result.data.data;
-    window.location.href = data.payment_link;
+    window.location.href  = data.payment_link;
     setTimeout(getorderinfo(data.order_id), 1000);
   } catch (error) {
     console.error("Failed:", error);
@@ -190,7 +190,7 @@ onMounted(() => {
           v-model="targetUserName"
         />
         <div
-          class="select-top-item-input-recipient flex-row gap-16 items-center text-neutral-700"
+          class="input-recipient flex-row gap-16 items-center text-neutral-700"
           v-if="recipient"
         >
           <p>{{ recipientName }}</p>
@@ -200,7 +200,7 @@ onMounted(() => {
             alt=""
           />
         </div>
-        <p class="select-top-formyself" @click="buyformyself()">
+        <p class="buyformyself" @click="buyformyself()">
           Buy for myself
         </p>
       </div>
@@ -354,35 +354,10 @@ main {
   gap: 6px;
   position: relative;
 }
-.select-top-formyself {
-  position: absolute;
-  right: 12px;
-  color: var(--blue-400);
-}
 .select-top-item-input-text {
   padding: 15px 12px;
   border: 0;
   border: 2px solid #00000000;
-}
-.with-dog {
-  position: relative;
-}
-.with-dog::after {
-  content: "@";
-  position: absolute;
-  font-size: 16px;
-  bottom: 18px;
-  left: 12px;
-  color: var(--neutral-500);
-  font-family: Geist;
-}
-.with-dog-inputed::after {
-  color: var(--neutral-700);
-}
-.select-top-item-input-recipient {
-  position: absolute;
-  right: 12px;
-  bottom: 11.5px;
 }
 .select-top-item-input-text:focus-visible {
   border: 2px solid var(--blue-500);
