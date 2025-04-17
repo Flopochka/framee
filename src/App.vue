@@ -7,8 +7,10 @@ import Profile from "./components/Profile.vue";
 import ModalScreens from "./components/ModalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
 import { useScreenStore } from "./stores/screen";
+import { initInputNumberHandler } from './modules/inputNumber'
 
 const { getCurrentScreen } = useScreenStore();
+initInputNumberHandler()
 </script>
 
 <template>

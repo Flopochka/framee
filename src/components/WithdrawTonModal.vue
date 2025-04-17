@@ -11,8 +11,27 @@ const { getUserBalance } = useUserStore();
 const withdrawTonAmmount = ref(null);
 const targetUserName = ref(null);
 
-// Новые переменные для withdrawton
-const targetUserNameTon = ref(""); // Имя пользователя для withdrawton
+const withdraw = async () => {
+  const payload = {
+    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    amount:
+      withdrawTonAmmount.value % 1 === 0
+        ? withdrawTonAmmount.value + ".0"
+        : withdrawTonAmmount.value,
+    adress: targetUserName.value,
+  };
+  try {
+    const result = await sendToBackend("/withdraw", payload);
+    const data = result.data.data;
+    referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
+    if (getCurrentLanguage() != data.language.slice(0, 2)) {
+      switchLanguage(data.language.slice(0, 2));
+    }
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
 </script>
 
 <template>
@@ -49,7 +68,7 @@ const targetUserNameTon = ref(""); // Имя пользователя для wit
       />
       <span
         class="with-dog flex-col gap-6"
-        :class="targetUserNameTon ? 'with-dog-inputed' : ''"
+        :class="targetUserName ? 'with-dog-inputed' : ''"
       >
         <p class="pl-14 text-neutral-300 text-14">
           {{ getTranslation("Wallet") }}
@@ -73,7 +92,7 @@ const targetUserNameTon = ref(""); // Имя пользователя для wit
       </div>
     </div>
     <div
-      @click="toggleModal('popupwalletnc')"
+      @click="withdraw()"
       class="withdraw-btn font-600 letter-spacing-04 btn text-17"
     >
       {{ getTranslation("WithdrawinTON") }}

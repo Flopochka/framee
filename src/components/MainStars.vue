@@ -199,7 +199,7 @@ onMounted(() => {
             alt=""
           />
         </div>
-        <p class="buyformyself" @click="buyformyself()">Buy for myself</p>
+        <p class="buyformyself" @click="buyformyself()">{{getTranslation("BuyForMyself")}}</p>
       </div>
       <div
         class="select-top-swith"

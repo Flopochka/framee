@@ -15,20 +15,19 @@ const recipientName = ref(""); // Имя найденного получател
 const recipientPhoto = ref(""); // Фото получателя
 const recipient = ref(null); // Данные получателя
 const recipientCorrect = ref(false); // Флаг валидности получателя
-const targetUserNameChanged = ref(0); // Время изменения имени
-
+const withdrawAmount = ref(null);
 const searchTimeout = ref(null);
 
-watch(targetUserName, (newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    targetUserNameChanged.value = Date.now();
-    clearTimeout(searchTimeout.value);
-    searchTimeout.value = setTimeout(async () => {
-      if (newValue) {
-        await searchRecipient(newValue, "stars");
-      }
-    }, 300);
-  }
+watch(targetUserName, (newValue) => {
+  clearTimeout(searchTimeout.value);
+  searchTimeout.value = setTimeout(async () => {
+    if (newValue && newValue.length >= 3) {
+      await searchRecipient(newValue, "stars");
+    } else {
+      recipient.value = null;
+      recipientCorrect.value = false;
+    }
+  }, 300);
 });
 
 const searchRecipient = async (username, context) => {
@@ -54,6 +53,25 @@ const searchRecipient = async (username, context) => {
 
 const buyformyself = async () => {
   targetUserName.value = getUser(); // Для withdrawstars
+};
+
+const withdraw = async () => {
+  const payload = {
+    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    amount: withdrawAmount.value,
+    adress: targetUserName.value,
+  };
+  try {
+    const result = await sendToBackend("/withdraw", payload);
+    const data = result.data.data;
+    referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
+    if (getCurrentLanguage() != data.language.slice(0, 2)) {
+      switchLanguage(data.language.slice(0, 2));
+    }
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
 };
 </script>
 
@@ -87,6 +105,7 @@ const buyformyself = async () => {
         placeholder="Min 100"
         min="100"
         max="1000000"
+        v-model="withdrawAmount"
       />
       <span
         class="with-dog flex-col gap-6"
@@ -114,20 +133,20 @@ const buyformyself = async () => {
             alt=""
           />
         </div>
-        <p class="buyformyself" @click="buyformyself()">Buy for myself</p>
+        <p class="buyformyself" @click="buyformyself()">{{getTranslation("BuyForMyself")}}</p>
       </span>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
           {{ getTranslation("Yougetfor") }} 0.3 TON ≈
         </p>
-        <p class="text-24 text-white">100 Stars</p>
+        <p class="text-24 text-white">{{ withdrawAmount }} Stars</p>
         <p class="text-14 font-400 text-white-60 jse">
           {{ getTranslation("Fee") }} 0.3 TON
         </p>
       </div>
     </div>
     <div
-      @click="toggleModal('popupstars')"
+      @click="withdraw()"
       class="withdraw-btn font-600 letter-spacing-04 btn text-17"
     >
       {{ getTranslation("WithdrawinStars") }}

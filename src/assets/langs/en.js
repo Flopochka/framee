@@ -100,4 +100,8 @@ export default {
   PleaseconnectyourTONwalletonthemainpagetostartpurchasing:
     "Please connect your TON wallet on the main page to start purchasing",
   Close: "Close",
+  PurchaseCancelled: "Purchase cancelled",
+  PurchaseProcessing: "Purchase processing",
+  PurchaseSuccessful: "Purchase successful",
+  BuyForMyself: "Buy for myself"
 };

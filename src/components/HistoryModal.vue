@@ -6,6 +6,9 @@ import { ref, onMounted } from "vue";
 import StarGold from "../assets/img/StarGold.svg";
 import StarPremium from "../assets/img/StarPremium.svg";
 import TONMinimal from "../assets/img/TONMinimal.svg";
+// Добавлены новые иконки для обработки и отмены
+import Processing from "../assets/img/Processing.svg"; // Новая иконка для состояния обработки
+import Cancelled from "../assets/img/Cancelled.svg"; // Новая иконка для состояния отмены
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -39,21 +42,29 @@ function normalizeDate(dateString) {
   return {
     day: day,
     month: month,
-    // year: year === currentYear ? 0 : year,
     year: year,
   };
 }
 
-function getIconPath(type) {
+function getIconPath(type, count) {
+  // Добавлен параметр count для определения иконки в зависимости от количества (Premium или Stars)
   switch (type) {
     case 0:
-      return StarGold; // Покупка звёзд
+      // Состояние 0: Покупка отменена — используем иконку Cancelled
+      return Cancelled;
     case 1:
-      return StarPremium; // Покупка премиума
+      // Состояние 1: Обработка покупки — используем иконку Processing
+      return Processing;
     case 2:
-      return TONMinimal; // Вывод TON
+      // Состояние 2: Покупка успешна — выбираем иконку в зависимости от count
+      return count < 15 ? StarPremium : StarGold; // Premium для count < 15, Stars для count >= 15
+    case 3:
+      // Состояние 3: Вывод TON — используем TONMinimal
+      return TONMinimal;
+    case 4:
     default:
-      return "../assets/img/default.svg"; // На случай неизвестного типа
+      // Состояние 4 и выше: Вывод Stars (или неизвестный тип) — используем StarGold
+      return StarGold;
   }
 }
 
@@ -64,7 +75,8 @@ const fetchUserHistory = async () => {
     history.value = historyCache.value;
   }
   const payload = {
-    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    // user_id: 227363776,
+    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id
   };
   try {
     const result = await sendToBackend("/get_user_history", payload);
@@ -124,25 +136,55 @@ onMounted(() => {
           class="history-card flex-row items-center"
         >
           <div class="history-img flex-row justify-center items-center">
-            <img :src="getIconPath(item.type)" alt="" class="img-20" />
+            <!-- Передаем item.Count в getIconPath для type=2 -->
+            <img
+              :src="getIconPath(item.type, item.Count)"
+              alt=""
+              class="img-20"
+            />
           </div>
           <p class="text-14 flex-row">
             <template v-if="item.type === 0">
-              {{ getTranslation("buy") }}
-              &nbsp;
+              <!-- Состояние 0: Покупка отменена -->
+              {{ getTranslation("PurchaseCancelled") }}	&nbsp;
               <span class="font-400">
-                {{ item.Count }} {{ getTranslation("stars") }}
-                &nbsp;
-              </span>
+                {{ item.Count }}
+                {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
+              </span>&nbsp;
+              {{ getTranslation("for") }} @{{ item.Destination }}
+            </template>
+            <template v-else-if="item.type === 1">
+              <!-- Состояние 1: Обработка покупки -->
+              {{ getTranslation("PurchaseProcessing") }}	&nbsp;
+              <span class="font-400">
+                {{ item.Count }}
+                {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
+              </span>&nbsp;
               {{ getTranslation("for") }} @{{ item.Destination }}
             </template>
             <template v-else-if="item.type === 2">
-              {{ getTranslation("Withdraw") }} {{ item.Count }} TON
+              <!-- Состояние 2: Покупка успешна -->
+              {{ getTranslation("PurchaseSuccessful") }}	&nbsp;
+              <span class="font-400">
+                {{ item.Count }}
+                {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
+              </span>&nbsp;
+              {{getTranslation("for") }} @{{ item.Destination }}
             </template>
             <template v-else-if="item.type === 3">
-              {{ getTranslation("buy") }}
-              {{ getTranslation("Premium3months") }}
-              {{ getTranslation("for") }} @{{ item.Destination }}
+              <!-- Состояние 3: Вывод TON -->
+              {{ getTranslation("Withdraw") }} {{ item.Count }}
+              {{ getTranslation("TON") }}
+            </template>
+            <template v-else-if="item.type === 4">
+              <!-- Состояние 4: Вывод Stars -->
+              {{ getTranslation("Withdraw") }} {{ item.Count }}
+              {{ getTranslation("Stars") }}
+            </template>
+            <template v-else>
+              <!-- Состояния 5 и 6 (или другие): Обработка как Вывод Stars -->
+              {{ getTranslation("Withdraw") }} {{ item.Count }}
+              {{ getTranslation("Stars") }}
             </template>
           </p>
         </div>
