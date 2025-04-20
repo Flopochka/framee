@@ -14,7 +14,7 @@ const PressswitchScreen = (type) => {
   <nav class="menu">
     <div
       @click="PressswitchScreen(0), switchScreen(0)"
-      class="menu-item"
+      class="menu-item cupo"
       :class="{ 'menu-item-active': activeScreen === 0 }"
     >
       <img
@@ -25,7 +25,7 @@ const PressswitchScreen = (type) => {
     </div>
     <div
       @click="PressswitchScreen(1), switchScreen(1)"
-      class="menu-item"
+      class="menu-item cupo"
       :class="{ 'menu-item-active': activeScreen === 1 }"
     >
       <img
@@ -36,7 +36,7 @@ const PressswitchScreen = (type) => {
     </div>
     <div
       @click="PressswitchScreen(2), switchScreen(2)"
-      class="menu-item"
+      class="menu-item cupo"
       :class="{ 'menu-item-active': activeScreen === 2 }"
     >
       <img
@@ -47,7 +47,7 @@ const PressswitchScreen = (type) => {
     </div>
     <div
       @click="PressswitchScreen(3), switchScreen(3)"
-      class="menu-item"
+      class="menu-item cupo"
       :class="{ 'menu-item-active': activeScreen > 2 }"
     >
       <img src="../assets/img/User.svg" alt="" class="menu-item-img user-img" />

@@ -9,11 +9,11 @@ const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
 
 <template>
   <div @click.stop class="lang-menu-head madal-screen-head">
-    <div class="madal-screen-swipka"></div>
+    <div class="madal-screen-swipka cugr"></div>
     <p class="text-20 madal-screen-title lh-120">
       {{ getTranslation("Systemlanguage") }}
     </p>
-    <div @click="toggleModal(null)" class="madal-screen-close">
+    <div @click="toggleModal(null)" class="madal-screen-close cupo">
       <img src="../assets/img/Cross.svg" alt="" class="img-24" />
     </div>
   </div>
@@ -23,7 +23,7 @@ const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
         v-for="(label, key) in langs"
         :key="key"
         @click="switchLanguage(key)"
-        class="lang-select-card flex-row"
+        class="lang-select-card flex-row cupo"
       >
         <p class="text-16 font-400">{{ label }}</p>
         <img

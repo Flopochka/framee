@@ -113,7 +113,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @click.stop class="user-history-head madal-screen-head">
+  <div @click.stop class="user-history-head madal-screen-head cude">
     <div class="madal-screen-swipka"></div>
     <p class="text-20 madal-screen-title">{{ getTranslation("History") }}</p>
     <div @click="toggleModal(null)" class="madal-screen-close">
@@ -141,6 +141,7 @@ onMounted(() => {
               :src="getIconPath(item.type, item.Count)"
               alt=""
               class="img-20"
+              :class="{ 'processing-icon': item.type === 1 }"
             />
           </div>
           <p class="text-14 flex-row">
@@ -211,5 +212,9 @@ onMounted(() => {
   width: 40px;
   border-radius: 50%;
   background: var(--Surface-white-20, #ffffff33);
+}
+.processing-icon{
+  transform: rotate(360deg);
+  transition: transform 1s;
 }
 </style>

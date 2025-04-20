@@ -66,14 +66,14 @@ onMounted(() => {
       <div
         @click="toggleModal('withdrawton')"
         style="grid-area: C"
-        class="withdraw-ton-btn font-600 btn text-17 text-white letter-spacing-04"
+        class="withdraw-ton-btn font-600 btn text-17 text-white letter-spacing-04 cupo"
       >
         {{ getTranslation("WithdrawinTON") }}
       </div>
       <div
         @click="toggleModal('withdrawstars')"
         style="grid-area: D"
-        class="withdraw-stars-btn btn"
+        class="withdraw-stars-btn btn cupo"
       >
         <p class="wis text-17 font-600 letter-spacing-04">
           {{ getTranslation("WithdrawinStars") }}

@@ -348,6 +348,22 @@ body {
   height: 44px;
 }
 
+.cupo{
+  cursor: pointer;
+}
+
+.cute{
+  cursor: text;
+}
+
+.cugr{
+  cursor: grab;
+}
+
+.cude{
+  cursor: default;
+}
+
 /* Custom styles */
 .custom-radio {
   width: 18px;

@@ -159,7 +159,7 @@ onMounted(() => {
     <div class="select-type flex-row gap-10 bg-blue-900 rounded-10 p-2">
       <div
         @click="switchType(0)"
-        class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
+        class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8 cupo"
         :class="{ 'select-type-item-selected': currentType === 0 }"
       >
         {{ getTranslation("stars") }}
@@ -167,7 +167,7 @@ onMounted(() => {
       </div>
       <div
         @click="switchType(1)"
-        class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8"
+        class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8 cupo"
         :class="{ 'select-type-item-selected': currentType === 1 }"
       >
         {{ getTranslation("premium") }}
@@ -200,7 +200,9 @@ onMounted(() => {
             alt=""
           />
         </div>
-        <p class="buyformyself" @click="buyformyself()">{{getTranslation("BuyForMyself")}}</p>
+        <p class="buyformyself cupo" @click="buyformyself()">
+          {{ getTranslation("BuyForMyself") }}
+        </p>
       </div>
       <div
         class="select-top-swith"
@@ -226,22 +228,22 @@ onMounted(() => {
           </div>
           <div class="select-top-item select-top-stars-box">
             <div
-              @click="stars += 100"
-              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
+              @click="stars <= 1000000 - 100 ? (stars += 100) : ''"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
             >
               +100
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
             </div>
             <div
-              @click="stars += 1000"
-              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
+              @click="stars <= 1000000 - 1000 ? (stars += 1000) : ''"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
             >
               +1 000
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
             </div>
             <div
-              @click="stars += 10000"
-              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white letter-spacing-04"
+              @click="stars <= 1000000 - 10000 ? (stars += 10000) : ''"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
             >
               +10 000
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
@@ -257,7 +259,7 @@ onMounted(() => {
               v-for="(premium, index) in getTranslation('subscriptions')"
               :key="index"
               @click="switchPremium(index)"
-              class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12"
+              class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12 cupo"
               :class="{
                 'select-top-premium-card-active': isPremiumActive(index),
               }"
@@ -279,7 +281,7 @@ onMounted(() => {
           v-for="(payment, index) in getTranslation('paymentmetdods')"
           :key="index"
           @click="switchPayment(index)"
-          class="select-bottom-card card bg-blue-900 grid-col items-center gap-8"
+          class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo"
           :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
         >
           <div
@@ -293,7 +295,7 @@ onMounted(() => {
     </div>
     <div
       @click="createorder()"
-      class="bottom-button btn bg-gradient-blue flex-col"
+      class="bottom-button btn bg-gradient-blue flex-col cupo"
     >
       <div
         class="bottom-button-stars flex-row gap-4 items-center justify-center"

@@ -62,7 +62,7 @@ export default {
   totalEarnings: "Total Earnings",
   Withdraw: "Withdraw",
   Invitefriendsandearn5fromtheirpurchases:
-    "Invite friends and earn 5% from their purchases!",
+    "Invite friends and earn 10% from their purchases!",
   Inviteafriend: "Invite a friend",
   History: "History",
   Support: "Support",

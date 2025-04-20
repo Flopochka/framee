@@ -76,8 +76,8 @@ const withdraw = async () => {
 </script>
 
 <template>
-  <div @click.stop class="withdrawstars-head madal-screen-head">
-    <div class="madal-screen-swipka"></div>
+  <div @click.stop class="withdrawstars-head madal-screen-head cude">
+    <div class="madal-screen-swipka cugr"></div>
     <p class="text-20 lh-120 madal-screen-title flex-row gap-14 items-center">
       {{ getTranslation("Yourbalance") }}:
       <span class="lh-115 flex-row items-center"
@@ -87,7 +87,7 @@ const withdraw = async () => {
           class="img-20"
       /></span>
     </p>
-    <div @click="toggleModal(null)" class="madal-screen-close">
+    <div @click="toggleModal(null)" class="madal-screen-close cupo">
       <img src="../assets/img/Cross.svg" alt="" class="img-24" />
     </div>
   </div>
@@ -148,7 +148,7 @@ const withdraw = async () => {
     </div>
     <div
       @click="withdraw()"
-      class="withdraw-btn font-600 letter-spacing-04 btn text-17"
+      class="withdraw-btn font-600 letter-spacing-04 btn text-17 cupo"
     >
       {{ getTranslation("WithdrawinStars") }}
     </div>

@@ -15,7 +15,7 @@ const { getTranslation } = useLanguageStore();
         <p class="text-16 text-white">
           {{ getTranslation("followinTelegram") }}
         </p>
-        <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white">
+        <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo">
           {{ getTranslation("start") }}
         </div>
         <p class="text-14 text-white flex-row gap-2">

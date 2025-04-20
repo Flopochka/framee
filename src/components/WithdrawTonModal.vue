@@ -35,8 +35,8 @@ const withdraw = async () => {
 </script>
 
 <template>
-  <div @click.stop class="withdrawton-head madal-screen-head">
-    <div class="madal-screen-swipka"></div>
+  <div @click.stop class="withdrawton-head madal-screen-head cude">
+    <div class="madal-screen-swipka cugr"></div>
     <p class="text-20 lh-120 madal-screen-title flex-row gap-14 items-center">
       {{ getTranslation("Yourbalance") }}:
       <span class="lh-115 flex-row items-center"
@@ -46,7 +46,7 @@ const withdraw = async () => {
           class="img-20"
       /></span>
     </p>
-    <div @click="toggleModal(null)" class="madal-screen-close">
+    <div @click="toggleModal(null)" class="madal-screen-close cupo">
       <img src="../assets/img/Cross.svg" alt="" class="img-24" />
     </div>
   </div>
@@ -66,17 +66,13 @@ const withdraw = async () => {
         :max="getUserBalance() > 0.3 ? min(getUserBalance(), 1000000) : 0"
         v-model="withdrawTonAmmount"
       />
-      <span
-        class="with-dog flex-col gap-6"
-        :class="targetUserName ? 'with-dog-inputed' : ''"
-      >
+      <span class="flex-col gap-6">
         <p class="pl-14 text-neutral-300 text-14">
           {{ getTranslation("Wallet") }}
         </p>
         <input
           type="text"
           class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
-          style="padding-left: 24px"
           placeholder="UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2"
           v-model="targetUserName"
           maxlength="90"
@@ -94,7 +90,7 @@ const withdraw = async () => {
     </div>
     <div
       @click="withdraw()"
-      class="withdraw-btn font-600 letter-spacing-04 btn text-17"
+      class="withdraw-btn font-600 letter-spacing-04 btn text-17 cupo"
     >
       {{ getTranslation("WithdrawinTON") }}
     </div>
