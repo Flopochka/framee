@@ -15,7 +15,7 @@ const { getTranslation, langs, getCurrentLanguage, switchLanguage } =
   useLanguageStore();
 
 function linkTo(e) {
-  window.location.href = e;
+  window.Telegram.WebApp.openLink(e);
 }
 
 const fetchUserInfo = async () => {

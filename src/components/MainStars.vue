@@ -77,7 +77,7 @@ const createorder = async () => {
     const result = await sendToBackend("/create_order", payload);
     console.log("Response:", result);
     var data = result.data.data;
-    window.location.href = data.payment_link;
+    window.Telegram.WebApp.openLink(data.payment_link);
     toggleModal(currentType.value == 0
         ? 'popupstars'
         : 'popuppremium')
