@@ -8,6 +8,7 @@ import WithdrawStarsModal from "./WithdrawStarsModal.vue";
 import StarsPopup from "./StarsPopup.vue";
 import PremiumPopup from "./StarsPopup.vue"; // Проверьте, это тот же компонент?
 import WalletPopup from "./StarsPopup.vue"; // Проверьте, это тот же компонент?
+import ErrorPopup from "./ErrorPopup.vue";
 
 const modalStore = useModalStore();
 const { toggleModal, getActiveModal } = modalStore;
@@ -54,6 +55,12 @@ const modals = [
     id: "popupwalletnc",
     type: "popup",
     component: WalletPopup,
+    class: "popup",
+  },
+  {
+    id: "error",
+    type: "popup",
+    component: ErrorPopup,
     class: "popup",
   },
 ];

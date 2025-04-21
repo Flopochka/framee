@@ -78,9 +78,13 @@ const createorder = async () => {
     console.log("Response:", result);
     var data = result.data.data;
     window.location.href = data.payment_link;
+    toggleModal(currentType.value == 0
+        ? 'popupstars'
+        : 'popuppremium')
     setTimeout(getorderinfo(data.order_id), 1000);
   } catch (error) {
     console.error("Failed:", error);
+    toggleModal('Error')
   }
 };
 

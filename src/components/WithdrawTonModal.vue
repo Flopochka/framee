@@ -28,8 +28,10 @@ const withdraw = async () => {
       switchLanguage(data.language.slice(0, 2));
     }
     console.log("Response:", result.data);
+    toggleModal('popupstars')
   } catch (error) {
     console.error("Failed:", error);
+    toggleModal('Error')
   }
 };
 </script>

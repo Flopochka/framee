@@ -69,8 +69,10 @@ const withdraw = async () => {
       switchLanguage(data.language.slice(0, 2));
     }
     console.log("Response:", result.data);
+    toggleModal('popupstars')
   } catch (error) {
     console.error("Failed:", error);
+    toggleModal('Error')
   }
 };
 </script>
@@ -134,16 +136,13 @@ const withdraw = async () => {
             alt=""
           />
         </div>
-        <p class="buyformyself" @click="buyformyself()">{{getTranslation("BuyForMyself")}}</p>
+        <p class="buyformyself cupo" @click="buyformyself()">{{getTranslation("BuyForMyself")}}</p>
       </span>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
           {{ getTranslation("Yougetfor") }} 0.3 TON ≈
         </p>
-        <p class="text-24 text-white">{{ withdrawAmount }} Stars</p>
-        <p class="text-14 font-400 text-white-60 jse">
-          {{ getTranslation("Fee") }} 0.3 TON
-        </p>
+        <p class="text-24 text-white">{{ withdrawAmount||0 }} Stars</p>
       </div>
     </div>
     <div
