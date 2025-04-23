@@ -17,6 +17,7 @@ const recipient = ref(null); // Данные получателя
 const recipientCorrect = ref(false); // Флаг валидности получателя
 const withdrawAmount = ref(null);
 const searchTimeout = ref(null);
+const kef = ref(187.265917)
 
 watch(targetUserName, (newValue) => {
   clearTimeout(searchTimeout.value);
@@ -29,6 +30,18 @@ watch(targetUserName, (newValue) => {
     }
   }, 300);
 });
+
+const fetchStarsPrice = async () => {
+  const payload = { user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id, amount: 1000000 };
+  try {
+    const result = await sendToBackend("/get_price_stars", payload);
+    console.log("Response:", result);
+    var data = result.data.data;
+    kef.value = data.count_stars / 1000000
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
 
 const searchRecipient = async (username, context) => {
   console.log("Searching for:", username);
@@ -140,9 +153,9 @@ const withdraw = async () => {
       </span>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
-          {{ getTranslation("Yougetfor") }} 0.3 TON ≈
+          {{ getTranslation("Yougetfor") }} {{ withdrawAmount||0 }} TON ≈
         </p>
-        <p class="text-24 text-white">{{ withdrawAmount||0 }} Stars</p>
+        <p class="text-24 text-white">{{ Math.floor(withdrawAmount * kef)||0 }} Stars</p>
       </div>
     </div>
     <div
