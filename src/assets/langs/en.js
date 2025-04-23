@@ -6,7 +6,15 @@ export default {
   subscription: "Subscription",
   subscriptions: ["3 months", "6 months", "12 months"],
   payment: "Payment",
-  paymentmetdods: ["TON Network", "USDT", "SBP", "VISA & MasterCard"],
+  paymentmetdods: [
+    {
+      name: "TON Network",
+      submethods: ["TON", "DOGS", "NOT"],
+    },
+    "USDT",
+    "SBP",
+    "VISA & MasterCard",
+  ],
   buy: "Buy",
   buyPremium: "Buy Premium",
   tasks: "Tasks",
@@ -103,5 +111,5 @@ export default {
   PurchaseCancelled: "Purchase cancelled",
   PurchaseProcessing: "Purchase processing",
   PurchaseSuccessful: "Purchase successful",
-  BuyForMyself: "Buy for myself"
+  BuyForMyself: "Buy for myself",
 };

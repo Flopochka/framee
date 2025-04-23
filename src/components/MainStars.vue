@@ -19,6 +19,7 @@ const targetUserNameChanged = ref(0);
 const currentType = ref(0);
 const currentPremium = ref(0);
 const currentPayment = ref(0);
+const currentPaymentSub = ref(0);
 const stars = ref(null);
 const paymentlist = ["TON", "USDT", "SBP", "VM"];
 const paymentlistanother = ["TON", "PUNK", "USDT"];
@@ -32,8 +33,10 @@ const valueCorrect = ref(true);
 const switchType = (type) => (currentType.value = type);
 const switchPremium = (type) => (currentPremium.value = type);
 const switchPayment = (type) => (currentPayment.value = type);
+const switchSubmethod = (type) => (currentPaymentSub.value = type);
 const isPremiumActive = (index) => currentPremium.value === index;
 const isPaymentActive = (index) => currentPayment.value === index;
+const isSubmethodActive = (index) => currentPaymentSub.value === index;
 
 const premiumBox = ref(null); // Ref для premiumBox
 const premiumBoxHeight = ref(0); // Реактивная высота premiumBox
@@ -291,21 +294,44 @@ onMounted(() => {
     </div>
     <div class="select-bottomm flex-col gap-4">
       <p class="pl-12 text-white-70">{{ getTranslation("payment") }}</p>
+
       <div class="select-botoom-cards grid-row gap-8">
-        <div
+        <template
           v-for="(payment, index) in getTranslation('paymentmetdods')"
           :key="index"
-          @click="switchPayment(index)"
-          class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo"
-          :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
         >
           <div
-            class="custom-radio"
-            :class="{ 'custom-radio-active': isPaymentActive(index) }"
-          ></div>
-          <p class="text-16 font-400 text-white-75">{{ payment }}</p>
-          <img :src="paymentsvg[index]" alt="" class="img-28" />
-        </div>
+            @click="switchPayment(index)"
+            class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo"
+            :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
+          >
+            <div
+              class="custom-radio"
+              :class="{ 'custom-radio-active': isPaymentActive(index) }"
+            ></div>
+            <p class="text-16 font-400 text-white-75">
+              {{ typeof payment === "object" ? payment.name : payment }}
+            </p>
+            <img :src="paymentsvg[index]" alt="" class="img-28" />
+          </div>
+          <div
+            v-if="typeof payment === 'object' && payment.submethods"
+            :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
+            class="select-botoom-subcards grid-row gap-8"
+          >
+            <div
+              v-for="(submethod, subIndex) in payment.submethods"
+              :key="subIndex"
+              @click="switchSubmethod(subIndex)"
+              class="select-bottom-subcard card bg-white-10 grid-col items-center gap-8 cupo tac"
+              :class="{
+                'select-bottom-subcard-active': isSubmethodActive(subIndex),
+              }"
+            >
+              <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
     <div
@@ -440,6 +466,27 @@ main {
 }
 .select-botoom-cards {
   grid-template-rows: repeat(4, 1fr);
+}
+.select-botoom-subcards{
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+  transition: max-height 0.2s, display 0s 0.2s;
+  max-height: 0px;
+  overflow-y: hidden;
+  display: none;
+}
+.select-botoom-subcards-active{
+  max-height: 200px;
+  display: grid;
+}
+.select-bottom-subcard{
+  transition: background 0.2s;
+}
+.select-bottom-subcard-active{
+  background: var(--white-100);
+  color: var(--blue-500);
+}
+.select-bottom-subcard-active p{
+  color: var(--blue-500);
 }
 .select-bottom-card {
   width: 100%;

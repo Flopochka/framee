@@ -46,6 +46,7 @@
 
   --red: rgb(241, 79, 79);
 
+  --white-10: #ffffff1a;
   --white-60: #ffffff99;
   --white-70: #ffffffb3;
   --white-75: #ffffffbf;
@@ -173,6 +174,9 @@ body {
 }
 
 /* Colors and Backgrounds */
+.bg-white-10 {
+  background: var(--white-10);
+}
 .bg-blue-900 {
   background: var(--blue-900);
 }
