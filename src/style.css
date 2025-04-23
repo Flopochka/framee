@@ -523,6 +523,10 @@ main {
   transition: background 0.3s;
   z-index: 5;
 }
+.incorrect {
+  border: 2px solid var(--red) !important;
+  outline: none;
+}
 .popup-block {
   width: 286px;
   height: 202px;

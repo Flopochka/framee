@@ -10,28 +10,39 @@ const { getUserBalance } = useUserStore();
 
 const withdrawTonAmmount = ref(null);
 const targetUserName = ref(null);
+const valueCorrect = ref(true);
+const walletCorrect = ref(true)
 
 const withdraw = async () => {
-  const payload = {
-    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-    amount:
-      withdrawTonAmmount.value % 1 === 0
-        ? withdrawTonAmmount.value + ".0"
-        : withdrawTonAmmount.value,
-    adress: targetUserName.value,
-  };
-  try {
-    const result = await sendToBackend("/withdraw", payload);
-    const data = result.data.data;
-    referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    if (getCurrentLanguage() != data.language.slice(0, 2)) {
-      switchLanguage(data.language.slice(0, 2));
+  if (
+    100 < withdrawTonAmmount.value &&
+    withdrawTonAmmount.value < 1000000 &&
+    withdrawTonAmmount.value <= getUserBalance()
+  ) {
+    valueCorrect.value = false;
+    if (true) {//Проверка кошелька
+      const payload = {
+        user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+        amount:
+          withdrawTonAmmount.value % 1 === 0
+            ? withdrawTonAmmount.value + ".0"
+            : withdrawTonAmmount.value,
+        adress: targetUserName.value,
+      };
+      try {
+        const result = await sendToBackend("/withdraw", payload);
+        console.log("Response:", result.data);
+        toggleModal("popupstars");
+      } catch (error) {
+        console.error("Failed:", error);
+        toggleModal("Error");
+      }
+    } else {
+      walletCorrect.value = false;
     }
-    console.log("Response:", result.data);
-    toggleModal('popupstars')
-  } catch (error) {
-    console.error("Failed:", error);
-    toggleModal('Error')
+  } else {
+    valueCorrect.value = true;
+    console.log(valueCorrect.value);
   }
 };
 </script>
@@ -62,6 +73,7 @@ const withdraw = async () => {
       </p>
       <input
         type="number"
+        :class="valueCorrect ? '' : 'incorrect'"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
         placeholder="Min 0.3"
         :min="getUserBalance() > 0.3 ? 0.3 : 0"
@@ -74,6 +86,7 @@ const withdraw = async () => {
         </p>
         <input
           type="text"
+          :class="walletCorrect ? '' : 'incorrect'"
           class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
           placeholder="UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2"
           v-model="targetUserName"

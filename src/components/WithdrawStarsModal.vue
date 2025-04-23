@@ -3,7 +3,7 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -14,10 +14,11 @@ const targetUserName = ref(""); // Имя пользователя для withdr
 const recipientName = ref(""); // Имя найденного получателя
 const recipientPhoto = ref(""); // Фото получателя
 const recipient = ref(null); // Данные получателя
-const recipientCorrect = ref(false); // Флаг валидности получателя
-const withdrawAmount = ref(null);
+const recipientCorrect = ref(true); // Флаг валидности получателя
+const withdrawAmount = ref(0);
 const searchTimeout = ref(null);
-const kef = ref(187.265917)
+const kef = ref(187.265917);
+const valueCorrect = ref(true);
 
 watch(targetUserName, (newValue) => {
   clearTimeout(searchTimeout.value);
@@ -32,12 +33,15 @@ watch(targetUserName, (newValue) => {
 });
 
 const fetchStarsPrice = async () => {
-  const payload = { user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id, amount: 1000000 };
+  const payload = {
+    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    amount: 1000000,
+  };
   try {
     const result = await sendToBackend("/get_price_stars", payload);
     console.log("Response:", result);
     var data = result.data.data;
-    kef.value = data.count_stars / 1000000
+    kef.value = data.count_stars / 1000000;
   } catch (error) {
     console.error("Failed:", error);
   }
@@ -69,25 +73,38 @@ const buyformyself = async () => {
 };
 
 const withdraw = async () => {
-  const payload = {
-    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-    amount: withdrawAmount.value,
-    adress: targetUserName.value,
-  };
-  try {
-    const result = await sendToBackend("/withdraw", payload);
-    const data = result.data.data;
-    referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    if (getCurrentLanguage() != data.language.slice(0, 2)) {
-      switchLanguage(data.language.slice(0, 2));
+  if (
+    100 < withdrawAmount.value &&
+    withdrawAmount.value < 1000000 &&
+    withdrawAmount.value <= getUserBalance()
+  ) {
+    valueCorrect.value = false;
+    if (await searchRecipient(targetUserName, "stars")) {
+      const payload = {
+        user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+        amount: withdrawAmount.value,
+        adress: targetUserName.value,
+      };
+      try {
+        const result = await sendToBackend("/withdraw", payload);
+        console.log("Response:", result.data);
+        toggleModal("popupstars");
+      } catch (error) {
+        console.error("Failed:", error);
+        toggleModal("Error");
+      }
+    } else {
+      recipientCorrect.value = false;
     }
-    console.log("Response:", result.data);
-    toggleModal('popupstars')
-  } catch (error) {
-    console.error("Failed:", error);
-    toggleModal('Error')
+  } else {
+    valueCorrect.value = true;
+    console.log(valueCorrect.value);
   }
 };
+
+onMounted(() => {
+  fetchStarsPrice();
+});
 </script>
 
 <template>
@@ -116,6 +133,7 @@ const withdraw = async () => {
       </p>
       <input
         type="number"
+        :class="valueCorrect ? '' : 'incorrect'"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
         placeholder="Min 100"
         min="100"
@@ -149,13 +167,17 @@ const withdraw = async () => {
             alt=""
           />
         </div>
-        <p class="buyformyself cupo" @click="buyformyself()">{{getTranslation("BuyForMyself")}}</p>
+        <p class="buyformyself cupo" @click="buyformyself()">
+          {{ getTranslation("BuyForMyself") }}
+        </p>
       </span>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
-          {{ getTranslation("Yougetfor") }} {{ withdrawAmount||0 }} TON ≈
+          {{ getTranslation("Yougetfor") }} {{ withdrawAmount || 0 }} TON ≈
         </p>
-        <p class="text-24 text-white">{{ Math.floor(withdrawAmount * kef)||0 }} Stars</p>
+        <p class="text-24 text-white">
+          {{ Math.floor(withdrawAmount * kef) || 0 }} Stars
+        </p>
       </div>
     </div>
     <div

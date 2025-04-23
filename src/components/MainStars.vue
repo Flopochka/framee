@@ -27,6 +27,7 @@ const recipientName = ref(null);
 const recipientPhoto = ref(null);
 const recipient = ref(null);
 const recipientCorrect = ref(true);
+const valueCorrect = ref(true);
 
 const switchType = (type) => (currentType.value = type);
 const switchPremium = (type) => (currentPremium.value = type);
@@ -62,29 +63,38 @@ const searchRecipient = async (username) => {
 };
 
 const createorder = async () => {
-  const payload = {
-    sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-    count:
-      currentType.value == 0
-        ? stars.value
-        : 3 * Math.pow(2, currentPremium.value),
-    to_user: targetUserName.value,
-    payment_method: paymentlistanother[0],
-    payment_network: paymentlist[currentPayment.value],
-  };
-  console.log(payload);
-  try {
-    const result = await sendToBackend("/create_order", payload);
-    console.log("Response:", result);
-    var data = result.data.data;
-    window.Telegram.WebApp.openLink(data.payment_link);
-    toggleModal(currentType.value == 0
-        ? 'popupstars'
-        : 'popuppremium')
-    setTimeout(getorderinfo(data.order_id), 1000);
-  } catch (error) {
-    console.error("Failed:", error);
-    toggleModal('Error')
+  if (
+    !(currentType.value == 0 && (stars.value < 100 || stars.value > 1000000))
+  ) {
+    valueCorrect.value = true;
+    if ((await searchRecipient(targetUserName)) && targetUserName) {
+      const payload = {
+        sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+        count:
+          currentType.value == 0
+            ? stars.value
+            : 3 * Math.pow(2, currentPremium.value),
+        to_user: targetUserName.value,
+        payment_method: paymentlistanother[0],
+        payment_network: paymentlist[currentPayment.value],
+      };
+      console.log(payload);
+      try {
+        const result = await sendToBackend("/create_order", payload);
+        console.log("Response:", result);
+        var data = result.data.data;
+        window.Telegram.WebApp.openLink(data.payment_link);
+        toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
+        setTimeout(getorderinfo(data.order_id), 1000);
+      } catch (error) {
+        console.error("Failed:", error);
+        toggleModal("Error");
+      }
+    } else {
+      recipientCorrect.value = false;
+    }
+  } else {
+    valueCorrect.value = false;
   }
 };
 
@@ -224,6 +234,7 @@ onMounted(() => {
             <input
               v-model.number="stars"
               type="number"
+              :class="valueCorrect ? '' : 'incorrect'"
               class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
               placeholder="Min 100"
               min="100"
@@ -365,10 +376,6 @@ main {
 }
 .select-top-item-input-text:focus-visible {
   border: 2px solid var(--blue-500);
-  outline: none;
-}
-.incorrect {
-  border: 2px solid var(--red) !important;
   outline: none;
 }
 .select-top-stars {

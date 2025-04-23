@@ -35,6 +35,33 @@ const fetchUserInfo = async () => {
   }
 };
 
+function copyToClipboard(text, url) {
+  const textToCopy = `${text} ${url || ''}`;
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => toggleModal("Copied"))
+      .catch((error) => console.error("Ошибка копирования:", error));
+}
+
+function shareContent() {
+  const shareData = {
+    title: "FRAME Stars",
+    text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇 @Framestars_bot",
+    url: "https://t.me/Framestars_bot?start=1341978600",
+  };
+
+  // Проверяем, поддерживается ли Web Share API
+  if (navigator.share) {
+    navigator
+      .share(shareData)
+      .then(() => console.log("Успех поделится"))
+      .catch((error) => console.error("Ошибка:", error));
+  } else {
+    // Fallback: копирование в буфер обмена
+    copyToClipboard(shareData.text, shareData.url)
+  }
+}
+
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
   fetchUserInfo();
@@ -56,7 +83,10 @@ onMounted(() => {
         {{ income }}
         <img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
       </p>
-      <div @click="switchScreen(4)" class="user-stat-box-btn btn rounded-8 cupo">
+      <div
+        @click="switchScreen(4)"
+        class="user-stat-box-btn btn rounded-8 cupo"
+      >
         <p class="user-stat-box-btn-text letter-spacing-04 text-14 lh-22">
           {{ getTranslation("Withdraw") }}
         </p>
@@ -69,6 +99,7 @@ onMounted(() => {
         {{ getTranslation("Invitefriendsandearn5fromtheirpurchases") }}
       </p>
       <div
+      @click="shareContent()"
         class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center cupo"
       >
         <img src="../assets/img/Gift.svg" alt="" class="img-16" />
@@ -77,6 +108,7 @@ onMounted(() => {
         </p>
       </div>
       <div
+      @click="copyToClipboard('FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇 @Framestars_bot','https://t.me/Framestars_bot?start=1341978600')"
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo"
       >
         <img src="../assets/img/Copy.svg" alt="" class="img-28" />
