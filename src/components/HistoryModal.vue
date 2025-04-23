@@ -149,7 +149,7 @@ onMounted(() => {
               <!-- Состояние 0: Покупка отменена -->
               {{ getTranslation("PurchaseCancelled") }}	&nbsp;
               <span class="font-400">
-                {{ item.Count }}
+                {{ item.Count < 15 ? getTranslation("subscriptions")[item.Count] : item.Count }}
                 {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
               </span>&nbsp;
               {{ getTranslation("for") }} @{{ item.Destination }}
@@ -158,7 +158,7 @@ onMounted(() => {
               <!-- Состояние 1: Обработка покупки -->
               {{ getTranslation("PurchaseProcessing") }}	&nbsp;
               <span class="font-400">
-                {{ item.Count }}
+                {{ item.Count < 15 ? getTranslation("subscriptions")[item.Count] : item.Count }}
                 {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
               </span>&nbsp;
               {{ getTranslation("for") }} @{{ item.Destination }}
@@ -167,7 +167,7 @@ onMounted(() => {
               <!-- Состояние 2: Покупка успешна -->
               {{ getTranslation("PurchaseSuccessful") }}	&nbsp;
               <span class="font-400">
-                {{ item.Count }}
+                {{ item.Count < 15 ? getTranslation("subscriptions")[item.Count] : item.Count }}
                 {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
               </span>&nbsp;
               {{getTranslation("for") }} @{{ item.Destination }}

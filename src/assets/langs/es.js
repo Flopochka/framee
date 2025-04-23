@@ -6,12 +6,20 @@ export default {
   subscription: "Suscripción",
   subscriptions: ["3 meses", "6 meses", "12 meses"],
   payment: "Pago",
-  paymentmetdods: ["Red TON", "USDT", "SBP", "VISA y MasterCard"],
+  paymentmetdods: [
+    {
+      name: "Red TON",
+      submethods: ["TON", "PUNK", "GLITCH"],
+    },
+    "USDT",
+    "SBP",
+    "VISA y MasterCard",
+  ],
   buy: "Comprar",
   buyPremium: "Comprar Premium",
   tasks: "Tareas",
   followinTelegram: "Seguir en Telegram",
-  start: "Empezar",
+  start: "Iniciar",
   connectWallet: "Conectar billetera",
   theBestChoiceforPurchasingTelegramStarsandPremium:
     "La mejor opción para comprar Estrellas de Telegram y Premium",
@@ -27,7 +35,7 @@ export default {
   FAQData: [
     [
       "¿Por qué sus precios son hasta un 39,7% más bajos?",
-      "Al comprar Estrellas de Telegram y Premium a través de la aplicación de Telegram, el precio incluye comisiones de Apple/Google Store de aproximadamente un 40%. Con nuestro servicio, evitas estas tarifas y obtienes una mejor oferta.",
+      "Al comprar Estrellas de Telegram y Premium a través de la aplicación de Telegram, el precio incluye comisiones de aproximadamente el 40% de las tiendas Apple/Google. Al usar nuestro servicio, evitas estas tarifas y obtienes una mejor oferta.",
     ],
     [
       "¿Cuál es la comisión por comprar a través de FRAME?",
@@ -39,11 +47,11 @@ export default {
     ],
     [
       "¿Cuánto tiempo tarda la entrega?",
-      "Los pedidos suelen procesarse al instante. En casos raros, puede tomar unos minutos. Si tu compra no ha llegado, verifica los detalles de tu transacción o contacta a nuestro soporte @framestars_support.",
+      "Los pedidos generalmente se procesan de inmediato. En casos raros, puede tomar unos minutos. Si tu compra no ha llegado, verifica los detalles de tu transacción o contacta con nuestro @framestars_support.",
     ],
     [
       "¿Qué pasa si mi compra no llega?",
-      "Si no has recibido tus Estrellas o suscripción Premium en un tiempo razonable, contacta a nuestro soporte @framestars_support con los detalles de tu pago. Te ayudaremos lo antes posible.",
+      "Si no has recibido tus Estrellas o suscripción Premium en un tiempo razonable, por favor contacta con nuestro @framestars_support con los detalles de tu pago. Te ayudaremos lo más rápido posible.",
     ],
     [
       "¿Es seguro comprar en FRAME?",
@@ -51,18 +59,18 @@ export default {
     ],
     [
       "¿Cómo puedo enviar Estrellas a un amigo?",
-      "Solo ingresa el @username de Telegram del destinatario durante el proceso de compra, y las Estrellas o la suscripción Premium se enviarán directamente a su cuenta.",
+      "Simplemente ingresa el @nombredeusuario de Telegram del destinatario durante el proceso de compra, y las Estrellas o la suscripción Premium se enviarán directamente a su cuenta.",
     ],
     [
       "¿Cómo puedo obtener Estrellas de Telegram gratis?",
-      "Nuestra página de tareas está en desarrollo. Pronto podrás ganar Estrellas viendo videos promocionales cortos.",
+      "Nuestra página de tareas está actualmente en desarrollo. Pronto podrás ganar Estrellas viendo videos promocionales cortos.",
     ],
   ],
-  totalUsers: "Usuarios totales",
+  totalUsers: "Total de usuarios",
   totalEarnings: "Ganancias totales",
   Withdraw: "Retirar",
   Invitefriendsandearn5fromtheirpurchases:
-    "¡Invita amigos y gana un 5% de sus compras!",
+    "¡Invita a amigos y gana un 10% de sus compras!",
   Inviteafriend: "Invitar a un amigo",
   History: "Historial",
   Support: "Soporte",
@@ -84,20 +92,24 @@ export default {
   Sep: "Sep",
   Oct: "Oct",
   Nov: "Nov",
-  Dec: "Dic", // Abr, 17 (сокращение от "Abril" — апрель)
-  Buyed: "Comprado", // Comprado 100 para @ahillary
-  for: "para", // Comprado 100 para @ahillary
-  Premium3months: "Premium 3 meses", // Comprar Premium 3 meses para @ahillary
+  Dec: "Dic",
+  Buyed: "Comprado",
+  for: "para",
+  Premium3months: "Premium 3 meses",
   Wallet: "Billetera",
-  Youget: "Recibes",
-  Fee: "Comisión", // Comisión 0.3 TON
-  Yougetfor: "Recibes por", // Recibes por 0.3 TON ≈
+  Youget: "Obtienes",
+  Fee: "Tarifa",
+  Yougetfor: "Obtienes por",
   Starshavebeensent: "Las Estrellas han sido enviadas",
   Youraccountwillbeupdatedwithinafewminutes:
-    "Tu cuenta se actualizará en pocos minutos",
-  Premiumhavebeensent: "El Premium ha sido enviado",
+    "Tu cuenta se actualizará en unos minutos",
+  Premiumhavebeensent: "Premium ha sido enviado",
   Walletnotconnected: "Billetera no conectada",
   PleaseconnectyourTONwalletonthemainpagetostartpurchasing:
     "Por favor, conecta tu billetera TON en la página principal para comenzar a comprar",
   Close: "Cerrar",
+  PurchaseCancelled: "Compra cancelada",
+  PurchaseProcessing: "Procesando compra",
+  PurchaseSuccessful: "Compra exitosa",
+  BuyForMyself: "Comprar para mí",
 };
