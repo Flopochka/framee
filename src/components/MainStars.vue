@@ -22,7 +22,7 @@ const currentPayment = ref(0);
 const currentPaymentSub = ref(0);
 const stars = ref(null);
 const paymentlist = ["TON", "USDT", "SBP", "VM"];
-const paymentlistanother = ["TON", "PUNK", "USDT"];
+const paymentlistanother = ["TON", "PUNK", "GLITCH"];
 const paymentsvg = ref([tonsvg, usdtsvg, sbpsvg, visamastercardsvg]);
 const recipientName = ref(null);
 const recipientPhoto = ref(null);
@@ -134,7 +134,7 @@ const createorder = async () => {
           ? stars.value
           : 3 * Math.pow(2, currentPremium.value),
       to_user: targetUserName.value,
-      payment_method: paymentlistanother[0],
+      payment_method: paymentlistanother[currentPaymentSub.value],
       payment_network: paymentlist[currentPayment.value],
     };
     console.log(payload);

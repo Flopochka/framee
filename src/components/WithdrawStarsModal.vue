@@ -15,7 +15,7 @@ const recipientName = ref(""); // Имя найденного получател
 const recipientPhoto = ref(""); // Фото получателя
 const recipient = ref(null); // Данные получателя
 const recipientCorrect = ref(true); // Флаг валидности получателя
-const withdrawAmount = ref(0);
+const withdrawAmount = ref(null);
 const searchTimeout = ref(null);
 const kef = ref(187.265917);
 const valueCorrect = ref(true);
@@ -74,31 +74,33 @@ const buyformyself = async () => {
 
 const withdraw = async () => {
   if (
-    100 < withdrawAmount.value &&
-    withdrawAmount.value < 1000000 &&
-    withdrawAmount.value <= getUserBalance()
+    100 < (withdrawAmount.value || 0) &&
+    (withdrawAmount.value || 0) < 1000000 &&
+    (withdrawAmount.value || 0) <= getUserBalance()
   ) {
-    valueCorrect.value = false;
-    if (await searchRecipient(targetUserName, "stars")) {
-      const payload = {
-        user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-        amount: Math.floor(withdrawAmount.value * kef.value),
-        adress: targetUserName.value,
-      };
-      try {
-        const result = await sendToBackend("/withdraw", payload);
-        console.log("Response:", result.data);
-        toggleModal("popupstars");
-      } catch (error) {
-        console.error("Failed:", error);
-        toggleModal("Error");
-      }
-    } else {
-      recipientCorrect.value = false;
-    }
-  } else {
     valueCorrect.value = true;
-    console.log(valueCorrect.value);
+  } else {
+    valueCorrect.value = false;
+  }
+  if (await searchRecipient(targetUserName, "stars")) {
+    recipientCorrect.value = true;
+  } else {
+    recipientCorrect.value = false;
+  }
+  if (valueCorrect.value && recipientCorrect.value) {
+    const payload = {
+      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      amount: Math.floor(withdrawAmount.value * kef.value),
+      adress: targetUserName.value,
+    };
+    try {
+      const result = await sendToBackend("/withdraw", payload);
+      console.log("Response:", result.data);
+      toggleModal("popupstars");
+    } catch (error) {
+      console.error("Failed:", error);
+      toggleModal("Error");
+    }
   }
 };
 

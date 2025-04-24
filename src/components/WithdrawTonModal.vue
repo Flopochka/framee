@@ -11,7 +11,7 @@ const { getUserBalance } = useUserStore();
 const withdrawTonAmmount = ref(null);
 const targetUserName = ref(null);
 const valueCorrect = ref(true);
-const walletCorrect = ref(true)
+const walletCorrect = ref(true);
 
 const withdraw = async () => {
   if (
@@ -19,30 +19,33 @@ const withdraw = async () => {
     withdrawTonAmmount.value < 1000000 &&
     withdrawTonAmmount.value <= getUserBalance()
   ) {
-    valueCorrect.value = false;
-    if (true) {//Проверка кошелька
-      const payload = {
-        user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-        amount:
-          withdrawTonAmmount.value % 1 === 0
-            ? withdrawTonAmmount.value + ".0"
-            : withdrawTonAmmount.value,
-        adress: targetUserName.value,
-      };
-      try {
-        const result = await sendToBackend("/withdraw", payload);
-        console.log("Response:", result.data);
-        toggleModal("popupstars");
-      } catch (error) {
-        console.error("Failed:", error);
-        toggleModal("Error");
-      }
-    } else {
-      walletCorrect.value = false;
-    }
-  } else {
     valueCorrect.value = true;
-    console.log(valueCorrect.value);
+  } else {
+    valueCorrect.value = false;
+  }
+  if (targetUserName.value && targetUserName.value.length > 24) {
+    //проверка кошелька
+    walletCorrect.value = true;
+  } else {
+    walletCorrect.value = false;
+  }
+  if (valueCorrect.value && walletCorrect.value) {
+    const payload = {
+      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      amount:
+        withdrawTonAmmount.value % 1 === 0
+          ? withdrawTonAmmount.value + ".0"
+          : withdrawTonAmmount.value,
+      adress: targetUserName.value,
+    };
+    try {
+      const result = await sendToBackend("/withdraw", payload);
+      console.log("Response:", result.data);
+      toggleModal("popupstars");
+    } catch (error) {
+      console.error("Failed:", error);
+      toggleModal("Error");
+    }
   }
 };
 </script>

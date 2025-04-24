@@ -9,7 +9,7 @@ export default {
   paymentmetdods: [
     {
       name: "TON Network",
-      submethods: ["TON", "DOGS", "NOT"],
+      submethods: ["TON", "PUNK", "GLITCH"],
     },
     "USDT",
     "SBP",

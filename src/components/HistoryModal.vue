@@ -155,7 +155,7 @@ onMounted(() => {
               <!-- Состояния 0-2: Покупка (отменена, обработка, успешна) -->
               {{ getTranslation('buy') }} 
               <span class="font-400 twp" style="display:contents">
-                {{ item.Count }}
+                {{ item.Count < 15 ? getTranslation("subscriptions")[item.Count] : item.Count }}
                 {{
                   getTranslation(item.Count < 15 ? "Premium" : "Stars")
                 }} </span
