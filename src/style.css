@@ -116,6 +116,9 @@ body {
 .jcsb {
   justify-content: space-between;
 }
+.tae{
+  text-align: end;
+}
 
 /* Spacing */
 .gap-2 {

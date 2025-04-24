@@ -11,6 +11,24 @@ const boughtToday = ref(0);
 const boughtYesterday = ref(0);
 const boughtAlltime = ref(0);
 const boughtMonthPremium = ref(0);
+const cards = ref([
+  {
+    value: boughtToday,
+    translation: "boughttoday",
+  },
+  {
+    value: boughtYesterday,
+    translation: "boughtyesterday",
+  },
+  {
+    value: boughtAlltime,
+    translation: "boughtalltime",
+  },
+  {
+    value: boughtMonthPremium,
+    translation: "boughtmonthpremium",
+  },
+]);
 
 const currentAccordion = ref(0);
 const switchAccordion = (type) => (currentAccordion.value = type);
@@ -18,12 +36,16 @@ const isAccordionActive = (index) => currentAccordion.value === index;
 
 // Функция форматирования чисел
 function formatNumber(num) {
-  if (typeof num !== 'number' || isNaN(num)) return '0';
+  if (typeof num !== "number" || isNaN(num)) return "0";
   const absNum = Math.abs(num);
-  const sign = num < 0 ? '-' : '';
-  if (absNum >= 1_000_000_000) return `${sign}${Math.floor(absNum / 1_000_000_000)}B`;
+  const sign = num < 0 ? "-" : "";
+  if (absNum >= 1_000_000_000)
+    return `${sign}${Math.floor(absNum / 1_000_000_000)}B`;
   if (absNum >= 1_000_000) return `${sign}${Math.floor(absNum / 1_000_000)}M`;
-  if (absNum >= 1_000) return `${sign}${Math.floor(absNum).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}`;
+  if (absNum >= 1_000)
+    return `${sign}${Math.floor(absNum)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
   return `${sign}${Math.floor(absNum)}`;
 }
 
@@ -31,7 +53,10 @@ const fetchTotalInfo = async () => {
   try {
     const result = await sendToBackend("/get_stat_stars", {});
     const data = result.data.data;
-    boughtToday.value = data.stats[0]!=0 ? formatNumber(data.stats[0]) : formatNumber(Math.round(Math.random()*25)*50)
+    boughtToday.value =
+      data.stats[0] != 0
+        ? formatNumber(data.stats[0])
+        : formatNumber(Math.round(Math.random() * 25) * 50);
     boughtYesterday.value = formatNumber(data.stats[1]);
     boughtAlltime.value = formatNumber(data.stats[2]);
     boughtMonthPremium.value = formatNumber(data.stats[3]);
@@ -86,48 +111,19 @@ onMounted(() => {
         {{ getTranslation("aboutus") }}
       </p>
       <div class="aboutus-other-cards gap-26">
-        <div class="aboutus-other-card items-center gap-2">
+        <div
+          v-for="card in cards"
+          :key="card.translation"
+          class="aboutus-other-card items-center gap-2"
+        >
           <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
           <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">
-            {{ boughtToday }}
+            {{ card.value }}
           </p>
           <p
-            class="text-14 lh-120 letter-spacing-05 font-400 text-neutral-300 jse"
+            class="text-14 lh-120 letter-spacing-05 font-400 text-neutral-300 jse tae"
           >
-            {{ getTranslation("boughttoday") }}
-          </p>
-        </div>
-        <div class="aboutus-other-card items-center gap-2">
-          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
-          <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">
-            {{ boughtYesterday }}
-          </p>
-          <p
-            class="text-14 letter-spacing-05 lh-120 font-400 text-neutral-300 jse"
-          >
-            {{ getTranslation("boughtyesterday") }}
-          </p>
-        </div>
-        <div class="aboutus-other-card items-center gap-2">
-          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
-          <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">
-            {{boughtAlltime}}
-          </p>
-          <p
-            class="text-14 letter-spacing-05 lh-120 font-400 text-neutral-300 jse"
-          >
-            {{ getTranslation("boughtalltime") }}
-          </p>
-        </div>
-        <div class="aboutus-other-card items-center gap-2">
-          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133" />
-          <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">
-            {{ boughtMonthPremium }}
-          </p>
-          <p
-            class="text-14 letter-spacing-05 lh-120 font-400 text-neutral-300 jse"
-          >
-            {{ getTranslation("boughtmonthpremium") }}
+            {{ getTranslation(card.translation) }}
           </p>
         </div>
       </div>

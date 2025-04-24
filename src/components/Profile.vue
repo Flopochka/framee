@@ -13,6 +13,13 @@ const { switchScreen } = useScreenStore();
 const { toggleModal } = useModalStore();
 const { getTranslation, langs, getCurrentLanguage, switchLanguage } =
   useLanguageStore();
+const shareData = {
+  title: "FRAME Stars",
+  text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇 @Framestars_bot",
+  url:
+    "https://t.me/Framestars_bot?start=" +
+    window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+};
 
 function linkTo(e) {
   window.Telegram.WebApp.openLink(e);
@@ -36,29 +43,77 @@ const fetchUserInfo = async () => {
 };
 
 function copyToClipboard(text, url) {
-  const textToCopy = `${text} ${url || ''}`;
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => toggleModal("Copied"))
-      .catch((error) => console.error("Ошибка копирования:", error));
+  const textToCopy = `${text} ${url || ""}`;
+  navigator.clipboard
+    .writeText(textToCopy)
+    .then(() => toggleModal("Copied"))
+    .catch((error) => console.error("Ошибка копирования:", error));
+}
+
+function openShareLink(url) {
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 function shareContent() {
-  const shareData = {
-    title: "FRAME Stars",
-    text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇 @Framestars_bot",
-    url: "https://t.me/Framestars_bot?start=1341978600",
-  };
-
-  // Проверяем, поддерживается ли Web Share API
+  // 1. Web Share API (поддерживается на мобильных и некоторых десктопах)
   if (navigator.share) {
     navigator
       .share(shareData)
-      .then(() => console.log("Успех поделится"))
-      .catch((error) => console.error("Ошибка:", error));
+      .then(() => console.log("Share successful"))
+      .catch((error) => console.error("Share error:", error));
+    return;
+  }
+
+  // 2. Проверяем поддержку Clipboard API
+  if (navigator.clipboard) {
+    copyToClipboard(shareData.text, shareData.url);
+    return;
+  }
+
+  // 3. Формируем ссылки для популярных платформ
+  const encodedUrl = encodeURIComponent(shareData.url);
+  const encodedText = encodeURIComponent(shareData.text);
+  const shareLinks = [
+    {
+      name: "WhatsApp",
+      url: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+    },
+    {
+      name: "Telegram",
+      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+    },
+    {
+      name: "Twitter",
+      url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+    },
+    {
+      name: "Facebook",
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    },
+  ];
+
+  // 4. Если поддерживается window.open, открываем выбор платформы
+  if (
+    window.confirm(
+      "Sharing is not fully supported. Choose a platform to share:"
+    )
+  ) {
+    const choice = prompt(
+      `Select a platform:\n${shareLinks
+        .map((link, i) => `${i + 1}. ${link.name}`)
+        .join("\n")}`,
+      "1"
+    );
+    const index = parseInt(choice) - 1;
+    if (index >= 0 && index < shareLinks.length) {
+      openShareLink(shareLinks[index].url);
+    } else {
+      // Fallback: копирование вручную
+      prompt("Copy this link:", `${shareData.text} ${shareData.url}`);
+    }
   } else {
-    // Fallback: копирование в буфер обмена
-    copyToClipboard(shareData.text, shareData.url)
+    // Если пользователь отменил выбор, показываем ссылку
+    prompt("Copy this link:", `${shareData.text} ${shareData.url}`);
   }
 }
 
@@ -99,7 +154,7 @@ onMounted(() => {
         {{ getTranslation("Invitefriendsandearn5fromtheirpurchases") }}
       </p>
       <div
-      @click="shareContent()"
+        @click="shareContent()"
         class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center cupo"
       >
         <img src="../assets/img/Gift.svg" alt="" class="img-16" />
@@ -108,7 +163,7 @@ onMounted(() => {
         </p>
       </div>
       <div
-      @click="copyToClipboard('FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇 @Framestars_bot','https://t.me/Framestars_bot?start=1341978600')"
+        @click="copyToClipboard(shareData.text, shareData.url)"
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo"
       >
         <img src="../assets/img/Copy.svg" alt="" class="img-28" />
