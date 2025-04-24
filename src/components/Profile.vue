@@ -21,8 +21,49 @@ const shareData = {
     window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
 };
 
-function linkTo(e) {
-  window.Telegram.WebApp.openLink(e);
+function linkTo(url, options = { tryInstantView: false, target: '_blank' }) {
+  // Проверяем валидность URL
+  try {
+    new URL(url);
+  } catch (error) {
+    console.error('Invalid URL:', url, error);
+    if (Telegram?.WebApp?.showAlert) {
+      Telegram.WebApp.showAlert('Invalid link. Please try another.');
+    } else {
+      alert('Invalid link. Please try another.');
+    }
+    return;
+  }
+
+  // 1. Telegram Web App: используем openLink или openTelegramLink
+  if (Telegram?.WebApp) {
+    try {
+      if (url.startsWith('https://t.me/') || url.startsWith('tg://')) {
+        // Для Telegram-ссылок (например, каналы, чаты)
+        Telegram.WebApp.openTelegramLink(url);
+      } else {
+        // Для внешних ссылок с возможностью Instant View
+        Telegram.WebApp.openLink(url, { try_instant_view: options.tryInstantView });
+      }
+      return;
+    } catch (error) {
+      console.error('Telegram Web App link error:', error);
+      Telegram.WebApp.showAlert('Failed to open link. Trying alternative...');
+    }
+  }
+
+  // 2. Fallback: открытие ссылки в браузере
+  try {
+    window.open(url, options.target, 'noopener,noreferrer');
+  } catch (error) {
+    console.error('Failed to open link:', error);
+    // Последний fallback: показываем URL для ручного копирования
+    if (Telegram?.WebApp?.showAlert) {
+      Telegram.WebApp.showAlert(`Please open this link manually: ${url}`);
+    } else {
+      prompt('Please open this link manually:', url);
+    }
+  }
 }
 
 const fetchUserInfo = async () => {
@@ -56,7 +97,7 @@ function copyToClipboard(text, url) {
     // Fallback: показываем текст для ручного копирования
     Telegram.WebApp.showAlert(`Copy this link: ${textToCopy}`);
   }
-  
+
 }
 
 // Функция для открытия внешних ссылок
