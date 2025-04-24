@@ -44,77 +44,108 @@ const fetchUserInfo = async () => {
 
 function copyToClipboard(text, url) {
   const textToCopy = `${text} ${url || ""}`;
-  navigator.clipboard
-    .writeText(textToCopy)
-    .then(() => toggleModal("Copied"))
-    .catch((error) => console.error("Ошибка копирования:", error));
+  try {
+    if (Telegram?.WebApp?.writeTextToClipboard) {
+      await Telegram.WebApp.writeTextToClipboard(textToCopy);
+    } else {
+      await navigator.clipboard.writeText(textToCopy);
+    }
+    toggleModal("Copied")
+  } catch (error) {
+    console.error('Failed to copy:', error);
+    // Fallback: показываем текст для ручного копирования
+    Telegram.WebApp.showAlert(`Copy this link: ${textToCopy}`);
+  }
+  
 }
 
+// Функция для открытия внешних ссылок
 function openShareLink(url) {
-  window.open(url, "_blank", "noopener,noreferrer");
+  if (Telegram?.WebApp?.openLink) {
+    Telegram.WebApp.openLink(url);
+  } else {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
 }
 
 function shareContent() {
-  // 1. Web Share API (поддерживается на мобильных и некоторых десктопах)
-  if (navigator.share) {
-    navigator
-      .share(shareData)
-      .then(() => console.log("Share successful"))
-      .catch((error) => console.error("Share error:", error));
+  // 1. Проверяем Telegram Web App и используем нативный шаринг
+  if (Telegram?.WebApp?.showShareMenu) {
+    Telegram.WebApp.showShareMenu({
+      url: shareData.url,
+      text: `${shareData.title}\n${shareData.text}`
+    });
     return;
   }
 
-  // 2. Проверяем поддержку Clipboard API
-  if (navigator.clipboard) {
+  // 2. Проверяем Telegram Web App и пробуем отправить в Telegram
+  if (Telegram?.WebApp?.openTelegramLink) {
+    const encodedUrl = encodeURIComponent(shareData.url);
+    const encodedText = encodeURIComponent(`${shareData.title}\n${shareData.text}`);
+    const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+    Telegram.WebApp.openTelegramLink(telegramUrl);
+    return;
+  }
+
+  // 3. Проверяем Web Share API (для случаев вне Telegram Web App)
+  if (navigator.share) {
+    navigator
+      .share(shareData)
+      .then(() => console.log('Share successful'))
+      .catch((error) => console.error('Share error:', error));
+    return;
+  }
+
+  // 4. Проверяем Clipboard API
+  if (navigator.clipboard || Telegram?.WebApp?.writeTextToClipboard) {
     copyToClipboard(shareData.text, shareData.url);
     return;
   }
 
-  // 3. Формируем ссылки для популярных платформ
+  // 5. Формируем ссылки для других платформ
   const encodedUrl = encodeURIComponent(shareData.url);
   const encodedText = encodeURIComponent(shareData.text);
   const shareLinks = [
     {
-      name: "WhatsApp",
-      url: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+      name: 'WhatsApp',
+      url: `https://wa.me/?text=${encodedText}%20${encodedUrl}`
     },
     {
-      name: "Telegram",
-      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+      name: 'Telegram',
+      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`
     },
     {
-      name: "Twitter",
-      url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      name: 'Twitter',
+      url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`
     },
     {
-      name: "Facebook",
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    },
+      name: 'Facebook',
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
+    }
   ];
 
-  // 4. Если поддерживается window.open, открываем выбор платформы
-  if (
-    window.confirm(
-      "Sharing is not fully supported. Choose a platform to share:"
-    )
-  ) {
-    const choice = prompt(
-      `Select a platform:\n${shareLinks
-        .map((link, i) => `${i + 1}. ${link.name}`)
-        .join("\n")}`,
-      "1"
-    );
-    const index = parseInt(choice) - 1;
-    if (index >= 0 && index < shareLinks.length) {
-      openShareLink(shareLinks[index].url);
-    } else {
-      // Fallback: копирование вручную
-      prompt("Copy this link:", `${shareData.text} ${shareData.url}`);
+  // 6. Fallback: выбор платформы или ручное копирование
+  Telegram.WebApp.showConfirm('Sharing is not fully supported. Choose a platform to share:', (confirmed) => {
+    if (!confirmed) {
+      Telegram.WebApp.showAlert(`Copy this link: ${shareData.text} ${shareData.url}`);
+      return;
     }
-  } else {
-    // Если пользователь отменил выбор, показываем ссылку
-    prompt("Copy this link:", `${shareData.text} ${shareData.url}`);
-  }
+    Telegram.WebApp.showPopup({
+      title: 'Share via',
+      message: 'Select a platform:',
+      buttons: shareLinks.map((link, i) => ({
+        id: `${i}`,
+        type: 'default',
+        text: link.name
+      }))
+    }, (buttonId) => {
+      if (buttonId !== null) {
+        openShareLink(shareLinks[parseInt(buttonId)].url);
+      } else {
+        Telegram.WebApp.showAlert(`Copy this link: ${shareData.text} ${shareData.url}`);
+      }
+    });
+  });
 }
 
 // Инициализация user_id после загрузки компонента
