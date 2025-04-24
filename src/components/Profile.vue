@@ -87,9 +87,9 @@ function copyToClipboard(text, url) {
   const textToCopy = `${text} ${url || ""}`;
   try {
     if (Telegram?.WebApp?.writeTextToClipboard) {
-      await Telegram.WebApp.writeTextToClipboard(textToCopy);
+      Telegram.WebApp.writeTextToClipboard(textToCopy);
     } else {
-      await navigator.clipboard.writeText(textToCopy);
+      navigator.clipboard.writeText(textToCopy);
     }
     toggleModal("Copied")
   } catch (error) {
