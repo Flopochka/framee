@@ -112,4 +112,6 @@ export default {
   PurchaseProcessing: "Purchase processing",
   PurchaseSuccessful: "Purchase successful",
   BuyForMyself: "Buy for myself",
+  Copied: "Copied!",
+  Referallinksucessfulcopied: "Referal link sucessful copied!",
 };

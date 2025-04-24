@@ -82,7 +82,7 @@ const withdraw = async () => {
     if (await searchRecipient(targetUserName, "stars")) {
       const payload = {
         user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-        amount: withdrawAmount.value,
+        amount: Math.floor(withdrawAmount.value * kef.value),
         adress: targetUserName.value,
       };
       try {
@@ -108,7 +108,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @click.stop class="withdrawstars-head madal-screen-head cude">
+  <div @click.stop class="withdrawstars-head madal-screen-head items-start cude">
     <div class="madal-screen-swipka cugr"></div>
     <p class="text-20 lh-120 madal-screen-title flex-row gap-14 items-center">
       {{ getTranslation("Yourbalance") }}:
@@ -129,15 +129,15 @@ onMounted(() => {
   >
     <div class="withdraw-inputs flex-col gap-8">
       <p class="pl-14 text-neutral-300 text-14">
-        {{ getTranslation("Ammount") }}
+        {{ getTranslation("amount") }}
       </p>
       <input
         type="number"
         :class="valueCorrect ? '' : 'incorrect'"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
         placeholder="Min 100"
-        min="100"
-        max="1000000"
+        :min="getUserBalance() > 0.3 ? 0.3 : 0"
+        :max="getUserBalance() > 0.3 ? min(1000000, getUserBalance()) : 0"
         v-model="withdrawAmount"
       />
       <span
@@ -152,7 +152,7 @@ onMounted(() => {
           :class="recipientCorrect ? '' : 'incorrect'"
           class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
           style="padding-left: 24px"
-          placeholder="example"
+          placeholder="username"
           v-model="targetUserName"
           maxlength="45"
         />

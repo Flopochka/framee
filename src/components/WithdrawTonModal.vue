@@ -48,7 +48,7 @@ const withdraw = async () => {
 </script>
 
 <template>
-  <div @click.stop class="withdrawton-head madal-screen-head cude">
+  <div @click.stop class="withdrawton-head madal-screen-head items-start cude">
     <div class="madal-screen-swipka cugr"></div>
     <p class="text-20 lh-120 madal-screen-title flex-row gap-14 items-center">
       {{ getTranslation("Yourbalance") }}:
@@ -69,7 +69,7 @@ const withdraw = async () => {
   >
     <div class="withdraw-inputs flex-col gap-8">
       <p class="pl-14 text-neutral-300 text-14">
-        {{ getTranslation("Ammount") }}
+        {{ getTranslation("amount") }}
       </p>
       <input
         type="number"

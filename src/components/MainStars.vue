@@ -29,6 +29,54 @@ const recipientPhoto = ref(null);
 const recipient = ref(null);
 const recipientCorrect = ref(true);
 const valueCorrect = ref(true);
+const holdDelay = ref(1000);
+const minDelay = ref(50);
+const speedFactor = ref(1.33);
+const incrementInterval = ref(null);
+const holdTimer = ref(null);
+const currentAmount = ref(0);
+
+const startIncrement = (amount) => {
+  if (stars.value > 1000000 - amount) return;
+
+  currentAmount.value = amount;
+  stars.value += amount; // Мгновенное первое увеличение
+
+  // Очищаем предыдущий интервал, если он есть
+  clearInterval(incrementInterval.value);
+
+  // Функция для запуска и обновления интервала
+  const runInterval = () => {
+    clearInterval(incrementInterval.value); // Очищаем текущий интервал
+    incrementInterval.value = setInterval(() => {
+      if (stars.value <= 1000000 - amount) {
+        stars.value += amount;
+      } else {
+        stopIncrement();
+        return;
+      }
+
+      // Уменьшаем задержку
+      if (holdDelay.value > minDelay.value) {
+        holdDelay.value = Math.max(
+          minDelay.value,
+          holdDelay.value / speedFactor.value
+        );
+        // Перезапускаем интервал с новой задержкой
+        runInterval();
+      }
+    }, holdDelay.value);
+  };
+
+  // Запускаем таймер для начала автоинкремента
+  holdTimer.value = setTimeout(runInterval, 500); // Задержка перед началом автоинкремента
+};
+
+const stopIncrement = () => {
+  clearTimeout(holdTimer.value);
+  clearInterval(incrementInterval.value);
+  holdDelay.value = 1000; // Сбрасываем задержку до начальной
+};
 
 const switchType = (type) => (currentType.value = type);
 const switchPremium = (type) => (currentPremium.value = type);
@@ -70,34 +118,37 @@ const createorder = async () => {
     !(currentType.value == 0 && (stars.value < 100 || stars.value > 1000000))
   ) {
     valueCorrect.value = true;
-    if ((await searchRecipient(targetUserName)) && targetUserName) {
-      const payload = {
-        sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
-        count:
-          currentType.value == 0
-            ? stars.value
-            : 3 * Math.pow(2, currentPremium.value),
-        to_user: targetUserName.value,
-        payment_method: paymentlistanother[0],
-        payment_network: paymentlist[currentPayment.value],
-      };
-      console.log(payload);
-      try {
-        const result = await sendToBackend("/create_order", payload);
-        console.log("Response:", result);
-        var data = result.data.data;
-        window.Telegram.WebApp.openLink(data.payment_link);
-        toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
-        setTimeout(getorderinfo(data.order_id), 1000);
-      } catch (error) {
-        console.error("Failed:", error);
-        toggleModal("Error");
-      }
-    } else {
-      recipientCorrect.value = false;
-    }
   } else {
     valueCorrect.value = false;
+  }
+  if ((await searchRecipient(targetUserName)) && targetUserName) {
+    recipientCorrect.value = true;
+  } else {
+    recipientCorrect.value = false;
+  }
+  if (recipientCorrect.value && valueCorrect.value) {
+    const payload = {
+      sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      count:
+        currentType.value == 0
+          ? stars.value
+          : 3 * Math.pow(2, currentPremium.value),
+      to_user: targetUserName.value,
+      payment_method: paymentlistanother[0],
+      payment_network: paymentlist[currentPayment.value],
+    };
+    console.log(payload);
+    try {
+      const result = await sendToBackend("/create_order", payload);
+      console.log("Response:", result);
+      var data = result.data.data;
+      window.Telegram.WebApp.openLink(data.payment_link);
+      toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
+      setTimeout(getorderinfo(data.order_id), 1000);
+    } catch (error) {
+      console.error("Failed:", error);
+      toggleModal("Error");
+    }
   }
 };
 
@@ -202,7 +253,7 @@ onMounted(() => {
           :class="recipientCorrect ? '' : 'incorrect'"
           class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
           style="padding-left: 24px"
-          placeholder="example"
+          placeholder="username"
           v-model="targetUserName"
           maxlength="45"
         />
@@ -246,24 +297,16 @@ onMounted(() => {
           </div>
           <div class="select-top-item select-top-stars-box">
             <div
-              @click="stars <= 1000000 - 100 ? (stars += 100) : ''"
+              v-for="amount in [100, 1000, 10000]"
+              :key="amount"
+              @mousedown="startIncrement(amount)"
+              @mouseup="stopIncrement"
+              @mouseleave="stopIncrement"
+              @touchstart="startIncrement(amount)"
+              @touchend="stopIncrement"
               class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
             >
-              +100
-              <img src="../assets/img/Star.svg" alt="" class="img-16" />
-            </div>
-            <div
-              @click="stars <= 1000000 - 1000 ? (stars += 1000) : ''"
-              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
-            >
-              +1 000
-              <img src="../assets/img/Star.svg" alt="" class="img-16" />
-            </div>
-            <div
-              @click="stars <= 1000000 - 10000 ? (stars += 10000) : ''"
-              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
-            >
-              +10 000
+              +{{ amount.toLocaleString() }}
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
             </div>
           </div>
@@ -467,25 +510,25 @@ main {
 .select-botoom-cards {
   grid-template-rows: repeat(4, 1fr);
 }
-.select-botoom-subcards{
+.select-botoom-subcards {
   grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
   transition: max-height 0.2s, display 0s 0.2s;
   max-height: 0px;
   overflow-y: hidden;
   display: none;
 }
-.select-botoom-subcards-active{
+.select-botoom-subcards-active {
   max-height: 200px;
   display: grid;
 }
-.select-bottom-subcard{
+.select-bottom-subcard {
   transition: background 0.2s;
 }
-.select-bottom-subcard-active{
+.select-bottom-subcard-active {
   background: var(--white-100);
   color: var(--blue-500);
 }
-.select-bottom-subcard-active p{
+.select-bottom-subcard-active p {
   color: var(--blue-500);
 }
 .select-bottom-card {
@@ -513,5 +556,15 @@ main {
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.3s;
+}
+@media (max-width: 350px) {
+  .select-top-stars-card {
+    flex-direction: column-reverse;
+  }
+}
+@media (max-width: 375px) {
+  .select-top-premium-card p {
+    line-height: 115%;
+  }
 }
 </style>

@@ -104,6 +104,9 @@ body {
 .items-center {
   align-items: center;
 }
+.items-start{
+  align-items: start;
+}
 .justify-center {
   justify-content: center;
 }
@@ -335,6 +338,10 @@ body {
   width: 20px;
   height: 20px;
 }
+.img-24{
+  width: 24px;
+  height: 24px;
+}
 .img-28 {
   width: 28px;
   height: 28px;
@@ -481,6 +488,7 @@ main {
 .madal-screen-close {
   padding: 4px;
   border-radius: 16px;
+  /* aspect-ratio: 1/1; */
   background: #ffffff1a;
   display: flex;
 }

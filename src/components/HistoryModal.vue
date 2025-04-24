@@ -14,6 +14,12 @@ const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 
 const history = ref([]);
+const purchaseStatus = ref([
+  "PurchaseCancelled",
+  "PurchaseProcessing",
+  "PurchaseSuccessful",
+]);
+const withdrawType = ref(["TON", "Stars", "Stars", "Stars"]);
 
 // Определяем константы вне функций
 const months = [
@@ -113,7 +119,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @click.stop class="user-history-head madal-screen-head cude">
+  <div @click.stop class="user-history-head madal-screen-head items-start cude">
     <div class="madal-screen-swipka"></div>
     <p class="text-20 madal-screen-title">{{ getTranslation("History") }}</p>
     <div @click="toggleModal(null)" class="madal-screen-close">
@@ -144,48 +150,21 @@ onMounted(() => {
               :class="{ 'processing-icon': item.type === 1 }"
             />
           </div>
-          <p class="text-14 flex-row">
-            <template v-if="item.type === 0">
-              <!-- Состояние 0: Покупка отменена -->
-              {{ getTranslation("PurchaseCancelled") }}	&nbsp;
-              <span class="font-400">
+          <p class="text-14 flex-row twp">
+            <template v-if="item.type <= 2">
+              <!-- Состояния 0-2: Покупка (отменена, обработка, успешна) -->
+              {{ getTranslation('buy') }} 
+              <span class="font-400 twp" style="display:contents">
                 {{ item.Count }}
-                {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
-              </span>&nbsp;
-              {{ getTranslation("for") }} @{{ item.Destination }}
-            </template>
-            <template v-else-if="item.type === 1">
-              <!-- Состояние 1: Обработка покупки -->
-              {{ getTranslation("PurchaseProcessing") }}	&nbsp;
-              <span class="font-400">
-                {{ item.Count }}
-                {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
-              </span>&nbsp;
-              {{ getTranslation("for") }} @{{ item.Destination }}
-            </template>
-            <template v-else-if="item.type === 2">
-              <!-- Состояние 2: Покупка успешна -->
-              {{ getTranslation("PurchaseSuccessful") }}	&nbsp;
-              <span class="font-400">
-                {{ item.Count }}
-                {{ getTranslation(item.Count < 15 ? "Premium" : "Stars") }}
-              </span>&nbsp;
-              {{getTranslation("for") }} @{{ item.Destination }}
-            </template>
-            <template v-else-if="item.type === 3">
-              <!-- Состояние 3: Вывод TON -->
-              {{ getTranslation("Withdraw") }} {{ item.Count }}
-              {{ getTranslation("TON") }}
-            </template>
-            <template v-else-if="item.type === 4">
-              <!-- Состояние 4: Вывод Stars -->
-              {{ getTranslation("Withdraw") }} {{ item.Count }}
-              {{ getTranslation("Stars") }}
+                {{
+                  getTranslation(item.Count < 15 ? "Premium" : "Stars")
+                }} </span
+              >  {{ getTranslation("for") }} @{{ item.Destination }}
             </template>
             <template v-else>
-              <!-- Состояния 5 и 6 (или другие): Обработка как Вывод Stars -->
+              <!-- Состояния 3-6: Вывод -->
               {{ getTranslation("Withdraw") }} {{ item.Count }}
-              {{ getTranslation("Stars") }}
+              {{ getTranslation(withdrawType[item.type] || "Stars") }}
             </template>
           </p>
         </div>
@@ -210,10 +189,11 @@ onMounted(() => {
 .history-img {
   height: 40px;
   width: 40px;
-  border-radius: 50%;
+  border-radius: 20px;
+  aspect-ratio: 1/1;
   background: var(--Surface-white-20, #ffffff33);
 }
-.processing-icon{
+.processing-icon {
   transform: rotate(360deg);
   transition: transform 1s;
 }
