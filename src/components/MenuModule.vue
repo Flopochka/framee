@@ -2,55 +2,47 @@
 import { ref } from "vue";
 import { useScreenStore } from "../stores/screen";
 
-const { switchScreen } = useScreenStore();
-
-const activeScreen = ref(0);
-const PressswitchScreen = (type) => {
-  activeScreen.value = type;
+const { switchScreen, getCurrentScreen } = useScreenStore();
+// Проверка активного экрана
+const isActive = (index) => {
+  // Последний экран активен для индекса > 2
+  return index === 3 ? getCurrentScreen() > 2 : getCurrentScreen() === index;
 };
+
+const menuItems = ref([
+  {
+    icon: new URL("../assets/img/Icon.webp", import.meta.url).href,
+    alt: "Replenishment",
+    imgClass: "menu-item-img replenishment-img",
+  },
+  {
+    icon: new URL("../assets/img/Tasks.svg", import.meta.url).href,
+    alt: "Tasks",
+    imgClass: "menu-item-img tasks-img",
+  },
+  {
+    icon: new URL("../assets/img/Question.svg", import.meta.url).href,
+    alt: "FAQ",
+    imgClass: "menu-item-img faq-img",
+  },
+  {
+    icon: new URL("../assets/img/User.svg", import.meta.url).href,
+    alt: "User",
+    imgClass: "menu-item-img user-img",
+  },
+]);
 </script>
 
 <template>
   <nav class="menu">
     <div
-      @click="PressswitchScreen(0), switchScreen(0)"
+      v-for="(item, index) in menuItems"
+      :key="item.icon"
+      @click="switchScreen(index)"
       class="menu-item cupo"
-      :class="{ 'menu-item-active': activeScreen === 0 }"
+      :class="{ 'menu-item-active': isActive(index) }"
     >
-      <img
-        src="../assets/img/Icon.webp"
-        alt=""
-        class="menu-item-img replenishment-img"
-      />
-    </div>
-    <div
-      @click="PressswitchScreen(1), switchScreen(1)"
-      class="menu-item cupo"
-      :class="{ 'menu-item-active': activeScreen === 1 }"
-    >
-      <img
-        src="../assets/img/Tasks.svg"
-        alt=""
-        class="menu-item-img tasks-img"
-      />
-    </div>
-    <div
-      @click="PressswitchScreen(2), switchScreen(2)"
-      class="menu-item cupo"
-      :class="{ 'menu-item-active': activeScreen === 2 }"
-    >
-      <img
-        src="../assets/img/Question.svg"
-        alt=""
-        class="menu-item-img faq-img"
-      />
-    </div>
-    <div
-      @click="PressswitchScreen(3), switchScreen(3)"
-      class="menu-item cupo"
-      :class="{ 'menu-item-active': activeScreen > 2 }"
-    >
-      <img src="../assets/img/User.svg" alt="" class="menu-item-img user-img" />
+      <img :src="item.icon" :alt="item.alt" :class="item.imgClass" />
     </div>
   </nav>
 </template>
