@@ -122,14 +122,14 @@ const createorder = async () => {
   } else {
     valueCorrect.value = false;
     valueIncorrects.value.push(
-      100 > (stars.value || 0) ? "Min 100" : "Max 1000000"
+      100 > (stars.value || 0) ? "Min100" : "Max1000000"
     );
   }
   if ((await searchRecipient(targetUserName)) && targetUserName) {
     recipientCorrect.value = true;
   } else {
     recipientCorrect.value = false;
-    recipientIncorrects.value.push("Recipient not avalible");
+    recipientIncorrects.value.push("Recipientnotavalible");
   }
   starBoxHeight.value = starBox.value.offsetHeight;
   if (recipientCorrect.value && valueCorrect.value) {
@@ -279,7 +279,7 @@ onMounted(() => {
         </p>
       </div>
       <template v-if="recipientIncorrects" v-for="e in recipientIncorrects">
-        <p class="pl-14 text-red text-14">{{ e }}</p>
+        <p class="pl-14 text-red text-14">{{  getTranslation(e) }}</p>
       </template>
       <div
         class="select-top-swith"
@@ -305,7 +305,7 @@ onMounted(() => {
             />
           </div>
           <template v-if="valueIncorrects" v-for="e in valueIncorrects">
-            <p class="pl-14 text-red text-14">{{ e }}</p>
+            <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
           </template>
           <div class="select-top-item select-top-stars-box">
             <div

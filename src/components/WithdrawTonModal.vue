@@ -28,17 +28,17 @@ const withdraw = async () => {
     valueCorrect.value = false;
     valueIncorrects.value.push(
       0.1 > (withdrawTonAmmount.value || 0)
-        ? "Min 0.1"
+        ? "Min01"
         : (withdrawTonAmmount.value || 0) > 1000000
-        ? "Max 1000000"
-        : "Not enough balace"
+        ? "Max1000000"
+        : "Notenoughbalace"
     );
   }
   if (targetWallet.value && targetWallet.value.length > 24) {
     walletCorrect.value = true;
   } else {
     walletCorrect.value = false;
-    walletIncorrects.value.push("Wallet incorrect");
+    walletIncorrects.value.push("Walletincorrect");
   }
   if (valueCorrect.value && walletCorrect.value) {
     const payload = {
@@ -95,7 +95,7 @@ const withdraw = async () => {
         v-model="withdrawTonAmmount"
       />
       <template v-if="valueIncorrects" v-for="e in valueIncorrects">
-        <p class="pl-14 text-red text-14">{{ e }}</p>
+        <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
       </template>
       <span class="flex-col gap-6">
         <p class="pl-14 text-neutral-300 text-14">
@@ -111,7 +111,7 @@ const withdraw = async () => {
         />
       </span>
       <template v-if="walletIncorrects" v-for="e in walletIncorrects">
-        <p class="pl-14 text-red text-14">{{ e }}</p>
+        <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
       </template>
       <div class="withdraw-info gap-12" v-if="withdrawTonAmmount">
         <p style="grid-area: A" class="text-16 font-400 text-white">

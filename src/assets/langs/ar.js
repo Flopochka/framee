@@ -101,8 +101,7 @@ export default {
   Fee: "الرسوم",
   Yougetfor: "ستحصل مقابل",
   Starshavebeensent: "تم إرسال النجوم",
-  Youraccountwillbeupdatedwithinafewminutes:
-    "سيتم تحديث حسابك خلال بضع دقائق",
+  Youraccountwillbeupdatedwithinafewminutes: "سيتم تحديث حسابك خلال بضع دقائق",
   Premiumhavebeensent: "تم إرسال بريميوم",
   Walletnotconnected: "المحفظة غير متصلة",
   PleaseconnectyourTONwalletonthemainpagetostartpurchasing:
@@ -112,4 +111,10 @@ export default {
   PurchaseProcessing: "جاري معالجة الشراء",
   PurchaseSuccessful: "تم الشراء بنجاح",
   BuyForMyself: "شراء لنفسي",
+  Min01: "الحد الأدنى 0.1",
+  Max1000000: "الحد الأقصى 1000000",
+  Notenoughbalace: "الرصيد غير كافٍ",
+  Recipientnotavalible: "المستلم غير متاح",
+  Walletincorrect: "المحفظة غير صحيحة",
+  Min100: "الحد الأدنى 100",
 };

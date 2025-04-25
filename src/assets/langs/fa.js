@@ -112,4 +112,10 @@ export default {
   PurchaseProcessing: "در حال پردازش خرید",
   PurchaseSuccessful: "خرید موفق",
   BuyForMyself: "خرید برای خودم",
+  Min01: "حداقل 0.1",
+  Max1000000: "حداکثر 1000000",
+  Notenoughbalace: "موجودی ناکافی",
+  Recipientnotavalible: "گیرنده در دسترس نیست",
+  Walletincorrect: "کیف پول نادرست",
+  Min100: "حداقل 100",
 };

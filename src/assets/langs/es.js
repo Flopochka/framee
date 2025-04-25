@@ -112,4 +112,10 @@ export default {
   PurchaseProcessing: "Procesando compra",
   PurchaseSuccessful: "Compra exitosa",
   BuyForMyself: "Comprar para mí",
+  Min01: "Mínimo 0.1",
+  Max1000000: "Máximo 1000000",
+  Notenoughbalace: "Saldo insuficiente",
+  Recipientnotavalible: "Destinatario no disponible",
+  Walletincorrect: "Billetera incorrecta",
+  Min100: "Mínimo 100",
 };

@@ -114,4 +114,10 @@ export default {
   BuyForMyself: "Buy for myself",
   Copied: "Copied!",
   Referallinksucessfulcopied: "Referal link sucessful copied!",
+  Min01: "Minimum 0.1",
+  Max1000000: "Maximum 1000000",
+  Notenoughbalace: "Insufficient balance",
+  Recipientnotavalible: "Recipient not available",
+  Walletincorrect: "Incorrect wallet",
+  Min100: "Minimum 100"
 };

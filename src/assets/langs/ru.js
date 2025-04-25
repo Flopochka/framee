@@ -23,7 +23,8 @@ export default {
   connectWallet: "Подключить кошелек",
   theBestChoiceforPurchasingTelegramStarsandPremium:
     "Лучший выбор для покупки звезд Telegram и Премиум",
-  paywithTONUSDTorcardpayments: "Оплата с помощью TON, USDT или банковских карт.",
+  paywithTONUSDTorcardpayments:
+    "Оплата с помощью TON, USDT или банковских карт.",
   enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired:
     "Наслаждайтесь более низкими ценами, чем у официального бота Telegram, без необходимости верификации KYC",
   aboutus: "О нас",
@@ -112,4 +113,10 @@ export default {
   PurchaseProcessing: "Обработка покупки",
   PurchaseSuccessful: "Покупка успешна",
   BuyForMyself: "Купить для себя",
+  Min01: "Минимум 0.1",
+  Max1000000: "Максимум 1000000",
+  Notenoughbalace: "Недостаточный баланс",
+  Recipientnotavalible: "Получатель недоступен",
+  Walletincorrect: "Неверный кошелек",
+  Min100: "Минимум 100",
 };

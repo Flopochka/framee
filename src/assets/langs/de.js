@@ -23,7 +23,8 @@ export default {
   connectWallet: "Wallet verbinden",
   theBestChoiceforPurchasingTelegramStarsandPremium:
     "Die beste Wahl für den Kauf von Telegram-Stars und Premium",
-  paywithTONUSDTorcardpayments: "Zahlen Sie mit TON, USDT oder Kartenzahlungen.",
+  paywithTONUSDTorcardpayments:
+    "Zahlen Sie mit TON, USDT oder Kartenzahlungen.",
   enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired:
     "Profitieren Sie von niedrigeren Preisen als beim offiziellen Telegram-Bot ohne KYC-Verifizierung",
   aboutus: "Über uns",
@@ -112,4 +113,10 @@ export default {
   PurchaseProcessing: "Kauf wird verarbeitet",
   PurchaseSuccessful: "Kauf erfolgreich",
   BuyForMyself: "Für mich kaufen",
+  Min01: "Minimum 0,1",
+  Max1000000: "Maximum 1000000",
+  Notenoughbalace: "Unzureichendes Guthaben",
+  Recipientnotavalible: "Empfänger nicht verfügbar",
+  Walletincorrect: "Falsche Wallet",
+  Min100: "Minimum 100",
 };
