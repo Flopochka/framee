@@ -117,13 +117,15 @@ const searchRecipient = async (username) => {
 const createorder = async () => {
   valueIncorrects.value = [];
   recipientIncorrects.value = [];
-  if (currentType.value == 0 && stars.value > 100 && stars.value < 1000000) {
-    valueCorrect.value = true;
-  } else {
-    valueCorrect.value = false;
-    valueIncorrects.value.push(
-      100 > (stars.value || 0) ? "Min100" : "Max1000000"
-    );
+  if (!currentType.value) {
+    if (stars.value >= 100 && stars.value <= 1000000) {
+      valueCorrect.value = true;
+    } else {
+      valueCorrect.value = false;
+      valueIncorrects.value.push(
+        100 > (stars.value || 0) ? "Min100" : "Max1000000"
+      );
+    }
   }
   if ((await searchRecipient(targetUserName)) && targetUserName) {
     recipientCorrect.value = true;
@@ -279,7 +281,7 @@ onMounted(() => {
         </p>
       </div>
       <template v-if="recipientIncorrects" v-for="e in recipientIncorrects">
-        <p class="pl-14 text-red text-14">{{  getTranslation(e) }}</p>
+        <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
       </template>
       <div
         class="select-top-swith"
