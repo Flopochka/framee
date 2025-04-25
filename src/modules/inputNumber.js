@@ -2,63 +2,62 @@ function initInputNumberHandler() {
   const inputs = document.querySelectorAll('input[type="number"]');
 
   inputs.forEach(input => {
-    const min = input.hasAttribute('min') ? parseFloat(input.min) : undefined;
     const max = input.hasAttribute('max') ? parseFloat(input.max) : undefined;
-    let isProgrammatic = false; // Flag to prevent recursive event handling
+    let isProgrammatic = false;
 
-    // Обработчик ввода
     input.addEventListener('input', (e) => {
-      if (isProgrammatic) return; // Skip if event is programmatic
+      console.log('--- Input Event Start ---');
+      console.log('Input value:', e.target.value);
+
+      if (isProgrammatic) {
+        console.log('Skipping: Programmatic event');
+        return;
+      }
 
       let value = e.target.value;
+      console.log('Processed value:', value);
 
-      // Удаляем нечисловые символы (кроме точки для дробных)
-      value = value.replace(/[^0-9.]/g, '');
-
-      // Если пустая строка
+      // Если значение пустое, не обрабатываем, чтобы не сбросить
       if (value === '') {
-        e.target.value = '';
-        isProgrammatic = true;
-        e.target.dispatchEvent(new Event('input', { bubbles: true }));
-        isProgrammatic = false;
+        console.log('Empty value, keeping as is');
         return;
       }
 
       const numValue = parseFloat(value);
+      console.log('Parsed number:', numValue);
 
-      // Проверяем максимум
-      if (max !== undefined && numValue > max) {
-        e.target.value = max;
-        isProgrammatic = true;
-        e.target.dispatchEvent(new Event('input', { bubbles: true }));
-        isProgrammatic = false;
-        return;
+      // Проверяем превышение max
+      if (!isNaN(numValue) && max !== undefined && numValue > max) {
+        console.log(`Number ${numValue} exceeds max ${max}`);
+        // Если число целое и на 1 больше max, удаляем последнюю цифру
+        if (Number.isInteger(numValue) && numValue === max + 1) {
+          console.log('Condition: Integer and exceeds max by 1');
+          value = value.slice(0, -1);
+          console.log('New value (removed last digit):', value);
+        } else {
+          console.log('Condition: Setting to max');
+          value = max;
+          console.log('New value (set to max):', value);
+        }
+      } else {
+        console.log('No max violation, keeping value');
       }
 
-      // Обновляем значение и синхронизируем с v-model
+      // Разрешаем точку в конце (например, "1.")
+      if (/^\d+\.$/.test(value)) {
+        console.log('Value ends with dot, keeping as is');
+      }
+
       e.target.value = value;
+      console.log('Final value:', e.target.value);
       isProgrammatic = true;
+      console.log('Dispatching programmatic input event');
       e.target.dispatchEvent(new Event('input', { bubbles: true }));
       isProgrammatic = false;
-    });
-
-    // Обработчик при потере фокуса
-    input.addEventListener('blur', (e) => {
-      const value = parseFloat(e.target.value);
-
-      // Проверяем минимум
-      if (min !== undefined && (isNaN(value) || value < min)) {
-        e.target.value = min;
-        isProgrammatic = true;
-        e.target.dispatchEvent(new Event('input', { bubbles: true }));
-        isProgrammatic = false;
-      }
+      console.log('--- Input Event End ---');
     });
   });
 }
 
-// Выполняем инициализацию при загрузке DOM
 document.addEventListener('DOMContentLoaded', initInputNumberHandler);
-
-// Экспортируем для использования в модулях
 export { initInputNumberHandler };

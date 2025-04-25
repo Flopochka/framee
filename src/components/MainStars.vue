@@ -297,7 +297,7 @@ onMounted(() => {
           <div class="select-top-item flex-col gap-6">
             <p class="pl-12 usen">{{ getTranslation("amount") }}</p>
             <input
-              v-model.number="stars"
+              v-model="stars"
               type="number"
               :class="valueCorrect ? '' : 'incorrect'"
               class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
