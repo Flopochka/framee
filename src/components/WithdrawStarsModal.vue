@@ -191,7 +191,7 @@ onMounted(() => {
             alt=""
           />
         </div>
-        <p class="buyformyself cupo" @click="buyformyself()">
+        <p class="buyformyself cupo usen" @click="buyformyself()">
           {{ getTranslation("BuyForMyself") }}
         </p>
       </span>
@@ -209,7 +209,7 @@ onMounted(() => {
     </div>
     <div
       @click="withdraw()"
-      class="withdraw-btn font-600 letter-spacing-04 btn text-17 cupo"
+      class="withdraw-btn font-600 letter-spacing-04 btn text-17 cupo usen"
     >
       {{ getTranslation("WithdrawinStars") }}
     </div>

@@ -380,7 +380,9 @@ body {
 .cude{
   cursor: default;
 }
-
+.usen{
+  user-select: none;
+}
 /* Custom styles */
 .custom-radio {
   width: 18px;

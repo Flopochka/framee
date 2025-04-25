@@ -23,7 +23,7 @@ const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
         v-for="(label, key) in langs"
         :key="key"
         @click="switchLanguage(key)"
-        class="lang-select-card flex-row cupo"
+        class="lang-select-card flex-row cupo usen"
       >
         <p class="text-16 font-400">{{ label }}</p>
         <img

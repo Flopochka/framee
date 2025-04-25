@@ -125,7 +125,7 @@ const withdraw = async () => {
     </div>
     <div
       @click="withdraw()"
-      class="withdraw-btn font-600 letter-spacing-04 btn text-17 cupo"
+      class="withdraw-btn font-600 letter-spacing-04 btn text-17 cupo usen"
     >
       {{ getTranslation("WithdrawinTON") }}
     </div>

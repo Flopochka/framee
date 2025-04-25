@@ -230,7 +230,7 @@ onMounted(() => {
 
 <template>
   <main class="gap-28 p-24">
-    <div class="select-type flex-row gap-10 bg-blue-900 rounded-10 p-2">
+    <div class="select-type flex-row gap-10 bg-blue-900 rounded-10 p-2 usen">
       <div
         @click="switchType(0)"
         class="select-type-item letter-spacing-04 flex-row items-center justify-center gap-4 text-white p-6 rounded-8 cupo"
@@ -253,7 +253,7 @@ onMounted(() => {
         :class="targetUserName ? 'with-dog-inputed' : ''"
         class="select-top-item with-dog flex-col gap-6"
       >
-        <p class="pl-12">{{ getTranslation("username") }}</p>
+        <p class="pl-12 usen">{{ getTranslation("username") }}</p>
         <input
           type="text"
           :class="recipientCorrect ? '' : 'incorrect'"
@@ -274,7 +274,7 @@ onMounted(() => {
             alt=""
           />
         </div>
-        <p class="buyformyself cupo" @click="buyformyself()">
+        <p class="buyformyself cupo usen" @click="buyformyself()">
           {{ getTranslation("BuyForMyself") }}
         </p>
       </div>
@@ -293,7 +293,7 @@ onMounted(() => {
       >
         <div class="select-top-stars flex-col gap-16" ref="starBox">
           <div class="select-top-item flex-col gap-6">
-            <p class="pl-12">{{ getTranslation("amount") }}</p>
+            <p class="pl-12 usen">{{ getTranslation("amount") }}</p>
             <input
               v-model.number="stars"
               type="number"
@@ -316,7 +316,7 @@ onMounted(() => {
               @mouseleave="stopIncrement"
               @touchstart="startIncrement(amount)"
               @touchend="stopIncrement"
-              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo"
+              class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo usen"
             >
               +{{ amount.toLocaleString() }}
               <img src="../assets/img/Star.svg" alt="" class="img-16" />
@@ -332,7 +332,7 @@ onMounted(() => {
               v-for="(premium, index) in getTranslation('subscriptions')"
               :key="index"
               @click="switchPremium(index)"
-              class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12 cupo"
+              class="select-top-premium-card flex-col gap-4 rounded-12 text-white letter-spacing-04 bg-blue-900 p-12 cupo usen"
               :class="{
                 'select-top-premium-card-active': isPremiumActive(index),
               }"
@@ -357,7 +357,7 @@ onMounted(() => {
         >
           <div
             @click="switchPayment(index)"
-            class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo"
+            class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
           >
             <div
@@ -372,7 +372,7 @@ onMounted(() => {
           <div
             v-if="typeof payment === 'object' && payment.submethods"
             :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
-            class="select-botoom-subcards grid-row gap-8"
+            class="select-botoom-subcards grid-row gap-8 usen"
           >
             <div
               v-for="(submethod, subIndex) in payment.submethods"
@@ -391,7 +391,7 @@ onMounted(() => {
     </div>
     <div
       @click="createorder()"
-      class="bottom-button btn bg-gradient-blue flex-col cupo"
+      class="bottom-button btn bg-gradient-blue flex-col cupo usen"
     >
       <div
         class="bottom-button-stars flex-row gap-4 items-center justify-center"

@@ -214,7 +214,7 @@ onMounted(() => {
         @click="switchScreen(4)"
         class="user-stat-box-btn btn rounded-8 cupo"
       >
-        <p class="user-stat-box-btn-text letter-spacing-04 text-14 lh-22">
+        <p class="user-stat-box-btn-text letter-spacing-04 text-14 lh-22 usen">
           {{ getTranslation("Withdraw") }}
         </p>
       </div>
@@ -227,7 +227,7 @@ onMounted(() => {
       </p>
       <div
         @click="shareContent()"
-        class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center cupo"
+        class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center cupo usen"
       >
         <img src="../assets/img/Gift.svg" alt="" class="img-16" />
         <p class="text-17 letter-spacing-04 text-white">
@@ -236,7 +236,7 @@ onMounted(() => {
       </div>
       <div
         @click="copyToClipboard(shareData.text, shareData.url)"
-        class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo"
+        class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
       >
         <img src="../assets/img/Copy.svg" alt="" class="img-28" />
       </div>
@@ -244,7 +244,7 @@ onMounted(() => {
     <div class="user-buttons-1 flex-col gap-8">
       <div
         @click="toggleModal('history')"
-        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo"
+        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
       >
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("History") }}
@@ -252,7 +252,7 @@ onMounted(() => {
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
-        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo"
+        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
         @click="linkTo('https://t.me/framestars_support')"
       >
         <p class="text-16 font-400 text-neutral-200">
@@ -261,7 +261,7 @@ onMounted(() => {
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
-        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo"
+        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
         @click="linkTo('https://t.me/FrameStarsNews')"
       >
         <p class="text-16 font-400 text-neutral-200">
@@ -274,7 +274,7 @@ onMounted(() => {
       <p class="text-14 pl-12">{{ getTranslation("Language") }}</p>
       <div
         @click="toggleModal('lang')"
-        class="user-language-item rounded-10 bg-blue-900 flex-row items-center cupo"
+        class="user-language-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
       >
         <p class="text-16 font-400 text-neutral-200">
           {{ langs[getCurrentLanguage()] }}

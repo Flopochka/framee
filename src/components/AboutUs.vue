@@ -75,7 +75,7 @@ onMounted(() => {
 <template>
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
-      <div class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo">
+      <div class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen">
         {{ getTranslation("connectWallet") }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
       </div>
@@ -132,12 +132,12 @@ onMounted(() => {
       <p class="text-16 lh-120 mb-12 text-neutral-300 letter-spacing-05">
         {{ getTranslation("FAQ") }}
       </p>
-      <div class="aboutus-bottom-accordion gap-42 flex-col cupo">
+      <div class="aboutus-bottom-accordion gap-42 flex-col">
         <div
           v-for="(accordion, index) in getTranslation('FAQData')"
           :key="index"
           @click="switchAccordion(index)"
-          class="aboutus-bottom-accordion-item"
+          class="aboutus-bottom-accordion-item cupo"
         >
           <div class="aboutus-bottom-accordion-item-top flex-row items-center">
             <p class="text-18 lh-120 letter-spacing-05 text-white twp">
