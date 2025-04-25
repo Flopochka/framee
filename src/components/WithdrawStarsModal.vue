@@ -15,10 +15,12 @@ const recipientName = ref(""); // Имя найденного получател
 const recipientPhoto = ref(""); // Фото получателя
 const recipient = ref(null); // Данные получателя
 const recipientCorrect = ref(true); // Флаг валидности получателя
+const recipientIncorrects = ref([]);
 const withdrawAmount = ref(null);
 const searchTimeout = ref(null);
 const kef = ref(187.265917);
 const valueCorrect = ref(true);
+const valueIncorrects = ref([]);
 
 watch(targetUserName, (newValue) => {
   clearTimeout(searchTimeout.value);
@@ -47,7 +49,10 @@ const fetchStarsPrice = async () => {
   }
 };
 
-const searchRecipient = async (username, context) => {
+const searchRecipient = async (username) => {
+  if (!username) {
+    return;
+  }
   console.log("Searching for:", username);
   const payload = { username: username };
   try {
@@ -73,19 +78,29 @@ const buyformyself = async () => {
 };
 
 const withdraw = async () => {
+  valueIncorrects.value = [];
+  recipientIncorrects.value = [];
   if (
-    100 < (withdrawAmount.value || 0) &&
+    0.1 < (withdrawAmount.value || 0) &&
     (withdrawAmount.value || 0) < 1000000 &&
     (withdrawAmount.value || 0) <= getUserBalance()
   ) {
     valueCorrect.value = true;
   } else {
     valueCorrect.value = false;
+    valueIncorrects.value.push(
+      0.1 > (withdrawAmount.value || 0)
+        ? "Min 0.1"
+        : (withdrawAmount.value || 0) > 1000000
+        ? "Max 1000000"
+        : "Not enough balace"
+    );
   }
-  if (await searchRecipient(targetUserName, "stars")) {
+  if (await searchRecipient(targetUserName)) {
     recipientCorrect.value = true;
   } else {
     recipientCorrect.value = false;
+    recipientIncorrects.value.push("Recipient not avalible");
   }
   if (valueCorrect.value && recipientCorrect.value) {
     const payload = {
@@ -110,7 +125,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @click.stop class="withdrawstars-head madal-screen-head items-start cude">
+  <div
+    @click.stop
+    class="withdrawstars-head madal-screen-head items-start cude"
+  >
     <div class="madal-screen-swipka cugr"></div>
     <p class="text-20 lh-120 madal-screen-title flex-row gap-14 items-center">
       {{ getTranslation("Yourbalance") }}:
@@ -137,11 +155,14 @@ onMounted(() => {
         type="number"
         :class="valueCorrect ? '' : 'incorrect'"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
-        placeholder="Min 100"
-        :min="getUserBalance() > 0.3 ? 0.3 : 0"
-        :max="getUserBalance() > 0.3 ? min(1000000, getUserBalance()) : 0"
+        placeholder="Min 0.1"
+        min="0.1"
+        max="1000000"
         v-model="withdrawAmount"
       />
+      <template v-if="valueIncorrects" v-for="e in valueIncorrects">
+        <p class="pl-14 text-red text-14">{{ e }}</p>
+      </template>
       <span
         class="with-dog flex-col gap-6"
         :class="targetUserName ? 'with-dog-inputed' : ''"
@@ -158,6 +179,7 @@ onMounted(() => {
           v-model="targetUserName"
           maxlength="45"
         />
+
         <div
           class="input-recipient flex-row gap-16 items-center text-neutral-700"
           v-if="recipient"
@@ -173,6 +195,9 @@ onMounted(() => {
           {{ getTranslation("BuyForMyself") }}
         </p>
       </span>
+      <template v-if="recipientIncorrects" v-for="e in recipientIncorrects">
+        <p class="pl-14 text-red text-14">{{ e }}</p>
+      </template>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
           {{ getTranslation("Yougetfor") }} {{ withdrawAmount || 0 }} TON ≈

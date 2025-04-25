@@ -222,6 +222,9 @@ body {
 .text-neutral-200 {
   color: var(--neutral-200);
 }
+.text-red{
+  color: var(--red);
+}
 .font-geist {
   font-family: Geist;
 }

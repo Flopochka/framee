@@ -9,11 +9,15 @@ const { getTranslation } = useLanguageStore();
 const { getUserBalance } = useUserStore();
 
 const withdrawTonAmmount = ref(null);
-const targetUserName = ref(null);
+const targetWallet = ref(null);
 const valueCorrect = ref(true);
+const valueIncorrects = ref([]);
 const walletCorrect = ref(true);
+const walletIncorrects = ref([]);
 
 const withdraw = async () => {
+  valueIncorrects.value = [];
+  walletIncorrects.value = [];
   if (
     100 < withdrawTonAmmount.value &&
     withdrawTonAmmount.value < 1000000 &&
@@ -22,12 +26,19 @@ const withdraw = async () => {
     valueCorrect.value = true;
   } else {
     valueCorrect.value = false;
+    valueIncorrects.value.push(
+      0.1 > (withdrawTonAmmount.value || 0)
+        ? "Min 0.1"
+        : (withdrawTonAmmount.value || 0) > 1000000
+        ? "Max 1000000"
+        : "Not enough balace"
+    );
   }
-  if (targetUserName.value && targetUserName.value.length > 24) {
-    //проверка кошелька
+  if (targetWallet.value && targetWallet.value.length > 24) {
     walletCorrect.value = true;
   } else {
     walletCorrect.value = false;
+    walletIncorrects.value.push("Wallet incorrect");
   }
   if (valueCorrect.value && walletCorrect.value) {
     const payload = {
@@ -36,7 +47,7 @@ const withdraw = async () => {
         withdrawTonAmmount.value % 1 === 0
           ? withdrawTonAmmount.value + ".0"
           : withdrawTonAmmount.value,
-      adress: targetUserName.value,
+      adress: targetWallet.value,
     };
     try {
       const result = await sendToBackend("/withdraw", payload);
@@ -79,10 +90,13 @@ const withdraw = async () => {
         :class="valueCorrect ? '' : 'incorrect'"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
         placeholder="Min 0.3"
-        :min="getUserBalance() > 0.3 ? 0.3 : 0"
-        :max="getUserBalance() > 0.3 ? min(getUserBalance(), 1000000) : 0"
+        min="0.3"
+        max="1000000"
         v-model="withdrawTonAmmount"
       />
+      <template v-if="valueIncorrects" v-for="e in valueIncorrects">
+        <p class="pl-14 text-red text-14">{{ e }}</p>
+      </template>
       <span class="flex-col gap-6">
         <p class="pl-14 text-neutral-300 text-14">
           {{ getTranslation("Wallet") }}
@@ -92,10 +106,13 @@ const withdraw = async () => {
           :class="walletCorrect ? '' : 'incorrect'"
           class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
           placeholder="UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2"
-          v-model="targetUserName"
+          v-model="targetWallet"
           maxlength="90"
         />
       </span>
+      <template v-if="walletIncorrects" v-for="e in walletIncorrects">
+        <p class="pl-14 text-red text-14">{{ e }}</p>
+      </template>
       <div class="withdraw-info gap-12" v-if="withdrawTonAmmount">
         <p style="grid-area: A" class="text-16 font-400 text-white">
           {{ getTranslation("Youget") }}

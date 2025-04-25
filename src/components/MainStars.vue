@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from "vue";
 import tonsvg from "../assets/img/TON Network.svg";
 import usdtsvg from "../assets/img/USDT.svg";
 import sbpsvg from "../assets/img/SBP.webp";
@@ -28,7 +27,9 @@ const recipientName = ref(null);
 const recipientPhoto = ref(null);
 const recipient = ref(null);
 const recipientCorrect = ref(true);
+const recipientIncorrects = ref([]);
 const valueCorrect = ref(true);
+const valueIncorrects = ref([]);
 const holdDelay = ref(1000);
 const minDelay = ref(50);
 const speedFactor = ref(1.33);
@@ -114,18 +115,23 @@ const searchRecipient = async (username) => {
 };
 
 const createorder = async () => {
-  if (
-    !(currentType.value == 0 && (stars.value < 100 || stars.value > 1000000))
-  ) {
+  valueIncorrects.value = [];
+  recipientIncorrects.value = [];
+  if (currentType.value == 0 && stars.value > 100 && stars.value < 1000000) {
     valueCorrect.value = true;
   } else {
     valueCorrect.value = false;
+    valueIncorrects.value.push(
+      100 > (stars.value || 0) ? "Min 100" : "Max 1000000"
+    );
   }
   if ((await searchRecipient(targetUserName)) && targetUserName) {
     recipientCorrect.value = true;
   } else {
     recipientCorrect.value = false;
+    recipientIncorrects.value.push("Recipient not avalible");
   }
+  starBoxHeight.value = starBox.value.offsetHeight;
   if (recipientCorrect.value && valueCorrect.value) {
     const payload = {
       sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
@@ -272,6 +278,9 @@ onMounted(() => {
           {{ getTranslation("BuyForMyself") }}
         </p>
       </div>
+      <template v-if="recipientIncorrects" v-for="e in recipientIncorrects">
+        <p class="pl-14 text-red text-14">{{ e }}</p>
+      </template>
       <div
         class="select-top-swith"
         :style="{
@@ -295,6 +304,9 @@ onMounted(() => {
               max="1000000"
             />
           </div>
+          <template v-if="valueIncorrects" v-for="e in valueIncorrects">
+            <p class="pl-14 text-red text-14">{{ e }}</p>
+          </template>
           <div class="select-top-item select-top-stars-box">
             <div
               v-for="amount in [100, 1000, 10000]"
