@@ -127,10 +127,8 @@ const createorder = async () => {
       );
     }
   }
-  if ((await searchRecipient(targetUserName)) && targetUserName) {
-    recipientCorrect.value = true;
-  } else {
-    recipientCorrect.value = false;
+  await searchRecipient(targetUserName.value)
+  if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
   starBoxHeight.value = starBox.value.offsetHeight;
