@@ -100,7 +100,7 @@ const withdraw = async () => {
     recipientCorrect.value = true;
   } else {
     recipientCorrect.value = false;
-    recipientIncorrects.value.push("Recipient not avalible");
+    recipientIncorrects.value.push("Recipientnotavalible");
   }
   if (valueCorrect.value && recipientCorrect.value) {
     const payload = {
