@@ -90,10 +90,10 @@ const withdraw = async () => {
     valueCorrect.value = false;
     valueIncorrects.value.push(
       0.1 > (withdrawAmount.value || 0)
-        ? "Min 0.1"
+        ? "Min01"
         : (withdrawAmount.value || 0) > 1000000
-        ? "Max 1000000"
-        : "Not enough balace"
+        ? "Max1000000"
+        : "Notenoughbalace"
     );
   }
   if (await searchRecipient(targetUserName)) {
@@ -161,7 +161,7 @@ onMounted(() => {
         v-model="withdrawAmount"
       />
       <template v-if="valueIncorrects" v-for="e in valueIncorrects">
-        <p class="pl-14 text-red text-14">{{ e }}</p>
+        <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
       </template>
       <span
         class="with-dog flex-col gap-6"
@@ -196,7 +196,7 @@ onMounted(() => {
         </p>
       </span>
       <template v-if="recipientIncorrects" v-for="e in recipientIncorrects">
-        <p class="pl-14 text-red text-14">{{ e }}</p>
+        <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
       </template>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
