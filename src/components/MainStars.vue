@@ -178,14 +178,14 @@ const setupTabReturnListener = (order_id) => {
   const handleVisibilityChange = () => {
     if (document.visibilityState === "visible") {
       console.log("User returned to tab");
-      toggleModal(null)
+      toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
   };
   document.addEventListener("visibilitychange", handleVisibilityChange);
   const handleFocus = () => {
     console.log("Tab focused");
-    toggleModal(null)
+    toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
     window.removeEventListener("focus", handleFocus);
   };
   window.addEventListener("focus", handleFocus);
