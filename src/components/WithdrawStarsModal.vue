@@ -4,10 +4,12 @@ import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
 import { onMounted, ref, watch } from "vue";
+import { useHistoryStore } from "../stores/history";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 const { getUserBalance, getUser } = useUserStore();
+const { fetchUserHistory } = useHistoryStore();
 
 // Переменные для withdrawstars (уже есть)
 const targetUserName = ref(""); // Имя пользователя для withdrawstars
@@ -112,6 +114,7 @@ const withdraw = async () => {
       const result = await sendToBackend("/withdraw", payload);
       console.log("Response:", result.data);
       toggleModal("popupstars");
+      fetchUserHistory();
     } catch (error) {
       console.error("Failed:", error);
       toggleModal("Error");
