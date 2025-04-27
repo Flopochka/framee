@@ -6,12 +6,14 @@ import visamastercardsvg from "../assets/img/VISA & MasterCard.svg";
 import { useUserStore } from "../stores/user";
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
+import { useHistoryStore } from "../stores/history";
 import { ref, onMounted, watch, nextTick } from "vue";
 import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
+const { getHistory, fetchUserHistory } = useHistoryStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
