@@ -10,6 +10,7 @@ import PremiumPopup from "./StarsPopup.vue"; // Проверьте, это то�
 import WalletPopup from "./StarsPopup.vue"; // Проверьте, это тот же компонент?
 import ErrorPopup from "./ErrorPopup.vue";
 import CopiedPopup from "./CopiedPopup.vue";
+import FillerModal from "./FillerModal.vue";
 
 
 const modalStore = useModalStore();
@@ -70,6 +71,12 @@ const modals = [
     type: "popup",
     component: CopiedPopup,
     class: "popup",
+  },
+  {
+    id: "filler",
+    type: "modal",
+    component: FillerModal,
+    class: "filler madal-screen",
   },
 ];
 

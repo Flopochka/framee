@@ -154,7 +154,7 @@ onMounted(() => {
       <input
         type="number"
         :class="valueCorrect ? '' : 'incorrect'"
-        class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
+        class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
         placeholder="Min 0.1"
         min="0.1"
         max="1000000"
@@ -173,7 +173,7 @@ onMounted(() => {
         <input
           type="text"
           :class="recipientCorrect ? '' : 'incorrect'"
-          class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
+          class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
           style="padding-left: 24px"
           placeholder="username"
           v-model="targetUserName"

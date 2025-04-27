@@ -98,6 +98,7 @@ onMounted(() => {
           <p class="text-16 text-white-60">@{{ getUser() }}</p>
         </div>
         <div
+          v-if="referals"
           v-for="referal in referals"
           class="referal-card items-center gap-8"
         >
@@ -116,6 +117,12 @@ onMounted(() => {
             }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
           </p>
         </div>
+        <template v-else>
+          <span style="padding: 6px 14px" class="flex-col gap-8">
+            <p class="text-24">{{ getTranslation("Noreferralsyet") }}</p>
+          <p class="text-16">{{ getTranslation("Inviteyourfriendstojoinandstartearningrewardstogether") }}</p>
+          </span>
+        </template>
       </div>
     </div>
   </main>

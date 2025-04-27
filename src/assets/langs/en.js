@@ -119,5 +119,17 @@ export default {
   Notenoughbalace: "Insufficient balance",
   Recipientnotavalible: "Recipient not available",
   Walletincorrect: "Incorrect wallet",
-  Min100: "Minimum 100"
+  Min100: "Minimum 100",
+  Redirectingtopayment: "Redirecting to payment",
+  Itwillonlytakeamoment: "It will only take a moment.",
+  Openpaymentpagemanually: "Open payment page manually",
+  Notasksforyou: "No tasks for you",
+  Takeabreakorcheckbacklaterfornewassignments:
+    "Take a break or check back later for new assignments!",
+  Noreferralsyet: "No referrals yet?",
+  Inviteyourfriendstojoinandstartearningrewardstogether:
+    "Invite your friends to join and start earning rewards together!",
+  Nohistoryyet: "No history yet",
+  Makeapurchaseorwithdrawaltoseeyouractivityhere:
+    "Make a purchase or withdrawal to see your activity here!",
 };

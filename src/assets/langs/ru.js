@@ -119,4 +119,16 @@ export default {
   Recipientnotavalible: "Получатель недоступен",
   Walletincorrect: "Неверный кошелек",
   Min100: "Минимум 100",
+  Redirectingtopayment: "Перенаправление на оплату",
+  Itwillonlytakeamoment: "Это займёт всего момент.",
+  Openpaymentpagemanually: "Открыть страницу оплаты вручную",
+  Notasksforyou: "Нет задач для вас",
+  Takeabreakorcheckbacklaterfornewassignments:
+    "Сделайте перерыв или проверьте позже новые задания!",
+  Noreferralsyet: "Пока нет рефералов?",
+  Inviteyourfriendstojoinandstartearningrewardstogether:
+    "Приглашайте друзей присоединиться и начинайте зарабатывать награды вместе!",
+  Nohistoryyet: "История пока пуста",
+  Makeapurchaseorwithdrawaltoseeyouractivityhere:
+    "Совершите покупку или вывод, чтобы увидеть вашу активность здесь!",
 };

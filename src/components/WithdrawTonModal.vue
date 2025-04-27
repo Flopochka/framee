@@ -88,7 +88,7 @@ const withdraw = async () => {
       <input
         type="number"
         :class="valueCorrect ? '' : 'incorrect'"
-        class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
+        class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
         placeholder="Min 0.3"
         min="0.3"
         max="1000000"
@@ -104,7 +104,7 @@ const withdraw = async () => {
         <input
           type="text"
           :class="walletCorrect ? '' : 'incorrect'"
-          class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16"
+          class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
           placeholder="UQA63stAKU17GZ80mcHctRX3DBSbm4Ks_dBwGiX9JTrIAi2"
           v-model="targetWallet"
           maxlength="90"

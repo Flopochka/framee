@@ -1,7 +1,10 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
+import { ref } from "vue";
 
 const { getTranslation } = useLanguageStore();
+
+const tasks = ref(null);
 </script>
 
 <template>
@@ -9,13 +12,16 @@ const { getTranslation } = useLanguageStore();
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
     <div class="tasks-cards flex-col gap-8">
       <div
-        v-for="i in [, , , ,]"
+        v-if="tasks"
+        v-for="i in tasks"
         class="task-card bg-blue-900 rounded-12 items-center"
       >
         <p class="text-16 text-white">
           {{ getTranslation("followinTelegram") }}
         </p>
-        <div class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen">
+        <div
+          class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+        >
           {{ getTranslation("start") }}
         </div>
         <p class="text-14 text-white flex-row gap-2">
@@ -23,6 +29,12 @@ const { getTranslation } = useLanguageStore();
           0.15
         </p>
       </div>
+      <template v-else>
+        <p class="text-32">{{ getTranslation('Notasksforyou') }}</p>
+        <p class="text-16">
+          {{ getTranslation('Takeabreakorcheckbacklaterfornewassignments') }}
+        </p>
+      </template>
     </div>
   </main>
 </template>

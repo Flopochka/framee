@@ -118,4 +118,16 @@ export default {
   Recipientnotavalible: "Destinatario no disponible",
   Walletincorrect: "Billetera incorrecta",
   Min100: "Mínimo 100",
+  Redirectingtopayment: "Redirigiendo al pago",
+  Itwillonlytakeamoment: "Solo tomará un momento.",
+  Openpaymentpagemanually: "Abrir la página de pago manualmente",
+  Notasksforyou: "No hay tareas para ti",
+  Takeabreakorcheckbacklaterfornewassignments:
+    "Tómate un descanso o vuelve más tarde para nuevas tareas!",
+  Noreferralsyet: "¿Aún no tienes referidos?",
+  Inviteyourfriendstojoinandstartearningrewardstogether:
+    "¡Invita a tus amigos a unirse y comienza a ganar recompensas juntos!",
+  Nohistoryyet: "Aún no hay historial",
+  Makeapurchaseorwithdrawaltoseeyouractivityhere:
+    "¡Realiza una compra o retiro para ver tu actividad aquí!",
 };

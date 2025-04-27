@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Geist;
+  user-select: none;
 }
 
 @font-face {
@@ -382,6 +383,9 @@ body {
 }
 .usen{
   user-select: none;
+}
+.usea{
+  user-select: auto;
 }
 /* Custom styles */
 .custom-radio {

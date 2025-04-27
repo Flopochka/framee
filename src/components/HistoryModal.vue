@@ -13,7 +13,7 @@ import Cancelled from "../assets/img/Cancelled.svg"; // Новая иконка 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 
-const history = ref([]);
+const history = ref(null);
 const purchaseStatus = ref([
   "PurchaseCancelled",
   "PurchaseProcessing",
@@ -82,7 +82,7 @@ const fetchUserHistory = async () => {
   }
   const payload = {
     // user_id: 227363776,
-    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
   };
   try {
     const result = await sendToBackend("/get_user_history", payload);
@@ -130,7 +130,7 @@ onMounted(() => {
     @click.stop
     class="user-history-body madal-screen-body madal-screen-body-high"
   >
-    <template v-for="(group, index) in history" :key="index">
+    <template v-if="history" v-for="(group, index) in history" :key="index">
       <p class="text-white-70 text-14 pl-12">
         {{ getTranslation(group.date.month) }}, {{ group.date.day }}
         {{ group.date.year == currentYear ? "" : ", " + group.date.year }}
@@ -153,9 +153,13 @@ onMounted(() => {
           <p class="text-14 flex-row twp">
             <template v-if="item.type <= 2">
               <!-- Состояния 0-2: Покупка (отменена, обработка, успешна) -->
-              {{ getTranslation('buy') }} 
-              <span class="font-400 twp" style="display:contents">
-                {{ item.Count < 15 ? getTranslation("subscriptions")[item.Count] : item.Count }}
+              {{ getTranslation("buy") }} 
+              <span class="font-400 twp" style="display: contents">
+                {{
+                  item.Count < 15
+                    ? getTranslation("subscriptions")[item.Count]
+                    : item.Count
+                }}
                 {{
                   getTranslation(item.Count < 15 ? "Premium" : "Stars")
                 }} </span
@@ -169,6 +173,14 @@ onMounted(() => {
           </p>
         </div>
       </div>
+    </template>
+    <template v-else>
+      <span style="padding: 6px 14px" class="flex-col gap-8">
+        <p class="text-24">{{ getTranslation("Nohistoryyet") }}</p>
+        <p class="text-16">
+          {{ getTranslation("Makeapurchaseorwithdrawaltoseeyouractivityhere") }}
+        </p>
+      </span>
     </template>
   </div>
 </template>

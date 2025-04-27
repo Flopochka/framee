@@ -117,4 +117,16 @@ export default {
   Recipientnotavalible: "المستلم غير متاح",
   Walletincorrect: "المحفظة غير صحيحة",
   Min100: "الحد الأدنى 100",
+  Redirectingtopayment: "جارٍ إعادة التوجيه إلى الدفع",
+  Itwillonlytakeamoment: "سيستغرق الأمر لحظة فقط.",
+  Openpaymentpagemanually: "فتح صفحة الدفع يدويًا",
+  Notasksforyou: "لا توجد مهام لك",
+  Takeabreakorcheckbacklaterfornewassignments:
+    "خذ استراحة أو تحقق لاحقًا للحصول على مهام جديدة!",
+  Noreferralsyet: "لا توجد إحالات بعد؟",
+  Inviteyourfriendstojoinandstartearningrewardstogether:
+    "ادعُ أصدقاءك للانضمام وابدأ في كسب المكافآت معًا!",
+  Nohistoryyet: "لا يوجد سجل بعد",
+  Makeapurchaseorwithdrawaltoseeyouractivityhere:
+    "قم بإجراء عملية شراء أو سحب لرؤية نشاطك هنا!",
 };

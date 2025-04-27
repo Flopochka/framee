@@ -119,4 +119,16 @@ export default {
   Recipientnotavalible: "Empfänger nicht verfügbar",
   Walletincorrect: "Falsche Wallet",
   Min100: "Minimum 100",
+  Redirectingtopayment: "Weiterleitung zur Zahlung",
+  Itwillonlytakeamoment: "Es dauert nur einen Moment.",
+  Openpaymentpagemanually: "Zahlungsseite manuell öffnen",
+  Notasksforyou: "Keine Aufgaben für dich",
+  Takeabreakorcheckbacklaterfornewassignments:
+    "Mach eine Pause oder schau später nach neuen Aufgaben!",
+  Noreferralsyet: "Noch keine Empfehlungen?",
+  Inviteyourfriendstojoinandstartearningrewardstogether:
+    "Lade deine Freunde ein, mitzumachen und gemeinsam Belohnungen zu verdienen!",
+  Nohistoryyet: "Noch kein Verlauf",
+  Makeapurchaseorwithdrawaltoseeyouractivityhere:
+    "Tätige einen Kauf oder eine Auszahlung, um deine Aktivitäten hier zu sehen!",
 };

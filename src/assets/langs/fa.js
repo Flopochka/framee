@@ -118,4 +118,16 @@ export default {
   Recipientnotavalible: "گیرنده در دسترس نیست",
   Walletincorrect: "کیف پول نادرست",
   Min100: "حداقل 100",
+  Redirectingtopayment: "در حال هدایت به پرداخت",
+  Itwillonlytakeamoment: "فقط یک لحظه طول می‌کشد.",
+  Openpaymentpagemanually: "باز کردن صفحه پرداخت به صورت دستی",
+  Notasksforyou: "هیچ وظیفه‌ای برای شما وجود ندارد",
+  Takeabreakorcheckbacklaterfornewassignments:
+    "استراحت کنید یا بعداً برای وظایف جدید بررسی کنید!",
+  Noreferralsyet: "هنوز ارجاعی ندارید؟",
+  Inviteyourfriendstojoinandstartearningrewardstogether:
+    "دوستان خود را دعوت کنید تا به ما بپیوندند و با هم پاداش کسب کنید!",
+  Nohistoryyet: "هنوز سابقه‌ای وجود ندارد",
+  Makeapurchaseorwithdrawaltoseeyouractivityhere:
+    "خرید کنید یا برداشت انجام دهید تا فعالیت‌های خود را اینجا ببینید!",
 };

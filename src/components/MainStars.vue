@@ -143,14 +143,15 @@ const createorder = async () => {
       payment_method: paymentlistanother[currentPaymentSub.value],
       payment_network: paymentlist[currentPayment.value],
     };
-    console.log(payload);
+
     try {
       const result = await sendToBackend("/create_order", payload);
-      console.log("Response:", result);
-      var data = result.data.data;
+      const data = result.data.data;
+      // Показываем филлерное окно
+      toggleModal('filler')
       window.Telegram.WebApp.openLink(data.payment_link);
-      toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
-      setTimeout(getorderinfo(data.order_id), 1000);
+      const orderId = data.order_id;
+      setupTabReturnListener(orderId);
     } catch (error) {
       console.error("Failed:", error);
       toggleModal("Error");
@@ -158,15 +159,36 @@ const createorder = async () => {
   }
 };
 
+// Функция для получения статуса заказа
 const getorderinfo = async (order_id) => {
-  console.log("Searching for:", order_id); // Заглушка
+  console.log("Searching for:", order_id);
   const payload = { order_id: order_id };
   try {
     const result = await sendToBackend("/get_status_order", payload);
     console.log("Response:", result);
+    if (result.data.status === "success") {
+      toggleModal(null)
+    }
   } catch (error) {
     console.error("Failed:", error);
   }
+};
+
+const setupTabReturnListener = (order_id) => {
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      console.log("User returned to tab");
+      toggleModal(null)
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }
+  };
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+  const handleFocus = () => {
+    console.log("Tab focused");
+    toggleModal(null)
+    window.removeEventListener("focus", handleFocus);
+  };
+  window.addEventListener("focus", handleFocus);
 };
 
 const buyformyself = async () => {
@@ -257,7 +279,7 @@ onMounted(() => {
         <input
           type="text"
           :class="recipientCorrect ? '' : 'incorrect'"
-          class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
+          class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
           style="padding-left: 24px"
           placeholder="username"
           v-model="targetUserName"
@@ -298,7 +320,7 @@ onMounted(() => {
               v-model="stars"
               type="number"
               :class="valueCorrect ? '' : 'incorrect'"
-              class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16"
+              class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
               placeholder="Min 100"
               min="100"
               max="1000000"
