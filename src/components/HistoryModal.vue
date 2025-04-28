@@ -28,7 +28,9 @@ const getIconPath = (type, count) => {
     default:
       return StarGold;
   }
-};
+}
+
+const historyLoop = setInterval(fetchUserHistory(),30000);
 </script>
 
 <template>

@@ -3,10 +3,12 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
 import { ref } from "vue";
+import { useHistoryStore } from "../stores/history";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 const { getUserBalance } = useUserStore();
+const { fetchUserHistory } = useHistoryStore();
 
 const withdrawTonAmmount = ref(null);
 const targetWallet = ref(null);
@@ -53,6 +55,7 @@ const withdraw = async () => {
       const result = await sendToBackend("/withdraw", payload);
       console.log("Response:", result.data);
       toggleModal("popupstars");
+      fetchUserHistory();
     } catch (error) {
       console.error("Failed:", error);
       toggleModal("Error");

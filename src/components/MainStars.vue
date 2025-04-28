@@ -13,7 +13,7 @@ import { sendToBackend } from "../modules/fetch";
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
-const { getHistory, fetchUserHistory } = useHistoryStore();
+const { fetchUserHistory } = useHistoryStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -129,7 +129,7 @@ const createorder = async () => {
       );
     }
   }
-  await searchRecipient(targetUserName.value)
+  await searchRecipient(targetUserName.value);
   if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
@@ -150,7 +150,7 @@ const createorder = async () => {
       const result = await sendToBackend("/create_order", payload);
       const data = result.data.data;
       // Показываем филлерное окно
-      toggleModal('filler')
+      toggleModal("filler");
       window.Telegram.WebApp.openLink(data.payment_link);
       const orderId = data.order_id;
       setupTabReturnListener(orderId);
@@ -169,7 +169,7 @@ const getorderinfo = async (order_id) => {
     const result = await sendToBackend("/get_status_order", payload);
     console.log("Response:", result);
     if (result.data.status === "success") {
-      toggleModal(null)
+      toggleModal(null);
     }
   } catch (error) {
     console.error("Failed:", error);
@@ -181,6 +181,7 @@ const setupTabReturnListener = (order_id) => {
     if (document.visibilityState === "visible") {
       console.log("User returned to tab");
       toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
+      fetchUserHistory();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
   };
@@ -188,6 +189,7 @@ const setupTabReturnListener = (order_id) => {
   const handleFocus = () => {
     console.log("Tab focused");
     toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
+    fetchUserHistory();
     window.removeEventListener("focus", handleFocus);
   };
   window.addEventListener("focus", handleFocus);
