@@ -7,10 +7,12 @@ import { useUserStore } from "../stores/user";
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useHistoryStore } from "../stores/history";
+import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick } from "vue";
 import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
+const { setPaymentLink } = usePaymentStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
@@ -150,6 +152,7 @@ const createorder = async () => {
       const result = await sendToBackend("/create_order", payload);
       const data = result.data.data;
       // Показываем филлерное окно
+      setPaymentLink(data.payment_link)
       toggleModal("filler");
       window.Telegram.WebApp.openLink(data.payment_link);
       const orderId = data.order_id;

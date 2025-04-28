@@ -10,6 +10,7 @@ import Cancelled from "../assets/img/Cancelled.svg";
 
 const { getHistory } = useHistoryStore();
 const { getTranslation } = useLanguageStore();
+const { fetchUserHistory } = useHistoryStore();
 
 const history = getHistory();
 const withdrawType = ref(["TON", "Stars", "Stars", "Stars"]);
