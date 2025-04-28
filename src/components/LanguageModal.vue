@@ -1,23 +1,11 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
 
-const { toggleModal } = useModalStore();
-const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
-  useLanguageStore();
+const { switchLanguage, langs, getCurrentLanguage } = useLanguageStore();
 </script>
 
 <template>
-  <div @click.stop class="lang-menu-head madal-screen-head">
-    <div class="madal-screen-swipka cugr"></div>
-    <p class="text-20 madal-screen-title lh-120">
-      {{ getTranslation("Systemlanguage") }}
-    </p>
-    <div @click="toggleModal(null)" class="madal-screen-close cupo">
-      <img src="../assets/img/Cross.svg" alt="" class="img-24" />
-    </div>
-  </div>
-  <div @click.stop class="lang-menu-body madal-screen-body">
+  <div class="lang-menu-body">
     <div class="lang-select-cards">
       <div
         v-for="(label, key) in langs"
@@ -28,7 +16,7 @@ const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
         <p class="text-16 font-400">{{ label }}</p>
         <img
           src="../assets/img/Check.svg"
-          :alt="getCurrentLanguage() === key ? 'Галочки нет' : 'Галочка'"
+          :alt="getCurrentLanguage() === key ? 'Selected' : 'Not selected'"
           class="img-24"
           :class="{ hidden: getCurrentLanguage() !== key }"
         />
@@ -38,8 +26,23 @@ const { getTranslation, switchLanguage, langs, getCurrentLanguage } =
 </template>
 
 <style scoped>
+.lang-menu-body {
+  padding: 16px;
+}
+
+.lang-select-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .lang-select-card {
   justify-content: space-between;
   padding: 8px 6px 8px 0;
+  cursor: pointer;
+}
+
+.hidden {
+  visibility: hidden;
 }
 </style>
