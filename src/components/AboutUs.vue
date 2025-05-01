@@ -66,16 +66,24 @@ const fetchTotalInfo = async () => {
   }
 };
 
-// Инициализация user_id после загрузки компонента
 onMounted(() => {
   fetchTotalInfo();
+  lottie.loadAnimation({
+    container: document.getElementById("lottie"), // the dom element that will contain the animation
+    renderer: "svg",
+    loop: true,
+    autoplay: true,
+    path: "content/UtyaDuck_AgADAwEAAladvQo.json",
+  });
 });
 </script>
 
 <template>
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
-      <div class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen">
+      <div
+        class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
+      >
         {{ getTranslation("connectWallet") }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
       </div>
@@ -89,11 +97,12 @@ onMounted(() => {
       <div
         class="aboutus-cover-card rounded-18 flex-col items-center justify-center gap-32"
       >
-        <img
+        <div id="lottie" class="aboutus-cover-card-img"></div>
+        <!-- <img
           src="../assets/img/Duck.svg"
           alt=""
           class="aboutus-cover-card-img"
-        />
+        /> -->
         <p class="text-white text-24 font-600 letter-spacing-05 lh-100 tac twb">
           {{ getTranslation("paywithTONUSDTorcardpayments") }}
         </p>

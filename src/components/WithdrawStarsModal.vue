@@ -126,7 +126,7 @@ onMounted(() => {
         :class="{ incorrect: !valueCorrect }"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
         placeholder="Min 0.1"
-        min="0.1"
+        min="0.5"
         max="1000000"
         v-model="withdrawAmount"
       />

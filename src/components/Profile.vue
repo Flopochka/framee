@@ -15,7 +15,7 @@ const { getTranslation, langs, getCurrentLanguage, switchLanguage } =
   useLanguageStore();
 const shareData = {
   title: "FRAME Stars",
-  text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇 @Framestars_bot",
+  text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇",
   url:
     "https://t.me/Framestars_bot?start=" +
     window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
