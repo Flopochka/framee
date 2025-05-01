@@ -6,11 +6,21 @@ import AboutUs from "./components/AboutUs.vue";
 import Profile from "./components/Profile.vue";
 import ModalScreens from "./components/ModalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
+import { useRoute } from 'vue-router';
 import { useScreenStore } from "./stores/screen";
 import { initInputNumberHandler } from './modules/inputNumber'
 import { initInputTextHandler } from './modules/inputText'
+import {watch} from "vue"
 
-const { getCurrentScreen } = useScreenStore();
+const { getCurrentScreen, syncWithRoute } = useScreenStore();
+const route = useRoute();
+watch(
+  () => route.path,
+  (newPath) => {
+    syncWithRoute(newPath);
+  },
+  { immediate: true }
+);
 initInputNumberHandler()
 initInputTextHandler()
 </script>
