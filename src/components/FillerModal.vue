@@ -7,7 +7,7 @@ const { getPaymentLink } = usePaymentStore();
 </script>
 
 <template>
-  <div class="withdrawstars-body jcsb">
+  <div class="withdrawstars-body flex-col items-center gap-26 jcsb">
     <div class="spin">
       <img :src="Spinner" src="" alt="" class="img-44 spinner" />
       <img :src="Spinner" src="" alt="" class="img-44 spinner" />
@@ -16,7 +16,7 @@ const { getPaymentLink } = usePaymentStore();
       <p class="text-24 lh-120 twb">
         {{ getTranslation("Redirectingtopayment") }}
       </p>
-      <p class="text-16 twb">{{ getTranslation("Itwillonlytakeamoment") }}</p>
+      <p class="text-16 lh-120 twb">{{ getTranslation("Itwillonlytakeamoment") }}</p>
     </span>
     <a :href="getPaymentLink()" class="rd-meself btn text-16">{{
       getTranslation("Openpaymentpagemanually")

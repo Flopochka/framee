@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useModalStore = defineStore("modal", () => {
-  // const activeModal = ref('filler');
-  const activeModal = ref(null);
+  const activeModal = ref('filler');
+  // const activeModal = ref(null);
   const toggleModal = async (modalName) => {
     activeModal.value = activeModal.value === modalName ? null : modalName;
   };

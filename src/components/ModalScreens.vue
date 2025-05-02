@@ -92,7 +92,7 @@ const modals = [
     component: FillerModal,
     type: "modal",
     class: "filler madal-screen",
-    title: "Filler", // Уточните заголовок
+    title: "",
   },
 ];
 
