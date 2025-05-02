@@ -165,7 +165,9 @@ const createorder = async () => {
           : paymentlistanother[currentPaymentSub.value],
       payment_network:
         currentPayment.value > 0
-          ? "CARD"
+          ? currentPayment.value == 2
+            ? "USDT"
+            : "CARD"
           : paymentlistanother[currentPaymentSub.value],
     };
 

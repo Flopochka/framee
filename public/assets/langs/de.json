@@ -94,7 +94,7 @@
     "for": "für",
     "Premium3months": "Premium 3 Monate",
     "Wallet": "Wallet",
-    "youget": "Sie erhalten",
+    "Youget": "Sie erhalten",
     "Fee": "Gebühr",
     "Starshavebeensent": "Sterne wurden gesendet",
     "Youraccountwillbeupdatedwithinafewminutes": "Ihr Konto wird in wenigen Minuten aktualisiert.",
@@ -125,5 +125,6 @@
     "Makeapurchaseorwithdrawaltoseeyouractivityhere": "Tätigen Sie einen Kauf oder eine Auszahlung, um Ihre Aktivitäten hier zu sehen!",
     "Connectyouwallet": "Verbinden Sie Ihre Wallet",
     "disconectWallet": "Wallet trennen",
-    "Areyoushure": "Sind Sie sicher?"
+    "Areyoushure": "Sind Sie sicher?",
+    "For": "Für"
   }

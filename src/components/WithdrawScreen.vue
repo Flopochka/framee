@@ -98,7 +98,7 @@ onMounted(() => {
           <p class="text-16 text-white-60">@{{ getUser() }}</p>
         </div>
         <div
-          v-if="referals != []"
+          v-if="referals && referals.length"
           v-for="referal in referals"
           class="referal-card items-center gap-8"
         >

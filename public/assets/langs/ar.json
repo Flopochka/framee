@@ -94,7 +94,7 @@
     "for": "لـ",
     "Premium3months": "بريميوم 3 أشهر",
     "Wallet": "المحفظة",
-    "youget": "ستحصل على",
+    "Youget": "ستحصل على",
     "Fee": "الرسوم",
     "Starshavebeensent": "تم إرسال النجوم",
     "Youraccountwillbeupdatedwithinafewminutes": "سيتم تحديث حسابك خلال بضع دقائق.",
@@ -125,5 +125,6 @@
     "Makeapurchaseorwithdrawaltoseeyouractivityhere": "قم بالشراء أو السحب لرؤية نشاطك هنا!",
     "Connectyouwallet": "ربط محفظتك",
     "disconectWallet": "فصل المحفظة",
-    "Areyoushure": "هل أنت متأكد؟"
+    "Areyoushure": "هل أنت متأكد؟",
+    "For": "لـ"
   }

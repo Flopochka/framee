@@ -94,7 +94,7 @@
     "for": "برای",
     "Premium3months": "پریمیوم 3 ماه",
     "Wallet": "کیف پول",
-    "youget": "شما دریافت می‌کنید",
+    "Youget": "شما دریافت می‌کنید",
     "Fee": "کارمزد",
     "Starshavebeensent": "ستاره‌ها ارسال شده‌اند",
     "Youraccountwillbeupdatedwithinafewminutes": "حساب شما در چند دقیقه به‌روزرسانی خواهد شد.",
@@ -125,5 +125,6 @@
     "Makeapurchaseorwithdrawaltoseeyouractivityhere": "خرید یا برداشت انجام دهید تا فعالیت خود را اینجا ببینید!",
     "Connectyouwallet": "کیف پول خود را متصل کنید",
     "disconectWallet": "قطع اتصال کیف پول",
-    "Areyoushure": "آیا مطمئن هستید؟"
+    "Areyoushure": "آیا مطمئن هستید؟",
+    "For": "برای"
   }

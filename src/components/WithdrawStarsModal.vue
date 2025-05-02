@@ -161,7 +161,7 @@ onMounted(() => {
       </p>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
-          {{ getTranslation("For") }} {{ withdrawAmount || 0 }} TON {{ getTranslation("youget") }} ≈
+          {{ getTranslation("For") }} {{ withdrawAmount || 0 }} TON {{ getTranslation("Youget") }} ≈
         </p>
         <p class="text-24 text-white">{{ Math.floor((withdrawAmount || 0) * kef) }} Stars</p>
       </div>

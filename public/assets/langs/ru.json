@@ -94,7 +94,7 @@
     "for": "для",
     "Premium3months": "Премиум 3 месяца",
     "Wallet": "Кошелек",
-    "youget": "Вы получите",
+    "Youget": "Вы получите",
     "Fee": "Комиссия",
     "Starshavebeensent": "Звезды отправлены",
     "Youraccountwillbeupdatedwithinafewminutes": "Ваш аккаунт будет обновлен в течение нескольких минут.",
@@ -125,5 +125,6 @@
     "Makeapurchaseorwithdrawaltoseeyouractivityhere": "Совершите покупку или вывод, чтобы увидеть вашу активность здесь!",
     "Connectyouwallet": "Подключите ваш кошелек",
     "disconectWallet": "Отключить кошелек",
-    "Areyoushure": "Вы уверены?"
+    "Areyoushure": "Вы уверены?",
+    "For": "За"
   }
