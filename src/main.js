@@ -13,7 +13,7 @@ app.mount('#app');
 // TGWebApp
 window.onload = () => {
   const tg = window.Telegram.WebApp;
-  tg.expand();
+  // tg.expand();
 
   tg.setHeaderColor("#000000"); // Цвет заголовка
   tg.setBackgroundColor("#000000"); // Цвет фона

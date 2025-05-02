@@ -3,7 +3,7 @@ import querystring from "querystring";
 import { isValid } from "@telegram-apps/init-data-node";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const BASE_BACKEND_URL = "https://185.105.90.37:8000";
+const BASE_BACKEND_URL = "https://185.105.90.37:8010";
 
 // Проверка подписи Telegram initData с использованием библиотеки
 function verifyTelegramInitData(initData) {
@@ -58,7 +58,7 @@ function verifyTelegramInitData(initData) {
   return valid;
 }
 
-export async function handler(event){
+export async function handler(event) {
   if (event.httpMethod !== "POST") {
     console.log("Invalid method:", event.httpMethod);
     return {
@@ -170,4 +170,4 @@ export async function handler(event){
       }),
     };
   }
-};
+}
