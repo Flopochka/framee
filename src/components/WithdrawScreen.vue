@@ -12,7 +12,7 @@ const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } =
   useUserStore();
 
 const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
-const referals = ref(null);
+const referals = ref([]);
 
 const fetchUserReferals = async () => {
   const payload = {
@@ -98,7 +98,7 @@ onMounted(() => {
           <p class="text-16 text-white-60">@{{ getUser() }}</p>
         </div>
         <div
-          v-if="referals"
+          v-if="referals != []"
           v-for="referal in referals"
           class="referal-card items-center gap-8"
         >
