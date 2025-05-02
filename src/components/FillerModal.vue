@@ -18,7 +18,7 @@ const { getPaymentLink } = usePaymentStore();
       </p>
       <p class="text-16 lh-120 twb">{{ getTranslation("Itwillonlytakeamoment") }}</p>
     </span>
-    <a :href="getPaymentLink()" class="rd-meself btn text-16">{{
+    <a :href="getPaymentLink() || ''" class="rd-meself btn text-16">{{
       getTranslation("Openpaymentpagemanually")
     }}</a>
   </div>

@@ -58,7 +58,7 @@ const tryConnect = (e) => {
       <div
         @click="tryConnect(key)"
         v-for="(value, key) in conList"
-        class="connect-card btn bg-blue-900"
+        class="connect-card btn bg-blue-900 usen"
       >
         <p class="text-16 font-400 text-white-75">
           {{ getTranslation(value) }}
