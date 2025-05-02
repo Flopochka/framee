@@ -165,21 +165,21 @@ const createorder = async () => {
           : paymentlistanother[currentPaymentSub.value],
       payment_network:
         currentPayment.value > 0
-          ? currentPayment.value == 2
+          ? currentPayment.value == 1
             ? "USDT"
             : "CARD"
           : paymentlistanother[currentPaymentSub.value],
     };
 
     try {
-      const result = await sendToBackend("/create_order", payload);
-      const data = result.data.data;
-      // Показываем филлерное окно
-      setPaymentLink(data.payment_link);
       toggleModal("filler");
-      window.Telegram.WebApp.openLink(data.payment_link);
-      const orderId = data.order_id;
-      setupTabReturnListener(orderId);
+      sendToBackend("/create_order", payload).then((result) => {
+        const data = result.data.data;
+        setPaymentLink(data.payment_link);
+        const orderId = data.order_id;
+        window.Telegram.WebApp.openLink(data.payment_link);
+        setupTabReturnListener(orderId);
+      });
     } catch (error) {
       console.error("Failed:", error);
       toggleModal("error");
