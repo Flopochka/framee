@@ -27,6 +27,11 @@ onMounted(() => {
   window.onload = () => {
     const tg = window.Telegram.WebApp;
     tg.expand();
+    if (window.Telegram?.WebApp?.version < "6.0") {
+      console.warn(
+        "This version of Telegram may not fully support Web Apps. Please update Telegram."
+      );
+    }
 
     tg.setHeaderColor("#000000"); // Цвет заголовка
     tg.setBackgroundColor("#000000"); // Цвет фона
@@ -50,6 +55,7 @@ onMounted(() => {
   //   token: "",
   //   appName: "FRAME",
   // });
+  window.addEventListener('resize', () => tg.expand());
 });
 initInputNumberHandler();
 initInputTextHandler();
