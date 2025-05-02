@@ -103,9 +103,6 @@ const withdraw = async () => {
           {{ getTranslation("Youget") }}
         </p>
         <p class="text-24 text-white">{{ withdrawTonAmmount }} TON</p>
-        <p class="text-14 font-400 text-white-60 jse">
-          {{ getTranslation("Fee") }} 0.3 TON
-        </p>
       </div>
     </div>
     <div
