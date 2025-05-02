@@ -119,8 +119,8 @@ onMounted(() => {
         </div>
         <template v-else>
           <span style="padding: 6px 14px" class="flex-col gap-8">
-            <p class="text-24">{{ getTranslation("Noreferralsyet") }}</p>
-          <p class="text-16">{{ getTranslation("Inviteyourfriendstojoinandstartearningrewardstogether") }}</p>
+            <p class="text-24 lh-120">{{ getTranslation("Noreferralsyet") }}</p>
+          <p class="text-16 lh-120">{{ getTranslation("Inviteyourfriendstojoinandstartearningrewardstogether") }}</p>
           </span>
         </template>
       </div>

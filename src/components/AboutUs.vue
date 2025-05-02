@@ -34,7 +34,9 @@ const cards = ref([
 const disconWarn = ref(false);
 const toggleWarn = () => {
   disconWarn.value = !disconWarn.value;
-  console.log(disconWarn.value)
+  const xze = setTimeout(() => {
+    disconWarn.value = !disconWarn.value;
+  }, 3000);
 };
 
 const currentAccordion = ref(0);
@@ -80,7 +82,7 @@ const disconnect = async () => {
     };
     const result = await sendToBackend("/disconnect_wallet", payload);
     const data = result.data.data;
-    wallCon.value = false
+    wallCon.value = false;
     console.log("Response:", result.data);
   } catch (error) {
     console.error("Failed:", error);
@@ -133,10 +135,9 @@ onMounted(() => {
           }
         "
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
+        :class="disconWarn ? 'warn' : ''"
       >
-        {{
-          getTranslation(disconWarn? "Areyoushure" : "disconectWallet")
-        }}
+        {{ getTranslation(disconWarn ? "Areyoushure" : "disconectWallet") }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
       </div>
       <p
@@ -301,5 +302,8 @@ onMounted(() => {
 .aboutus-bottom-accordion-item-bottom-active {
   max-height: 200px;
   transition: max-height 0.2s ease-in-out;
+}
+.warn {
+  background: rgb(165, 63, 63);
 }
 </style>

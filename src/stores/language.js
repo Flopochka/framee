@@ -17,7 +17,7 @@ export const useLanguageStore = defineStore("language", () => {
     ar: "فارسی",
     fa: "العربية",
   });
-  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id)
+  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 
   // Вспомогательная функция для парсинга данных из localStorage
   const tryParse = (data) => {
@@ -41,10 +41,11 @@ export const useLanguageStore = defineStore("language", () => {
       return { [lang]: cachedData };
     }
 
-    // Если в кэше нет, загружаем с сервера
+    // Если в кэше нет, загружаем JSON с сервера
     try {
-      const language = await import(`../assets/langs/${lang}.js`);
-      const langData = language.default;
+      const response = await fetch(`/assets/langs/${lang}.json`);
+      if (!response.ok) throw new Error(`Failed to load ${lang}.json`);
+      const langData = await response.json();
       // Сохраняем в localStorage
       localStorage.setItem(`lang_${lang}`, JSON.stringify(langData));
       return { [lang]: langData };
@@ -81,12 +82,10 @@ export const useLanguageStore = defineStore("language", () => {
   // Основная функция загрузки всех языков
   const loadAllLanguages = async () => {
     isLoading.value = true;
-    
+
     // Установка начального языка
     const savedLangKey = localStorage.getItem("language") || "en";
-    const savedLangData = tryParse(
-      localStorage.getItem(`lang_${savedLangKey}`)
-    );
+    const savedLangData = tryParse(localStorage.getItem(`lang_${savedLangKey}`));
 
     if (savedLangData) {
       langsData.value[savedLangKey] = savedLangData;
@@ -113,10 +112,7 @@ export const useLanguageStore = defineStore("language", () => {
         if (langData) {
           const langKey = Object.keys(langData)[0];
           langsData.value[langKey] = langData[langKey];
-          localStorage.setItem(
-            `lang_${langKey}`,
-            JSON.stringify(langData[langKey])
-          );
+          localStorage.setItem(`lang_${langKey}`, JSON.stringify(langData[langKey]));
         }
       });
     }
@@ -148,10 +144,8 @@ export const useLanguageStore = defineStore("language", () => {
         user_id: userId.value,
         lang: lang,
       };
-      console.log(payload)
       try {
         const result = await sendToBackend("/change_user_lang", payload);
-        const data = result.data.data;
         console.log("Response:", result.data);
       } catch (error) {
         console.error("Failed:", error);
@@ -163,16 +157,6 @@ export const useLanguageStore = defineStore("language", () => {
         await switchLanguage("en");
       }
     }
-    const payload = {
-      user_id: userId.value,
-      lang: lang
-    };
-    try {
-      const result = await sendToBackend("/change_user_lang", payload);
-      console.log("Response:", result.data);
-    } catch (error) {
-      console.error("Failed:", error);
-    }
   };
 
   // Геттер для получения текущего языка
@@ -180,7 +164,6 @@ export const useLanguageStore = defineStore("language", () => {
 
   // Геттер для получения конкретного перевода
   const getTranslation = (key) => {
-    // console.log('Key: ', key, '\n', TextData.value[key] ? 'TextData: '+TextData.value[key] : 'TextData not avalible', '\n', langsData.value["en"]?.[key]? 'langsData: '+langsData.value["en"]?.[key] : 'langsData not avalible')
     return TextData.value[key] || langsData.value["en"]?.[key] || key;
   };
 

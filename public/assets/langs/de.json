@@ -1,0 +1,129 @@
+{
+    "stars": "Sterne",
+    "premium": "Premium",
+    "username": "Benutzername",
+    "amount": "Betrag",
+    "subscription": "Abonnement",
+    "subscriptions": ["3 Monate", "6 Monate", "12 Monate"],
+    "payment": "Zahlung",
+    "paymentMethods": [
+      {
+        "name": "TON",
+        "submethods": ["TON", "PUNK", "GLITCH"]
+      },
+      "USDT",
+      "SBP",
+      "VISA & MasterCard"
+    ],
+    "buy": "Kaufen",
+    "buyPremium": "Premium kaufen",
+    "tasks": "Aufgaben",
+    "followinTelegram": "Auf Telegram folgen",
+    "start": "Starten",
+    "connectWallet": "Wallet verbinden",
+    "theBestChoiceforPurchasingTelegramStarsandPremium": "Die beste Wahl für den Kauf von Telegram Stars und Premium.",
+    "paywithTONUSDTorcardpayments": "Zahlen Sie mit TON, USDT oder Kartenzahlungen.",
+    "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired": "Profitieren Sie von niedrigeren Preisen als beim offiziellen Telegram-Bot ohne KYC-Verifizierung.",
+    "aboutus": "Über uns",
+    "boughttoday": "Heute gekauft",
+    "boughtyesterday": "Gestern gekauft",
+    "boughtalltime": "Insgesamt gekauft",
+    "boughtmonthpremium": "Monatliches Premium gekauft",
+    "FAQ": "FAQ",
+    "FAQData": [
+      [
+        "Warum sind Ihre Preise bis zu 39,7 % niedriger?",
+        "Beim Kauf von Telegram Stars & Premium über die Telegram-App enthalten die Preise Provisionen von etwa 40 % für den Apple/Google Store. Mit unserem Service umgehen Sie diese Gebühren und erhalten ein besseres Angebot."
+      ],
+      [
+        "Was ist die Provision für den Kauf über FRAME?",
+        "Alle auf unserem Telegram-Service @FrameStars_Bot und unserer Website angegebenen Preise sind endgültig. Die einzige zusätzliche Kosten sind eine geringe Netzwerkgebühr beim Überweisen von Geldern."
+      ],
+      [
+        "Welche Zahlungsmethoden akzeptieren Sie?",
+        "Wir akzeptieren Zahlungen in TON, USDT und mit Bankkarten. Wählen Sie die für Sie bequemste Option während des Bezahlvorgangs."
+      ],
+      [
+        "Wie lange dauert die Lieferung?",
+        "Bestellungen werden in der Regel sofort bearbeitet. In seltenen Fällen kann es einige Minuten dauern. Wenn Ihr Kauf nicht ankommt, überprüfen Sie Ihre Transaktionsdetails oder kontaktieren Sie unseren Support unter @framestars_support."
+      ],
+      [
+        "Was passiert, wenn mein Kauf nicht ankommt?",
+        "Wenn Sie Ihre Sterne oder Ihr Premium-Abonnement nicht innerhalb einer angemessenen Zeit erhalten haben, wenden Sie sich bitte mit Ihren Zahlungsdetails an unseren Support unter @framestars_support. Wir helfen Ihnen so schnell wie möglich."
+      ],
+      [
+        "Ist es sicher, bei FRAME zu kaufen?",
+        "Ja, unser Service ist sicher und zuverlässig. Wir verarbeiten Transaktionen ohne persönliche Daten, um Privatsphäre und Sicherheit zu gewährleisten."
+      ],
+      [
+        "Wie kann ich Sterne an einen Freund senden?",
+        "Geben Sie während des Kaufprozesses einfach den Telegram-Benutzernamen (@username) des Empfängers ein, und die Sterne oder das Premium-Abonnement werden direkt auf sein Konto gesendet."
+      ],
+      [
+        "Wie kann ich Telegram-Sterne kostenlos erhalten?",
+        "Unsere Aufgaben-Seite ist derzeit in Entwicklung. Bald können Sie Sterne verdienen, indem Sie kurze Werbevideos ansehen."
+      ]
+    ],
+    "totalUsers": "Gesamtzahl der Nutzer",
+    "totalEarnings": "Gesamteinnahmen",
+    "Withdraw": "Auszahlen",
+    "Invitefriendsandearn5fromtheirpurchases": "Laden Sie Freunde ein und verdienen Sie 5 % von ihren Käufen!",
+    "Inviteafriend": "Einen Freund einladen",
+    "History": "Verlauf",
+    "Support": "Support",
+    "OurTelegram": "Unser Telegram",
+    "Language": "Sprache",
+    "Yourbalance": "Ihr Guthaben",
+    "WithdrawinTON": "In TON auszahlen",
+    "WithdrawinStars": "In Sternen auszahlen",
+    "YourReferals": "Ihre Empfehlungen",
+    "Systemlanguage": "Systemsprache",
+    "Jan": "Jan",
+    "Feb": "Feb",
+    "Mar": "Mär",
+    "Apr": "Apr",
+    "May": "Mai",
+    "Jun": "Jun",
+    "Jul": "Jul",
+    "Aug": "Aug",
+    "Sep": "Sep",
+    "Oct": "Okt",
+    "Nov": "Nov",
+    "Dec": "Dez",
+    "Buyed": "Gekauft",
+    "for": "für",
+    "Premium3months": "Premium 3 Monate",
+    "Wallet": "Wallet",
+    "youget": "Sie erhalten",
+    "Fee": "Gebühr",
+    "Starshavebeensent": "Sterne wurden gesendet",
+    "Youraccountwillbeupdatedwithinafewminutes": "Ihr Konto wird in wenigen Minuten aktualisiert.",
+    "Premiumhavebeensent": "Premium wurde gesendet",
+    "Walletnotconnected": "Wallet nicht verbunden",
+    "PleaseconnectyourTONwalletonthemainpagetostartpurchasing": "Bitte verbinden Sie Ihre TON-Wallet auf der Hauptseite, um mit dem Kauf zu beginnen.",
+    "Close": "Schließen",
+    "PurchaseCancelled": "Kauf abgebrochen",
+    "PurchaseProcessing": "Kauf wird verarbeitet",
+    "PurchaseSuccessful": "Kauf erfolgreich",
+    "BuyForMyself": "Für mich kaufen",
+    "Copied": "Kopiert!",
+    "Referallinksucessfulcopied": "Empfehlungslink erfolgreich kopiert!",
+    "Min01": "Minimum 0,1",
+    "Max1000000": "Maximum 1000000",
+    "Notenoughbalace": "Unzureichendes Guthaben",
+    "Recipientnotavalible": "Empfänger nicht verfügbar",
+    "Walletincorrect": "Falsche Wallet",
+    "Min100": "Minimum 100",
+    "Redirectingtopayment": "Weiterleitung zur Zahlung",
+    "Itwillonlytakeamoment": "Es dauert nur einen Moment.",
+    "Openpaymentpagemanually": "Zahlungsseite manuell öffnen",
+    "Notasksforyou": "Keine Aufgaben für Sie",
+    "Takeabreakorcheckbacklaterfornewassignments": "Machen Sie eine Pause oder schauen Sie später nach neuen Aufgaben!",
+    "Noreferralsyet": "Noch keine Empfehlungen?",
+    "Inviteyourfriendstojoinandstartearningrewardstogether": "Laden Sie Ihre Freunde ein, mitzumachen und gemeinsam Belohnungen zu verdienen!",
+    "Nohistoryyet": "Noch kein Verlauf",
+    "Makeapurchaseorwithdrawaltoseeyouractivityhere": "Tätigen Sie einen Kauf oder eine Auszahlung, um Ihre Aktivitäten hier zu sehen!",
+    "Connectyouwallet": "Verbinden Sie Ihre Wallet",
+    "disconectWallet": "Wallet trennen",
+    "Areyoushure": "Sind Sie sicher?"
+  }

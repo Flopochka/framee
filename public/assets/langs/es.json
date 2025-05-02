@@ -1,0 +1,129 @@
+{
+    "stars": "Estrellas",
+    "premium": "Premium",
+    "username": "Nombre de usuario",
+    "amount": "Cantidad",
+    "subscription": "Suscripción",
+    "subscriptions": ["3 meses", "6 meses", "12 meses"],
+    "payment": "Pago",
+    "paymentMethods": [
+      {
+        "name": "TON",
+        "submethods": ["TON", "PUNK", "GLITCH"]
+      },
+      "USDT",
+      "SBP",
+      "VISA y MasterCard"
+    ],
+    "buy": "Comprar",
+    "buyPremium": "Comprar Premium",
+    "tasks": "Tareas",
+    "followinTelegram": "Seguir en Telegram",
+    "start": "Iniciar",
+    "connectWallet": "Conectar billetera",
+    "theBestChoiceforPurchasingTelegramStarsandPremium": "La mejor opción para comprar Estrellas de Telegram y Premium.",
+    "paywithTONUSDTorcardpayments": "Paga con TON, USDT o pagos con tarjeta.",
+    "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired": "Disfruta de precios más bajos que el bot oficial de Telegram sin necesidad de verificación KYC.",
+    "aboutus": "Sobre nosotros",
+    "boughttoday": "Comprado hoy",
+    "boughtyesterday": "Comprado ayer",
+    "boughtalltime": "Comprado en total",
+    "boughtmonthpremium": "Comprado Premium mensual",
+    "FAQ": "Preguntas frecuentes",
+    "FAQData": [
+      [
+        "¿Por qué sus precios son hasta un 39,7% más bajos?",
+        "Al comprar Estrellas de Telegram y Premium a través de la aplicación de Telegram, el precio incluye comisiones de la tienda de Apple/Google de aproximadamente el 40%. Con nuestro servicio, evitas estas tarifas y obtienes una mejor oferta."
+      ],
+      [
+        "¿Cuál es la comisión por comprar a través de FRAME?",
+        "Todos los precios listados en nuestro servicio de Telegram @FrameStars_Bot y en nuestro sitio web son finales. El único costo adicional es una pequeña tarifa de red al transferir fondos."
+      ],
+      [
+        "¿Qué métodos de pago aceptan?",
+        "Aceptamos pagos en TON, USDT y con tarjetas bancarias. Elige la opción más conveniente durante el proceso de pago."
+      ],
+      [
+        "¿Cuánto tiempo tarda la entrega?",
+        "Los pedidos generalmente se procesan de inmediato. En casos raros, puede tomar unos minutos. Si tu compra no llega, verifica los detalles de tu transacción o contacta con nuestro soporte en @framestars_support."
+      ],
+      [
+        "¿Qué pasa si mi compra no llega?",
+        "Si no has recibido tus Estrellas o tu suscripción Premium en un tiempo razonable, contacta con nuestro soporte en @framestars_support con los detalles de tu pago. Te ayudaremos lo antes posible."
+      ],
+      [
+        "¿Es seguro comprar en FRAME?",
+        "Sí, nuestro servicio es seguro y confiable. Procesamos transacciones sin requerir datos personales, garantizando privacidad y seguridad."
+      ],
+      [
+        "¿Cómo puedo enviar Estrellas a un amigo?",
+        "Simplemente ingresa el nombre de usuario de Telegram del destinatario (@username) durante el proceso de compra, y las Estrellas o la suscripción Premium se enviarán directamente a su cuenta."
+      ],
+      [
+        "¿Cómo puedo obtener Estrellas de Telegram gratis?",
+        "Nuestra página de tareas está actualmente en desarrollo. Pronto podrás ganar Estrellas viendo videos promocionales cortos."
+      ]
+    ],
+    "totalUsers": "Total de usuarios",
+    "totalEarnings": "Ganancias totales",
+    "Withdraw": "Retirar",
+    "Invitefriendsandearn5fromtheirpurchases": "Invita a amigos y gana un 5% de sus compras!",
+    "Inviteafriend": "Invitar a un amigo",
+    "History": "Historial",
+    "Support": "Soporte",
+    "OurTelegram": "Nuestro Telegram",
+    "Language": "Idioma",
+    "Yourbalance": "Tu saldo",
+    "WithdrawinTON": "Retirar en TON",
+    "WithdrawinStars": "Retirar en Estrellas",
+    "YourReferals": "Tus referidos",
+    "Systemlanguage": "Idioma del sistema",
+    "Jan": "Ene",
+    "Feb": "Feb",
+    "Mar": "Mar",
+    "Apr": "Abr",
+    "May": "May",
+    "Jun": "Jun",
+    "Jul": "Jul",
+    "Aug": "Ago",
+    "Sep": "Sep",
+    "Oct": "Oct",
+    "Nov": "Nov",
+    "Dec": "Dic",
+    "Buyed": "Comprado",
+    "for": "para",
+    "Premium3months": "Premium 3 meses",
+    "Wallet": "Billetera",
+    "youget": "Obtienes",
+    "Fee": "Comisión",
+    "Starshavebeensent": "Las Estrellas han sido enviadas",
+    "Youraccountwillbeupdatedwithinafewminutes": "Tu cuenta se actualizará en pocos minutos.",
+    "Premiumhavebeensent": "Premium ha sido enviado",
+    "Walletnotconnected": "Billetera no conectada",
+    "PleaseconnectyourTONwalletonthemainpagetostartpurchasing": "Por favor, conecta tu billetera TON en la página principal para comenzar a comprar.",
+    "Close": "Cerrar",
+    "PurchaseCancelled": "Compra cancelada",
+    "PurchaseProcessing": "Procesando compra",
+    "PurchaseSuccessful": "Compra exitosa",
+    "BuyForMyself": "Comprar para mí",
+    "Copied": "¡Copiado!",
+    "Referallinksucessfulcopied": "¡Enlace de referido copiado exitosamente!",
+    "Min01": "Mínimo 0.1",
+    "Max1000000": "Máximo 1000000",
+    "Notenoughbalace": "Saldo insuficiente",
+    "Recipientnotavalible": "Destinatario no disponible",
+    "Walletincorrect": "Billetera incorrecta",
+    "Min100": "Mínimo 100",
+    "Redirectingtopayment": "Redirigiendo al pago",
+    "Itwillonlytakeamoment": "Solo tomará un momento.",
+    "Openpaymentpagemanually": "Abrir página de pago manualmente",
+    "Notasksforyou": "No hay tareas para ti",
+    "Takeabreakorcheckbacklaterfornewassignments": "Toma un descanso o revisa más tarde para nuevas tareas!",
+    "Noreferralsyet": "¿Aún sin referidos?",
+    "Inviteyourfriendstojoinandstartearningrewardstogether": "¡Invita a tus amigos a unirse y comienza a ganar recompensas juntos!",
+    "Nohistoryyet": "Aún sin historial",
+    "Makeapurchaseorwithdrawaltoseeyouractivityhere": "Realiza una compra o retiro para ver tu actividad aquí!",
+    "Connectyouwallet": "Conecta tu billetera",
+    "disconectWallet": "Desconectar billetera",
+    "Areyoushure": "¿Estás seguro?"
+  }

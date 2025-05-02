@@ -135,5 +135,5 @@ export default {
   youget: "you get", // For _0.3 TON_ you get _300 stars_
   Connectyouwallet: "Connect you wallet",
   disconectWallet: "disconect Wallet",
-  Areyoushure:"Are you shure?"
+  Areyoushure:"Are you shure?" // text to accept disconect wallet
 };
