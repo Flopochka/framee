@@ -6,11 +6,12 @@ import AboutUs from "./components/AboutUs.vue";
 import Profile from "./components/Profile.vue";
 import ModalScreens from "./components/ModalScreens.vue";
 import WithdrawScreen from "./components/WithdrawScreen.vue";
-import { useRoute } from 'vue-router';
+import telegramAnalytics from "@telegram-apps/analytics";
+import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";
-import { initInputNumberHandler } from './modules/inputNumber'
-import { initInputTextHandler } from './modules/inputText'
-import {watch} from "vue"
+import { initInputNumberHandler } from "./modules/inputNumber";
+import { initInputTextHandler } from "./modules/inputText";
+import { onMounted, watch } from "vue";
 
 const { getCurrentScreen, syncWithRoute } = useScreenStore();
 const route = useRoute();
@@ -21,8 +22,37 @@ watch(
   },
   { immediate: true }
 );
-initInputNumberHandler()
-initInputTextHandler()
+onMounted(() => {
+  // TGWebApp
+  window.onload = () => {
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    tg.setHeaderColor("#000000"); // Цвет заголовка
+    tg.setBackgroundColor("#000000"); // Цвет фона
+    tg.disableVerticalSwipes();
+
+    tg.ready();
+
+    if (
+      window.innerWidth <= 768 &&
+      !window.Telegram.WebApp.initDataUnsafe
+      // &&
+      // !window.location.pathname.includes("about")
+    ) {
+      // window.location.href = "https://t.me/Framestars_bot/start";
+      // window.location.href = "https://t.me/fremeetstbot/start";
+    }
+  };
+
+  // TGAnalytics
+  // telegramAnalytics.init({
+  //   token: "",
+  //   appName: "FRAME",
+  // });
+});
+initInputNumberHandler();
+initInputTextHandler();
 </script>
 
 <template>
