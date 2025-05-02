@@ -17,7 +17,7 @@ const { setPaymentLink } = usePaymentStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
-const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
+const { fetchWalletInfo, getWalletState } = useWalletStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -100,23 +100,28 @@ const starBox = ref(null); // Ref
 const starBoxHeight = ref(0); //
 
 const searchRecipient = async (username) => {
-  console.log("Searching for:", username); // Заглушка
-  const payload = { username: username };
-  try {
-    const result = await sendToBackend("/search_recipient", payload);
-    console.log("Response:", result);
-    var data = result.data.data;
-    if (result.data.status.message != "Пользователь не найден") {
-      recipientName.value = data.name;
-      recipientPhoto.value = data.photo;
-      recipient.value = data.recipient;
-      recipientCorrect.value = true;
-    } else {
-      recipient.value = null;
-      recipientCorrect.value = false;
+  if (username && username != "") {
+    console.log("Searching for:", username); // Заглушка
+    const payload = { username: username };
+    try {
+      const result = await sendToBackend("/search_recipient", payload);
+      console.log("Response:", result);
+      var data = result.data.data;
+      if (result.data.status.message != "Пользователь не найден") {
+        recipientName.value = data.name;
+        recipientPhoto.value = data.photo;
+        recipient.value = data.recipient;
+        recipientCorrect.value = true;
+      } else {
+        recipient.value = null;
+        recipientCorrect.value = false;
+      }
+    } catch (error) {
+      console.error("Failed:", error);
     }
-  } catch (error) {
-    console.error("Failed:", error);
+  } else {
+    recipient.value = null;
+    recipientCorrect.value = false;
   }
 };
 
@@ -137,6 +142,7 @@ const createorder = async () => {
   if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
+  currentPayment.value == 0 ? fetchWalletInfo() : "";
   if (!getWalletState() && currentPayment.value == 0) {
     toggleModal("popupwalletnc");
   }
@@ -144,7 +150,7 @@ const createorder = async () => {
   if (
     recipientCorrect.value &&
     valueCorrect.value &&
-    (currentPayment.value !== 0 || getWalletState())
+    (currentPayment.value == 0 ? getWalletState() : true)
   ) {
     const payload = {
       sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
@@ -153,8 +159,14 @@ const createorder = async () => {
           ? stars.value
           : 3 * Math.pow(2, currentPremium.value),
       to_user: targetUserName.value,
-      payment_method: paymentlistanother[currentPaymentSub.value],
-      payment_network: paymentlist[currentPayment.value],
+      payment_method:
+        currentPayment.value > 0
+          ? paymentlist[currentPayment.value]
+          : paymentlistanother[currentPaymentSub.value],
+      payment_network:
+        currentPayment.value > 0
+          ? "CARD"
+          : paymentlistanother[currentPaymentSub.value],
     };
 
     try {
@@ -168,7 +180,7 @@ const createorder = async () => {
       setupTabReturnListener(orderId);
     } catch (error) {
       console.error("Failed:", error);
-      toggleModal("Error");
+      toggleModal("error");
     }
   }
 };

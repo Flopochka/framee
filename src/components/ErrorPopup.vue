@@ -17,7 +17,7 @@ const { getTranslation } = useLanguageStore();
     <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
       {{
         getTranslation(
-          "Error"
+          "Errorpleasetryagainlater"
         )
       }}
     </p>
