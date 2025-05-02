@@ -1,12 +1,14 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
+import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
 
 const { getTranslation } = useLanguageStore();
+const { toggleModal } = useModalStore();
 
 const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
-const referals_count = ref(0);
+const wallCon = ref(false);
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
 const boughtAlltime = ref(0);
@@ -29,6 +31,11 @@ const cards = ref([
     translation: "boughtmonthpremium",
   },
 ]);
+const disconWarn = ref(false);
+const toggleWarn = () => {
+  disconWarn.value = !disconWarn.value;
+  console.log(disconWarn.value)
+};
 
 const currentAccordion = ref(0);
 const switchAccordion = (type) => (currentAccordion.value = type);
@@ -66,8 +73,37 @@ const fetchTotalInfo = async () => {
   }
 };
 
+const disconnect = async () => {
+  try {
+    const payload = {
+      user_id: userId.value,
+    };
+    const result = await sendToBackend("/disconnect_wallet", payload);
+    const data = result.data.data;
+    wallCon.value = false
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
+const fetchWalletInfo = async () => {
+  try {
+    const payload = {
+      user_id: userId.value,
+    };
+    const result = await sendToBackend("/check_connect_wallet", payload);
+    const data = result.data.data;
+    wallCon.value = data.connection;
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
+  }
+};
+
 onMounted(() => {
   fetchTotalInfo();
+  fetchWalletInfo();
   lottie.loadAnimation({
     container: document.getElementById("lottie"), // the dom element that will contain the animation
     renderer: "svg",
@@ -82,9 +118,25 @@ onMounted(() => {
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
       <div
+        v-if="!wallCon"
+        @click="toggleModal('connect')"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}
+        <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
+      </div>
+      <div
+        v-else
+        @click="
+          () => {
+            disconWarn ? disconnect('connect') : toggleWarn();
+          }
+        "
+        class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
+      >
+        {{
+          getTranslation(disconWarn? "Areyoushure" : "disconectWallet")
+        }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20" />
       </div>
       <p
@@ -98,11 +150,6 @@ onMounted(() => {
         class="aboutus-cover-card rounded-18 flex-col items-center justify-center gap-32"
       >
         <div id="lottie" class="aboutus-cover-card-img"></div>
-        <!-- <img
-          src="../assets/img/Duck.svg"
-          alt=""
-          class="aboutus-cover-card-img"
-        /> -->
         <p class="text-white text-24 font-600 letter-spacing-05 lh-100 tac twb">
           {{ getTranslation("paywithTONUSDTorcardpayments") }}
         </p>

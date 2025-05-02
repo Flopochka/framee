@@ -14,6 +14,7 @@ import WalletPopup from "./StarsPopup.vue"; // Уточните, если нуж
 import ErrorPopup from "./ErrorPopup.vue";
 import CopiedPopup from "./CopiedPopup.vue";
 import FillerModal from "./FillerModal.vue";
+import ConnectModal from "./ConnectModal.vue";
 
 const modalStore = useModalStore();
 const { toggleModal, getActiveModal } = modalStore;
@@ -34,6 +35,13 @@ const modals = [
     type: "modal",
     class: "user-history madal-screen",
     title: "History",
+  },
+  {
+    id: "connect",
+    component: ConnectModal,
+    type: "modal",
+    class: "user-connect madal-screen",
+    title: "Connectyouwallet",
   },
   {
     id: "withdrawton",

@@ -8,7 +8,7 @@ export default {
   payment: "Payment",
   paymentmetdods: [
     {
-      name: "TON Network",
+      name: "TON",
       submethods: ["TON", "PUNK", "GLITCH"],
     },
     "USDT",
@@ -93,13 +93,12 @@ export default {
   Oct: "Oct",
   Nov: "Nov",
   Dec: "Dec",
-  Buyed: "Buy", //Куплено 100 для @ahillary
-  for: "for", //Куплено 100 для @ahillary
+  Buyed: "Buy", // Куплено 100 для @ahillary
+  for: "for", // Куплено 100 для @ahillary
   Premium3months: "Premium 3 months", //Buy Premium 3 months for @ahillary
   Wallet: "Wallet",
   Youget: "You get",
-  Fee: "Fee", //Fee  0.3 TON
-  Yougetfor: "You get for", //You get for 0.3 TON ≈
+  Fee: "Fee", //Fee _0.3 TON_
   Starshavebeensent: "Stars have been sent",
   Youraccountwillbeupdatedwithinafewminutes:
     "Your account will be updated within a few minutes",
@@ -132,4 +131,9 @@ export default {
   Nohistoryyet: "No history yet",
   Makeapurchaseorwithdrawaltoseeyouractivityhere:
     "Make a purchase or withdrawal to see your activity here!",
+  For: "For",
+  youget: "you get", // For _0.3 TON_ you get _300 stars_
+  Connectyouwallet: "Connect you wallet",
+  disconectWallet: "disconect Wallet",
+  Areyoushure:"Are you shure?"
 };

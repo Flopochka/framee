@@ -17,6 +17,7 @@ const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
 
+const wallCon = ref(false)
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
 const currentType = ref(0);
@@ -135,8 +136,11 @@ const createorder = async () => {
   if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
+  if(!wallCon && currentPayment.value == 0){
+    toggleModal('popupwalletnc')
+  }
   starBoxHeight.value = starBox.value.offsetHeight;
-  if (recipientCorrect.value && valueCorrect.value) {
+  if (recipientCorrect.value && valueCorrect.value && (wallCon && currentPayment.value == 0)) {
     const payload = {
       sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
       count:
@@ -152,7 +156,7 @@ const createorder = async () => {
       const result = await sendToBackend("/create_order", payload);
       const data = result.data.data;
       // Показываем филлерное окно
-      setPaymentLink(data.payment_link)
+      setPaymentLink(data.payment_link);
       toggleModal("filler");
       window.Telegram.WebApp.openLink(data.payment_link);
       const orderId = data.order_id;
@@ -224,6 +228,20 @@ const updatePremiumBoxHeight = () => {
   }
   if (starBox.value) {
     starBoxHeight.value = starBox.value.offsetHeight;
+  }
+};
+
+const fetchWalletInfo = async () => {
+  try {
+    const payload = {
+      user_id: userId.value,
+    };
+    const result = await sendToBackend("/check_connect_wallet", payload);
+    const data = result.data.data;
+    wallCon.value = data.connection;
+    console.log("Response:", result.data);
+  } catch (error) {
+    console.error("Failed:", error);
   }
 };
 
@@ -398,7 +416,7 @@ onMounted(() => {
             </p>
             <img :src="paymentsvg[index]" alt="" class="img-28" />
           </div>
-          <div
+          <!-- <div
             v-if="typeof payment === 'object' && payment.submethods"
             :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
             class="select-botoom-subcards grid-row gap-8 usen"
@@ -414,7 +432,7 @@ onMounted(() => {
             >
               <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
             </div>
-          </div>
+          </div> -->
         </template>
       </div>
     </div>
@@ -436,6 +454,7 @@ onMounted(() => {
         class="bottom-button-prem flex-row gap-4 items-center justify-center"
         :style="{ maxHeight: currentType === 1 ? '18px' : '0' }"
       >
+        <img src="../assets/img/StarPremium.svg" alt="" class="img-16" />
         <p class="text-17 font-geist font-600 letter-spacing-04 text-white">
           {{ getTranslation("buyPremium") }}
         </p>

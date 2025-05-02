@@ -113,8 +113,8 @@ function shareContent() {
   // 1. Проверяем Telegram Web App и используем нативный шаринг
   if (Telegram?.WebApp?.showShareMenu) {
     Telegram.WebApp.showShareMenu({
-      url: shareData.url,
-      text: `${shareData.title}\n${shareData.text}`
+      text: `${shareData.title}\n${shareData.text}`,
+      url: shareData.url
     });
     return;
   }

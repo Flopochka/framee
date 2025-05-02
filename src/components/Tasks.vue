@@ -30,8 +30,8 @@ const tasks = ref(null);
         </p>
       </div>
       <template v-else>
-        <p class="text-32">{{ getTranslation('Notasksforyou') }}</p>
-        <p class="text-16">
+        <p class="text-32 lh-120">{{ getTranslation('Notasksforyou') }}</p>
+        <p class="text-16 lh-120">
           {{ getTranslation('Takeabreakorcheckbacklaterfornewassignments') }}
         </p>
       </template>

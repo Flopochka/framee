@@ -74,7 +74,7 @@ const withdraw = async () => {
         type="number"
         :class="valueCorrect ? '' : 'incorrect'"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
-        placeholder="Min 0.3"
+        placeholder="Min 0.5"
         min="0.5"
         max="1000000"
         v-model="withdrawTonAmmount"

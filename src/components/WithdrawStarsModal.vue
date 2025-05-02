@@ -125,7 +125,7 @@ onMounted(() => {
         type="number"
         :class="{ incorrect: !valueCorrect }"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
-        placeholder="Min 0.1"
+        placeholder="Min 0.5"
         min="0.5"
         max="1000000"
         v-model="withdrawAmount"
@@ -161,7 +161,7 @@ onMounted(() => {
       </p>
       <div class="withdraw-info gap-12">
         <p style="grid-area: A" class="text-16 font-400 text-white">
-          {{ getTranslation("Yougetfor") }} {{ withdrawAmount || 0 }} TON ≈
+          {{ getTranslation("For") }} {{ withdrawAmount || 0 }} TON {{ getTranslation("youget") }} ≈
         </p>
         <p class="text-24 text-white">{{ Math.floor((withdrawAmount || 0) * kef) }} Stars</p>
       </div>
