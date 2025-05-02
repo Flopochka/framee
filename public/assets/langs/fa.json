@@ -6,7 +6,7 @@
     "subscription": "اشتراک",
     "subscriptions": ["3 ماه", "6 ماه", "12 ماه"],
     "payment": "پرداخت",
-    "paymentMethods": [
+    "paymentmetdods": [
       {
         "name": "TON",
         "submethods": ["TON", "PUNK", "GLITCH"]

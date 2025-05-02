@@ -6,7 +6,7 @@
     "subscription": "Suscripción",
     "subscriptions": ["3 meses", "6 meses", "12 meses"],
     "payment": "Pago",
-    "paymentMethods": [
+    "paymentmetdods": [
       {
         "name": "TON",
         "submethods": ["TON", "PUNK", "GLITCH"]
@@ -67,7 +67,7 @@
     "totalUsers": "Total de usuarios",
     "totalEarnings": "Ganancias totales",
     "Withdraw": "Retirar",
-    "Invitefriendsandearn5fromtheirpurchases": "Invita a amigos y gana un 5% de sus compras!",
+    "Invitefriendsandearn5fromtheirpurchases": "Invita a amigos y gana un 10% de sus compras!",
     "Inviteafriend": "Invitar a un amigo",
     "History": "Historial",
     "Support": "Soporte",

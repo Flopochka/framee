@@ -6,7 +6,7 @@
     "subscription": "Подписка",
     "subscriptions": ["3 месяца", "6 месяцев", "12 месяцев"],
     "payment": "Оплата",
-    "paymentMethods": [
+    "paymentmetdods": [
       {
         "name": "TON",
         "submethods": ["TON", "PUNK", "GLITCH"]
@@ -67,7 +67,7 @@
     "totalUsers": "Всего пользователей",
     "totalEarnings": "Общий заработок",
     "Withdraw": "Вывести",
-    "Invitefriendsandearn5fromtheirpurchases": "Приглашайте друзей и зарабатывайте 5% от их покупок!",
+    "Invitefriendsandearn5fromtheirpurchases": "Приглашайте друзей и зарабатывайте 10% от их покупок!",
     "Inviteafriend": "Пригласить друга",
     "History": "История",
     "Support": "Поддержка",
@@ -108,7 +108,7 @@
     "BuyForMyself": "Купить для себя",
     "Copied": "Скопировано!",
     "Referallinksucessfulcopied": "Реферальная ссылка успешно скопирована!",
-    "Min01": "Минимум 0.1",
+    "Min01": "Минимум 0.5",
     "Max1000000": "Максимум 1000000",
     "Notenoughbalace": "Недостаточно средств",
     "Recipientnotavalible": "Получатель недоступен",

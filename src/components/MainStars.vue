@@ -9,6 +9,7 @@ import { useModalStore } from "../stores/modal";
 import { useHistoryStore } from "../stores/history";
 import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick } from "vue";
+import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
@@ -16,8 +17,8 @@ const { setPaymentLink } = usePaymentStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
+const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
 
-const wallCon = ref(false)
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
 const currentType = ref(0);
@@ -136,11 +137,15 @@ const createorder = async () => {
   if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
-  if(!wallCon && currentPayment.value == 0){
-    toggleModal('popupwalletnc')
+  if (!getWalletState() && currentPayment.value == 0) {
+    toggleModal("popupwalletnc");
   }
   starBoxHeight.value = starBox.value.offsetHeight;
-  if (recipientCorrect.value && valueCorrect.value && (wallCon && currentPayment.value == 0)) {
+  if (
+    recipientCorrect.value &&
+    valueCorrect.value &&
+    (currentPayment.value !== 0 || getWalletState())
+  ) {
     const payload = {
       sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
       count:
@@ -228,20 +233,6 @@ const updatePremiumBoxHeight = () => {
   }
   if (starBox.value) {
     starBoxHeight.value = starBox.value.offsetHeight;
-  }
-};
-
-const fetchWalletInfo = async () => {
-  try {
-    const payload = {
-      user_id: userId.value,
-    };
-    const result = await sendToBackend("/check_connect_wallet", payload);
-    const data = result.data.data;
-    wallCon.value = data.connection;
-    console.log("Response:", result.data);
-  } catch (error) {
-    console.error("Failed:", error);
   }
 };
 

@@ -6,7 +6,7 @@
     "subscription": "الاشتراك",
     "subscriptions": ["3 أشهر", "6 أشهر", "12 شهرًا"],
     "payment": "الدفع",
-    "paymentMethods": [
+    "paymentmetdods": [
       {
         "name": "TON",
         "submethods": ["TON", "PUNK", "GLITCH"]
@@ -67,7 +67,7 @@
     "totalUsers": "إجمالي المستخدمين",
     "totalEarnings": "إجمالي الأرباح",
     "Withdraw": "سحب",
-    "Invitefriendsandearn5fromtheirpurchases": "ادعُ أصدقاءك واكسب 5% من مشترياتهم!",
+    "Invitefriendsandearn5fromtheirpurchases": "ادعُ أصدقاءك واكسب 10% من مشترياتهم!",
     "Inviteafriend": "دعوة صديق",
     "History": "السجل",
     "Support": "الدعم",

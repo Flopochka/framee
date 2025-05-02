@@ -6,7 +6,7 @@
     "subscription": "Abonnement",
     "subscriptions": ["3 Monate", "6 Monate", "12 Monate"],
     "payment": "Zahlung",
-    "paymentMethods": [
+    "paymentmetdods": [
       {
         "name": "TON",
         "submethods": ["TON", "PUNK", "GLITCH"]
