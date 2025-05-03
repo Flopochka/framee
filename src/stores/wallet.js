@@ -89,6 +89,7 @@ export const useWalletStore = defineStore("wallet", () => {
       IsWalletConected.value = data.connection;
       console.log("Response:", result.data);
     } catch (error) {
+      IsWalletConected.value = false
       console.error("Failed:", error);
     }
   };

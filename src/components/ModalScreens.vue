@@ -10,7 +10,7 @@ import WithdrawTonModal from "./WithdrawTonModal.vue";
 import WithdrawStarsModal from "./WithdrawStarsModal.vue";
 import StarsPopup from "./StarsPopup.vue";
 import PremiumPopup from "./StarsPopup.vue"; // Уточните, если нужен другой компонент
-import WalletPopup from "./StarsPopup.vue"; // Уточните, если нужен другой компонент
+import WalletPopup from "./WalletPopup.vue"; // Уточните, если нужен другой компонент
 import ErrorPopup from "./ErrorPopup.vue";
 import CopiedPopup from "./CopiedPopup.vue";
 import FillerModal from "./FillerModal.vue";
