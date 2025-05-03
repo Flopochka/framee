@@ -12,12 +12,12 @@ const { getTranslation } = useLanguageStore();
   </div>
   <div class="popup-block flex-col">
     <p class="text-16 text-white letter-spacing-2">
-      {{ getTranslation("TONhavebeensent") }}
+      {{ getTranslation("Walletnotconnected") }}
     </p>
     <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
       {{
         getTranslation(
-          "Thereplenishmentwillarrivetoyourwalletwithinacoupleofminutes"
+          "PleaseconnectyourTONwalletonthemainpagetostartpurchasing"
         )
       }}
     </p>

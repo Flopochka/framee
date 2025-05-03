@@ -10,6 +10,7 @@ import WithdrawTonModal from "./WithdrawTonModal.vue";
 import WithdrawStarsModal from "./WithdrawStarsModal.vue";
 import StarsPopup from "./StarsPopup.vue";
 import PremiumPopup from "./StarsPopup.vue"; // Уточните, если нужен другой компонент
+import WalletNCPopup from "./WalletNCPopup.vue"; // Уточните, если нужен другой компонент
 import WalletPopup from "./WalletPopup.vue"; // Уточните, если нужен другой компонент
 import ErrorPopup from "./ErrorPopup.vue";
 import CopiedPopup from "./CopiedPopup.vue";
@@ -71,6 +72,12 @@ const modals = [
   },
   {
     id: "popupwalletnc",
+    component: WalletNCPopup,
+    type: "popup",
+    class: "popup",
+  },
+  {
+    id: "popupwallet",
     component: WalletPopup,
     type: "popup",
     class: "popup",

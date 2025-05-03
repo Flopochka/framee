@@ -54,7 +54,7 @@ const withdraw = async () => {
     try {
       const result = await sendToBackend("/withdraw", payload);
       console.log("Response:", result.data);
-      toggleModal("popupstars");
+      toggleModal("popupwallet");
       fetchUserHistory();
     } catch (error) {
       console.error("Failed:", error);
