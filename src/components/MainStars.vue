@@ -142,7 +142,7 @@ const createorder = async () => {
     } else {
       valueCorrect.value = false;
       valueIncorrects.value.push(
-        100 > (stars.value || 0)
+        minCount.value > (stars.value || 0)
           ? ["Min100", minCount.value]
           : ["Max1000000", 1000000]
       );
