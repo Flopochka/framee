@@ -42,6 +42,7 @@ const speedFactor = ref(1.33);
 const incrementInterval = ref(null);
 const holdTimer = ref(null);
 const currentAmount = ref(0);
+const minCount = ref(50);
 
 const startIncrement = (amount) => {
   if (stars.value > 1000000 - amount) return;
@@ -87,7 +88,14 @@ const stopIncrement = () => {
 
 const switchType = (type) => (currentType.value = type);
 const switchPremium = (type) => (currentPremium.value = type);
-const switchPayment = (type) => (currentPayment.value = type);
+const switchPayment = (type) => {
+  if (type == 0) {
+    minCount.value = 50;
+  } else {
+    minCount.value = 100;
+  }
+  currentPayment.value = type;
+};
 const switchSubmethod = (type) => (currentPaymentSub.value = type);
 const isPremiumActive = (index) => currentPremium.value === index;
 const isPaymentActive = (index) => currentPayment.value === index;
@@ -134,8 +142,11 @@ const createorder = async () => {
     } else {
       valueCorrect.value = false;
       valueIncorrects.value.push(
-        100 > (stars.value || 0) ? "Min100" : "Max1000000"
+        100 > (stars.value || 0)
+          ? ["Min100", minCount.value]
+          : ["Max1000000", 1000000]
       );
+      console.log(valueIncorrects.value[0], typeof valueIncorrects.value[0]);
     }
   }
   await searchRecipient(targetUserName.value);
@@ -351,13 +362,20 @@ onMounted(() => {
               type="number"
               :class="valueCorrect ? '' : 'incorrect'"
               class="select-top-item-input-text rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
-              placeholder="Min 100"
-              min="100"
+              :placeholder="'Min ' + minCount"
+              :min="minCount"
               max="1000000"
             />
           </div>
           <template v-if="valueIncorrects" v-for="e in valueIncorrects">
-            <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>
+            <p class="pl-14 text-red text-14">
+              <template v-if="typeof e == 'object'">{{
+                getTranslation(e[0])+e[1]
+              }}</template>
+              <template v-else>{{
+                getTranslation(e)
+              }}</template>
+            </p>
           </template>
           <div class="select-top-item select-top-stars-box">
             <div

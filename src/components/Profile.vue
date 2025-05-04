@@ -235,7 +235,7 @@ onMounted(() => {
         </p>
       </div>
       <div
-        @click="copyToClipboard(shareData.text, shareData.url)"
+        @click="copyToClipboard(null, shareData.url)"
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
       >
         <img src="../assets/img/Copy.svg" alt="" class="img-28" />

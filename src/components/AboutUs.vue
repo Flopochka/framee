@@ -66,7 +66,10 @@ const fetchTotalInfo = async () => {
       data.stats[0] != 0
         ? formatNumber(data.stats[0])
         : formatNumber(Math.round(Math.random() * 25) * 50);
-    boughtYesterday.value = formatNumber(data.stats[1]);
+    boughtYesterday.value =
+      data.stats[1] != 0
+        ? formatNumber(data.stats[1])
+        : formatNumber(Math.round(Math.random() * 25) * 50);
     boughtAlltime.value = formatNumber(data.stats[2]);
     boughtMonthPremium.value = formatNumber(data.stats[3]);
     console.log("Response:", result.data);

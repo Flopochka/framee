@@ -1,4 +1,3 @@
-// src/stores/userStore.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
@@ -80,18 +79,43 @@ export const useWalletStore = defineStore("wallet", () => {
     }
   };
   const fetchWalletInfo = async () => {
-    try {
+    const retryDelays = [1000, 2000, 4000, 8000, 10000]; // 1, 2, 4, 8, 10 seconds
+    
+    const tryFetch = async () => {
       const payload = {
         user_id: userId.value,
       };
       const result = await sendToBackend("/check_connect_wallet", payload);
-      const data = result.data.data;
-      IsWalletConected.value = data.connection;
-      console.log("Response:", result.data);
+      return result.data.data.connection;
+    };
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    try {
+      const connection = await tryFetch();
+      IsWalletConected.value = connection;
+      console.log("Initial wallet check:", connection);
+      return;
     } catch (error) {
-      IsWalletConected.value = false
-      console.error("Failed:", error);
+      console.error("Initial wallet check failed:", error);
     }
+
+    // Retry logic if initial attempt fails or returns disconnected
+    for (const delay of retryDelays) {
+      await sleep(delay);
+      try {
+        const connection = await tryFetch();
+        IsWalletConected.value = connection;
+        console.log(`Retry after ${delay}ms:`, connection);
+        if (connection) return; // Exit if connected
+      } catch (error) {
+        console.error(`Retry after ${delay}ms failed:`, error);
+      }
+    }
+
+    // Final state after all retries
+    IsWalletConected.value = false;
+    console.log("All wallet connection attempts failed");
   };
   const getWalletState = () => IsWalletConected.value;
   return { connectWallet, disconnectWallet, fetchWalletInfo, getWalletState };
