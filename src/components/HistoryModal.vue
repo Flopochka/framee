@@ -113,8 +113,8 @@ const historyLoop = setInterval(fetchUserHistory(),30000);
   background: var(--Surface-white-20, #ffffff33);
 }
 
-.processing-icon {
-  transform: rotate(360deg);
-  transition: transform 1s;
+.madal_active .processing-icon {
+  transform: rotate(3600deg);
+  transition: transform 10s;
 }
 </style>
