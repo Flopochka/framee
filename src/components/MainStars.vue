@@ -137,12 +137,12 @@ const createorder = async () => {
   valueIncorrects.value = [];
   recipientIncorrects.value = [];
   if (!currentType.value) {
-    if (stars.value >= 100 && stars.value <= 1000000) {
+    if (stars.value >= minCount.value && stars.value <= 1000000) {
       valueCorrect.value = true;
     } else {
       valueCorrect.value = false;
       valueIncorrects.value.push(
-        100 > (stars.value || 0)
+        minCount.value > (stars.value || 0)
           ? ["Min100", minCount.value]
           : ["Max1000000", 1000000]
       );
