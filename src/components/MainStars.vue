@@ -370,11 +370,9 @@ onMounted(() => {
           <template v-if="valueIncorrects" v-for="e in valueIncorrects">
             <p class="pl-14 text-red text-14">
               <template v-if="typeof e == 'object'">{{
-                getTranslation(e[0])+e[1]
+                getTranslation(e[0]) + e[1]
               }}</template>
-              <template v-else>{{
-                getTranslation(e)
-              }}</template>
+              <template v-else>{{ getTranslation(e) }}</template>
             </p>
           </template>
           <div class="select-top-item select-top-stars-box">
@@ -573,18 +571,24 @@ main {
   border: 2px solid var(--blue-900);
 }
 .select-top-premium-card:nth-of-type(1) {
-  background: url("../assets/img/Premium1.svg") no-repeat center,
-    var(--blue-900);
+  background-image: url("/src/assets/img/Premium1.svg");
+  background-color: var(--blue-900);
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
 }
 .select-top-premium-card:nth-of-type(2) {
-  background: url("../assets/img/Premium2.svg") no-repeat center,
-    var(--blue-900);
+  background-image: url("/src/assets/img/Premium2.svg");
+  background-color: var(--blue-900);
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
 }
 .select-top-premium-card:nth-of-type(3) {
-  background: url("../assets/img/Premium3.svg") no-repeat center,
-    var(--blue-900);
+  background-image: url("/src/assets/img/Premium3.svg");
+  background-color: var(--blue-900);
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
 }
 .select-top-premium-card-active {
