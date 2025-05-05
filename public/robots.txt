@@ -1,0 +1,19 @@
+# Allow all crawlers to index the site
+User-agent: *
+Allow: /
+
+# Disallow specific paths (e.g., admin or sensitive areas)
+Disallow: /admin/
+Disallow: /private/
+
+# Block specific file types if needed
+Disallow: /*.pdf$
+Disallow: /*.doc$
+
+# Sitemap (optional, adjust URL to your sitemap)
+Sitemap: https://your-site.com/sitemap.xml
+
+# Prevent crawling of build artifacts or sensitive files
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /vite.config.js

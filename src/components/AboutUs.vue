@@ -81,12 +81,34 @@ const fetchTotalInfo = async () => {
 onMounted(() => {
   fetchTotalInfo();
   fetchWalletInfo();
-  lottie.loadAnimation({
-    container: document.getElementById("lottie"), // the dom element that will contain the animation
-    renderer: "svg",
-    loop: true,
-    autoplay: true,
-    path: "content/UtyaDuck_AgADAwEAAladvQo.json",
+  import("lottie-web").then((lottie) => {
+    const container = document.getElementById("lottie");
+    if (!container) {
+      console.error("No lottie container");
+      walletStore.fetchTotalInfo();
+      walletStore.fetchWalletInfo();
+      return;
+    }
+
+    animation = lottie.default.loadAnimation({
+      container,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
+    });
+
+    animation.addEventListener("data_ready", () => {
+      console.log("Lottie ready");
+      walletStore.fetchTotalInfo();
+      walletStore.fetchWalletInfo();
+    });
+
+    animation.addEventListener("data_failed", () => {
+      console.error("Lottie failed");
+      walletStore.fetchTotalInfo();
+      walletStore.fetchWalletInfo();
+    });
   });
 });
 </script>
