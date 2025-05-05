@@ -137,7 +137,7 @@ const resetHeight = () => {
       <slot name="title" />
     </div>
     <div @click="() => { toggleModal(null); resetHeight(); }" class="madal-screen-close">
-      <img src="../assets/img/Cross.svg" alt="Close" class="img-24" />
+      <img src="../assets/img/Cross.svg" alt="Close" class="img-24 lazy-img" />
     </div>
   </div>
   <div

@@ -204,11 +204,11 @@ onMounted(() => {
         class="text-20 font-600 lh-120 flex-row items-center justify-center gap-4"
       >
         {{ referals_count }}
-        <img src="../assets/img/People.svg" alt="" class="img-24" />
+        <img src="../assets/img/People.svg" alt="" class="img-24 lazy-img" />
       </p>
       <p class="text-20 font-600 lh-120 flex-row items-center justify-center">
         {{ income }}
-        <img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
+        <img src="../assets/img/TONMinimal.svg" alt="" class="img-20 lazy-img" />
       </p>
       <div
         @click="switchScreen(4)"
@@ -229,7 +229,7 @@ onMounted(() => {
         @click="shareContent()"
         class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center cupo usen"
       >
-        <img src="../assets/img/Gift.svg" alt="" class="img-16" />
+        <img src="../assets/img/Gift.svg" alt="" class="img-16 lazy-img" />
         <p class="text-17 letter-spacing-04 text-white">
           {{ getTranslation("Inviteafriend") }}
         </p>
@@ -238,7 +238,7 @@ onMounted(() => {
         @click="copyToClipboard('', shareData.url)"
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
       >
-        <img src="../assets/img/Copy.svg" alt="" class="img-28" />
+        <img src="../assets/img/Copy.svg" alt="" class="img-28 lazy-img" />
       </div>
     </div>
     <div class="user-buttons-1 flex-col gap-8">

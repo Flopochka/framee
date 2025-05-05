@@ -9,8 +9,8 @@ const { getPaymentLink } = usePaymentStore();
 <template>
   <div class="withdrawstars-body flex-col items-center gap-26 jcsb">
     <div class="spin">
-      <img :src="Spinner" src="" alt="" class="img-44 spinner" />
-      <img :src="Spinner" src="" alt="" class="img-44 spinner" />
+      <img :src="Spinner" src="" alt="" class="img-44 spinner lazy-img" />
+      <img :src="Spinner" src="" alt="" class="img-44 spinner lazy-img" />
     </div>
     <span class="tac">
       <p class="text-24 lh-120 twb">

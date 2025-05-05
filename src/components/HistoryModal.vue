@@ -52,7 +52,7 @@ const historyLoop = setInterval(fetchUserHistory(),30000);
               <img
                 :src="getIconPath(item.type, item.Count)"
                 alt=""
-                class="img-20"
+                class="img-20 lazy-img"
                 :class="{ 'processing-icon': item.type === 1 }"
               />
             </div>

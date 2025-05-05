@@ -128,7 +128,7 @@ const activeModal = computed(() => getActiveModal());
           {{ getTranslation("Yourbalance") }}:
           <span class="lh-115 flex-row items-center">
             {{ getUserBalance() }}
-            <img src="../assets/img/TONMinimal.svg" alt="TON" class="img-20" />
+            <img src="../assets/img/TONMinimal.svg" alt="TON" class="img-20 lazy-img" />
           </span>
         </p>
         <p v-else>{{ getTranslation(modal.title) }}</p>

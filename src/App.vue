@@ -11,7 +11,8 @@ import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";
 import { initInputNumberHandler } from "./modules/inputNumber";
 import { initInputTextHandler } from "./modules/inputText";
-import { onMounted, watch } from "vue";
+import { onMounted, onBeforeUnmount, watch } from "vue";
+import lozad from 'lozad';
 
 const { getCurrentScreen, syncWithRoute } = useScreenStore();
 const route = useRoute();
@@ -55,7 +56,26 @@ onMounted(() => {
   //   token: "",
   //   appName: "FRAME",
   // });
-  window.addEventListener('resize', () => tg.expand());
+  window.addEventListener("resize", () => tg.expand());
+  try {
+    observer = lozad(".lazy-img, .lazy-bg", {
+      loaded: (el) => {
+        console.log("Lazy loaded:", el);
+      },
+      error: (el) => {
+        console.error("Lazy load failed:", el);
+      },
+    });
+    observer.observe();
+  } catch (error) {
+    console.error("Lozad init failed:", error);
+  }
+});
+onBeforeUnmount(() => {
+  if (observer) {
+    observer.observer.disconnect();
+    observer = null;
+  }
 });
 initInputNumberHandler();
 initInputTextHandler();

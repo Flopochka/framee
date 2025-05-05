@@ -8,7 +8,7 @@ const { getTranslation } = useLanguageStore();
 
 <template>
   <div class="popup-img flex-row items-center justify-center">
-    <img src="../assets/img/Star.svg" alt="" class="img-32" />
+    <img src="../assets/img/Star.svg" alt="" class="img-32 lazy-img" />
   </div>
   <div class="popup-block flex-col">
     <p class="text-16 text-white letter-spacing-2">
