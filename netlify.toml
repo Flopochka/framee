@@ -21,13 +21,3 @@
   to = "/index.html"
   status = 200
   conditions = { "Content-Type" = ["text/html"] }
-
-[[redirects]]
-  from = "/src/*"
-  to = "/src/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/assets/*"
-  to = "/assets/:splat"
-  status = 200
