@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
-import { WebApp } from "@telegram-apps/sdk-vue";
 
 export const useWalletStore = defineStore("wallet", () => {
   const IsWalletConected = ref(false);
@@ -51,7 +50,7 @@ export const useWalletStore = defineStore("wallet", () => {
       }
     }
   }
-  const userId = ref(WebApp.initDataUnsafe?.user?.id);
+  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
   const connectWallet = async (e) => {
     const payload = {
       user_id: userId.value,

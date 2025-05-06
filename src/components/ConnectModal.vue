@@ -3,12 +3,11 @@ import { ref } from "vue";
 import { useLanguageStore } from "../stores/language";
 import { useWalletStore } from "../stores/wallet";
 import { useModalStore } from "../stores/modal";
-import { WebApp } from '@telegram-apps/sdk-vue';
 
 const { getTranslation } = useLanguageStore();
 const { connectWallet, fetchWalletInfo } = useWalletStore();
 const { toggleModal } = useModalStore();
-const userId = ref(WebApp.initDataUnsafe?.user?.id);
+const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 const conList = [
   "Wallet",
   "Tonkeeper",

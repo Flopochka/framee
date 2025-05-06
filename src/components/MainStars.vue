@@ -11,7 +11,7 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
-import { WebApp } from '@telegram-apps/sdk-vue';
+ 
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -165,7 +165,7 @@ const createorder = async () => {
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
     const payload = {
-      sender_id: WebApp.initDataUnsafe?.user?.id,
+      sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
       count:
         currentType.value == 0
           ? stars.value

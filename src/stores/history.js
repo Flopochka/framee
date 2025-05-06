@@ -2,7 +2,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
-import { WebApp } from "@telegram-apps/sdk-vue";
 
 export const useHistoryStore = defineStore("history", () => {
   const history = ref(null);
@@ -44,7 +43,7 @@ export const useHistoryStore = defineStore("history", () => {
     }
     const payload = {
       // user_id: 227363776,
-      user_id: WebApp.initDataUnsafe?.user?.id,
+      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
     };
     try {
       const result = await sendToBackend("/get_user_history", payload);

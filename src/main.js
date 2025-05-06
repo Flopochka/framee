@@ -1,13 +1,15 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { init, WebApp } from "@telegram-apps/sdk-vue";
+import { init } from "@telegram-apps/sdk-vue";
 import "./style.css";
 import App from "./App.vue";
 import router from "./router";
+
 init().then(() => {
-  WebApp.expand(); // разворачиваем на весь экран
+  window.Telegram?.WebApp?.expand(); // Разворачиваем на весь экран
 });
+
 const app = createApp(App);
-app.use(createPinia()); // Подключаем Pinia
-app.use(router); // Подключаем Vue Router
+app.use(createPinia());
+app.use(router);
 app.mount("#app");

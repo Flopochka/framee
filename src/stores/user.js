@@ -1,14 +1,13 @@
 // src/stores/userStore.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { WebApp } from "@telegram-apps/sdk-vue";
 
 export const useUserStore = defineStore("user", () => {
   const userName = ref(null);
   const userLogin = ref(null);
   const userPhoto = ref(null);
   const userBalance = ref(0);
-  const userId = ref(WebApp.initDataUnsafe?.user?.id);
+  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
   const isLoading = ref(false); // Для отслеживания загрузки
 
   // Инициализация: загрузка данных из localStorage
