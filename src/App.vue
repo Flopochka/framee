@@ -27,7 +27,7 @@ onMounted(() => {
   // TGWebApp
   window.onload = () => {
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    ;
     if (window.Telegram?.WebApp?.version < "6.0") {
       console.warn(
         "This version of Telegram may not fully support Web Apps. Please update Telegram."
@@ -39,6 +39,7 @@ onMounted(() => {
     tg.disableVerticalSwipes();
 
     tg.ready();
+    tg.expand()
 
     if (
       window.innerWidth <= 768 &&
