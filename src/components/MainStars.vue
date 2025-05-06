@@ -571,21 +571,21 @@ main {
   border: 2px solid var(--blue-900);
 }
 .select-top-premium-card:nth-of-type(1) {
-  background-image: url("/src/assets/img/Premium1.svg");
+  background-image: url("../assets/img/Premium1.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 .select-top-premium-card:nth-of-type(2) {
-  background-image: url("/src/assets/img/Premium2.svg");
+  background-image: url("../assets/img/Premium2.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 .select-top-premium-card:nth-of-type(3) {
-  background-image: url("/src/assets/img/Premium3.svg");
+  background-image: url("../assets/img/Premium3.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
