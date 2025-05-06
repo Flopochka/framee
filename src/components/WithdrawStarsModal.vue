@@ -5,6 +5,7 @@ import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
 import { sendToBackend } from "../modules/fetch";
 import { useHistoryStore } from "../stores/history";
+import { WebApp } from '@telegram-apps/sdk-vue';
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -38,7 +39,7 @@ watch(targetUserName, (newValue) => {
 
 const fetchStarsPrice = async () => {
   const payload = {
-    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    user_id: WebApp.initDataUnsafe?.user?.id,
     amount: 1000000,
   };
   try {
@@ -97,7 +98,7 @@ const withdraw = async () => {
 
   if (valueCorrect.value && recipientCorrect.value) {
     const payload = {
-      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      user_id: WebApp.initDataUnsafe?.user?.id,
       amount: Math.floor(withdrawAmount.value * kef.value),
       adress: targetUserName.value,
     };

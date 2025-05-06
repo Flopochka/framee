@@ -4,6 +4,7 @@ import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
 import { ref } from "vue";
 import { useHistoryStore } from "../stores/history";
+import { WebApp } from '@telegram-apps/sdk-vue';
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -44,7 +45,7 @@ const withdraw = async () => {
   }
   if (valueCorrect.value && walletCorrect.value) {
     const payload = {
-      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      user_id: WebApp.initDataUnsafe?.user?.id,
       amount:
         withdrawTonAmmount.value % 1 === 0
           ? withdrawTonAmmount.value + ".0"

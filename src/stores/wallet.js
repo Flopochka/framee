@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
+import { WebApp } from "@telegram-apps/sdk-vue";
 
 export const useWalletStore = defineStore("wallet", () => {
   const IsWalletConected = ref(false);
@@ -50,7 +51,7 @@ export const useWalletStore = defineStore("wallet", () => {
       }
     }
   }
-  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+  const userId = ref(WebApp.initDataUnsafe?.user?.id);
   const connectWallet = async (e) => {
     const payload = {
       user_id: userId.value,
@@ -80,7 +81,7 @@ export const useWalletStore = defineStore("wallet", () => {
   };
   const fetchWalletInfo = async () => {
     const retryDelays = [1000, 2000, 4000, 8000, 10000]; // 1, 2, 4, 8, 10 seconds
-    
+
     const tryFetch = async () => {
       const payload = {
         user_id: userId.value,
@@ -89,7 +90,7 @@ export const useWalletStore = defineStore("wallet", () => {
       return result.data.data.connection;
     };
 
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     try {
       const connection = await tryFetch();

@@ -4,8 +4,9 @@ import { useModalStore } from "../stores/modal";
 import { useScreenStore } from "../stores/screen";
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
+import { WebApp } from '@telegram-apps/sdk-vue';
 
-const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+const userId = ref(WebApp.initDataUnsafe?.user?.id);
 const referals_count = ref(0);
 const income = ref(0);
 
@@ -18,7 +19,7 @@ const shareData = {
   text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇",
   url:
     "https://t.me/Framestars_bot?start=" +
-    window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    WebApp.initDataUnsafe?.user?.id,
 };
 
 function linkTo(url, options = { tryInstantView: false, target: '_blank' }) {

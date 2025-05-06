@@ -4,6 +4,7 @@ import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
 import { ref, onMounted } from "vue";
+import { WebApp } from '@telegram-apps/sdk-vue';
 import refPhoto from "../assets/img/TESTReferalPhoto.png";
 
 const { toggleModal } = useModalStore();
@@ -11,7 +12,7 @@ const { getTranslation } = useLanguageStore();
 const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } =
   useUserStore();
 
-const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+const userId = ref(WebApp.initDataUnsafe?.user?.id);
 const referals = ref([]);
 
 const fetchUserReferals = async () => {

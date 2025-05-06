@@ -1,18 +1,19 @@
 // src/stores/userStore.js
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import { WebApp } from "@telegram-apps/sdk-vue";
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore("user", () => {
   const userName = ref(null);
   const userLogin = ref(null);
   const userPhoto = ref(null);
   const userBalance = ref(0);
-  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+  const userId = ref(WebApp.initDataUnsafe?.user?.id);
   const isLoading = ref(false); // Для отслеживания загрузки
 
   // Инициализация: загрузка данных из localStorage
   const initialize = () => {
-    const cachedData = localStorage.getItem('userStore');
+    const cachedData = localStorage.getItem("userStore");
     if (cachedData) {
       try {
         const parsed = JSON.parse(cachedData);
@@ -20,9 +21,9 @@ export const useUserStore = defineStore('user', () => {
         userLogin.value = parsed.userLogin ?? null;
         userPhoto.value = parsed.userPhoto ?? null;
         userBalance.value = parsed.userBalance ?? 0;
-        console.log('Loaded cached user data:', parsed);
+        console.log("Loaded cached user data:", parsed);
       } catch (error) {
-        console.error('Failed to parse cached user data:', error);
+        console.error("Failed to parse cached user data:", error);
       }
     }
   };
@@ -45,10 +46,10 @@ export const useUserStore = defineStore('user', () => {
         userBalance: userBalance.value,
         userId: userId.value,
       };
-      localStorage.setItem('userStore', JSON.stringify(dataToCache));
-      console.log('Updated and cached user data:', dataToCache);
+      localStorage.setItem("userStore", JSON.stringify(dataToCache));
+      console.log("Updated and cached user data:", dataToCache);
     } catch (error) {
-      console.error('Error updating user data:', error);
+      console.error("Error updating user data:", error);
     } finally {
       isLoading.value = false;
     }

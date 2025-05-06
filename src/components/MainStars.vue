@@ -11,6 +11,7 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
+import { WebApp } from '@telegram-apps/sdk-vue';
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -164,7 +165,7 @@ const createorder = async () => {
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
     const payload = {
-      sender_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      sender_id: WebApp.initDataUnsafe?.user?.id,
       count:
         currentType.value == 0
           ? stars.value
@@ -188,7 +189,7 @@ const createorder = async () => {
         const data = result.data.data;
         setPaymentLink(data.payment_link);
         const orderId = data.order_id;
-        window.Telegram.WebApp.openLink(data.payment_link);
+        WebApp.openLink(data.payment_link);
         setupTabReturnListener(orderId);
       });
     } catch (error) {

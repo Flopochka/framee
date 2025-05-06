@@ -13,7 +13,6 @@ import { initInputNumberHandler } from "./modules/inputNumber";
 import { initInputTextHandler } from "./modules/inputText";
 import { onMounted, onBeforeUnmount, watch } from "vue";
 import lozad from "lozad";
-import { init } from "@telegram-apps/sdk";
 
 const { getCurrentScreen, syncWithRoute } = useScreenStore();
 const route = useRoute();
@@ -32,48 +31,11 @@ let telegramApp;
 let observer;
 
 onMounted(() => {
-  // Инициализация Telegram Web App через SDK
-  try {
-    telegramApp = init({
-      debug: true // Включаем дебаг для разработки
-    });
-
-    // Проверка версии Telegram
-    if (telegramApp.version < "6.0") {
-      console.warn(
-        "This version of Telegram may not fully support Web Apps. Please update Telegram."
-      );
-    }
-
-    // Настройка Telegram Web App
-    telegramApp.setHeaderColor("#000000");
-    telegramApp.setBackgroundColor("#000000");
-    telegramApp.disableVerticalSwipes();
-    telegramApp.ready();
-    telegramApp.expand();
-
-    // Редирект для мобильных устройств
-    if (
-      window.innerWidth <= 768 &&
-      !telegramApp.initDataUnsafe
-      // &&
-      // !window.location.pathname.includes("about")
-    ) {
-      // window.location.href = "https://t.me/Framestars_bot/start";
-      // window.location.href = "https://t.me/fremeetstbot/start";
-    }
-  } catch (error) {
-    console.error("Telegram Web App init failed:", error);
-  }
-
   // Инициализация аналитики (раскомментируй и укажи токен)
   // telegramAnalytics.init({
   //   token: "",
   //   appName: "FRAME",
   // });
-
-  // Обработчик ресайза
-  window.addEventListener("resize", () => telegramApp?.expand());
 
   // Инициализация lazy-loading
   try {

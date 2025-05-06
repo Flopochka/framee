@@ -3,8 +3,10 @@ const API_URL =
     ? "http://localhost:8888/.netlify/functions/proxy"
     : "/.netlify/functions/proxy";
 
+import { WebApp } from "@telegram-apps/sdk-vue";
+
 export async function sendToBackend(target, payload) {
-  const initData = window.Telegram?.WebApp?.initData
+  const initData = WebApp.initData;
   try {
     const response = await fetch(API_URL, {
       method: "POST",

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
 import { sendToBackend } from "../modules/fetch";
+import { WebApp } from "@telegram-apps/sdk-vue";
 
 // Хранилище для языковых данных
 export const useLanguageStore = defineStore("language", () => {
@@ -17,7 +18,7 @@ export const useLanguageStore = defineStore("language", () => {
     ar: "فارسی",
     fa: "العربية",
   });
-  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+  const userId = ref(WebApp.initDataUnsafe?.user?.id);
 
   // Вспомогательная функция для парсинга данных из localStorage
   const tryParse = (data) => {
@@ -85,7 +86,9 @@ export const useLanguageStore = defineStore("language", () => {
 
     // Установка начального языка
     const savedLangKey = localStorage.getItem("language") || "en";
-    const savedLangData = tryParse(localStorage.getItem(`lang_${savedLangKey}`));
+    const savedLangData = tryParse(
+      localStorage.getItem(`lang_${savedLangKey}`)
+    );
 
     if (savedLangData) {
       langsData.value[savedLangKey] = savedLangData;
@@ -112,7 +115,10 @@ export const useLanguageStore = defineStore("language", () => {
         if (langData) {
           const langKey = Object.keys(langData)[0];
           langsData.value[langKey] = langData[langKey];
-          localStorage.setItem(`lang_${langKey}`, JSON.stringify(langData[langKey]));
+          localStorage.setItem(
+            `lang_${langKey}`,
+            JSON.stringify(langData[langKey])
+          );
         }
       });
     }
