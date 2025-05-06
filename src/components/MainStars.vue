@@ -575,7 +575,7 @@ main {
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: contain;
 }
 .select-top-premium-card:nth-of-type(2) {
   background-image: url("../assets/img/Premium2.svg");
@@ -589,7 +589,7 @@ main {
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100%;
 }
 .select-top-premium-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
