@@ -1,0 +1,10 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": ["stylelint-no-unsupported-browser-features"],
+  "rules": {
+    "plugin/no-unsupported-browser-features": [true, {
+      "browsers": ["> 0.5%", "last 3 versions", "not dead", "ie >= 11", "safari >= 10", "ios >= 9", "android >= 4.4", "chrome >= 49", "firefox >= 52", "opera >= 36", "samsung >= 4", "uc >= 11.8"],
+      "severity": "warning"
+    }]
+  }
+}

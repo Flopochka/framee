@@ -1,10 +1,13 @@
 [build]
-  publish = "dist"          # Папка сборки Vite
-  command = "npm run build" # Команда сборки
-  functions = "netlify/functions" # Папка с функциями
+  publish = "dist"
+  command = "npm run build"
+  functions = "netlify/functions"
 
 [dev]
-  command = "vite"          # Для локальной разработки
+  command = "npm run dev"
+  port = 8888
+  targetPort = 5173
+  publish = "dist"
 
 [functions]
   node_bundler = "esbuild"
@@ -15,5 +18,16 @@
 
 [[redirects]]
   from = "/*"
-  to = "/"
+  to = "/index.html"
+  status = 200
+  conditions = { "Content-Type" = ["text/html"] }
+
+[[redirects]]
+  from = "/src/*"
+  to = "/src/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
   status = 200

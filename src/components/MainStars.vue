@@ -578,7 +578,7 @@ main {
   background-size: contain;
 }
 .select-top-premium-card:nth-of-type(2) {
-  background-image: url("../assets/img/SmoshStars.svg");
+  background-image: url("../assets/img/Premium2.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;

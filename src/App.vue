@@ -12,10 +12,13 @@ import { useScreenStore } from "./stores/screen";
 import { initInputNumberHandler } from "./modules/inputNumber";
 import { initInputTextHandler } from "./modules/inputText";
 import { onMounted, onBeforeUnmount, watch } from "vue";
-import lozad from 'lozad';
+import lozad from "lozad";
+import { init } from "@telegram-apps/sdk";
 
 const { getCurrentScreen, syncWithRoute } = useScreenStore();
 const route = useRoute();
+
+// Синхронизация маршрута со стором
 watch(
   () => route.path,
   (newPath) => {
@@ -23,41 +26,56 @@ watch(
   },
   { immediate: true }
 );
+
+// Инициализация Telegram Web App
+let telegramApp;
+let observer;
+
 onMounted(() => {
-  // TGWebApp
-  window.onload = () => {
-    const tg = window.Telegram.WebApp;
-    ;
-    if (window.Telegram?.WebApp?.version < "6.0") {
+  // Инициализация Telegram Web App через SDK
+  try {
+    telegramApp = init({
+      debug: true // Включаем дебаг для разработки
+    });
+
+    // Проверка версии Telegram
+    if (telegramApp.version < "6.0") {
       console.warn(
         "This version of Telegram may not fully support Web Apps. Please update Telegram."
       );
     }
 
-    tg.setHeaderColor("#000000"); // Цвет заголовка
-    tg.setBackgroundColor("#000000"); // Цвет фона
-    tg.disableVerticalSwipes();
+    // Настройка Telegram Web App
+    telegramApp.setHeaderColor("#000000");
+    telegramApp.setBackgroundColor("#000000");
+    telegramApp.disableVerticalSwipes();
+    telegramApp.ready();
+    telegramApp.expand();
 
-    tg.ready();
-    tg.expand()
-
+    // Редирект для мобильных устройств
     if (
       window.innerWidth <= 768 &&
-      !window.Telegram.WebApp.initDataUnsafe
+      !telegramApp.initDataUnsafe
       // &&
       // !window.location.pathname.includes("about")
     ) {
       // window.location.href = "https://t.me/Framestars_bot/start";
       // window.location.href = "https://t.me/fremeetstbot/start";
     }
-  };
+  } catch (error) {
+    console.error("Telegram Web App init failed:", error);
+  }
 
-  // TGAnalytics
+  // Инициализация аналитики (раскомментируй и укажи токен)
   // telegramAnalytics.init({
   //   token: "",
   //   appName: "FRAME",
   // });
-  window.addEventListener("resize", () => tg.expand());
+
+  // Обработчик ресайза
+  window.addEventListener("resize", () => telegramApp?.expand());
+
+  // Инициализация lazy-loading
   try {
     observer = lozad(".lazy-img, .lazy-bg", {
       loaded: (el) => {
@@ -71,15 +89,18 @@ onMounted(() => {
   } catch (error) {
     console.error("Lozad init failed:", error);
   }
+
+  // Инициализация обработчиков ввода
+  initInputNumberHandler();
+  initInputTextHandler();
 });
+
 onBeforeUnmount(() => {
   if (observer) {
     observer.observer.disconnect();
     observer = null;
   }
 });
-initInputNumberHandler();
-initInputTextHandler();
 </script>
 
 <template>

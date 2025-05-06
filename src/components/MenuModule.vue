@@ -42,7 +42,7 @@ const menuItems = ref([
       class="menu-item cupo"
       :class="{ 'menu-item-active': isActive(index) }"
     >
-      <img :src="item.icon" :alt="item.alt" class="lazy-img" :class="item.imgClass" />
+      <img :src="item.icon" :alt="item.alt" :class="item.imgClass" />
     </div>
   </nav>
 </template>

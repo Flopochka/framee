@@ -11,6 +11,7 @@
   "dependencies": {
     "@telegram-apps/analytics": "^1.3.13",
     "@telegram-apps/init-data-node": "^2.0.3",
+    "@telegram-apps/sdk": "^3.9.2",
     "axios": "^1.8.4",
     "lottie-web": "^5.12.2",
     "lozad": "^1.16.0",
@@ -20,6 +21,27 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.21",
+    "browserslist": "^4.24.5",
+    "postcss": "^8.5.3",
+    "postcss-custom-properties": "^14.0.4",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-normalize": "^13.0.1",
+    "postcss-preset-env": "^10.1.6",
     "vite": "^6.2.0"
-  }
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 3 versions",
+    "not dead",
+    "ie >= 11",
+    "safari >= 10",
+    "ios >= 9",
+    "android >= 4.4",
+    "chrome >= 49",
+    "firefox >= 52",
+    "opera >= 36",
+    "samsung >= 4",
+    "and_uc >= 11.8"
+  ]
 }
