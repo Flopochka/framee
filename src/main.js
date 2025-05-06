@@ -5,10 +5,7 @@ import "./style.css";
 import App from "./App.vue";
 import router from "./router";
 
-init().then(() => {
-  window.Telegram?.WebApp?.expand(); // Разворачиваем на весь экран
-});
-
+init();
 const app = createApp(App);
 app.use(createPinia());
 app.use(router);

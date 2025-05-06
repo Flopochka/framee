@@ -31,6 +31,7 @@ let telegramApp;
 let observer;
 
 onMounted(() => {
+  window.Telegram?.WebApp?.expand();
   // Инициализация аналитики (раскомментируй и укажи токен)
   // telegramAnalytics.init({
   //   token: "",
