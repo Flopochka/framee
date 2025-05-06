@@ -7,12 +7,7 @@ export async function sendToBackend(target, payload) {
   const initData = window.Telegram?.WebApp?.initData;
   try {
     console.log(
-      "sending: " +
-        JSON.stringify({
-          initData, // Для проверки подписи
-          target, // Цель, например "/search_recipient"
-          payload, // Данные для бэкенда
-        })
+      target, payload
     );
     const response = await fetch(API_URL, {
       method: "POST",

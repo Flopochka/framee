@@ -90,7 +90,7 @@ onMounted(() => {
       return;
     }
 
-    animation = lottie.default.loadAnimation({
+    let animation = lottie.default.loadAnimation({
       container,
       renderer: "svg",
       loop: true,
