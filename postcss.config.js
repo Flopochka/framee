@@ -14,7 +14,7 @@ export default {
       }
     }),
     postcssFlexbugsFixes(),
-    postcssCustomProperties(),
+    postcssCustomProperties({ preserve: true }), // ключевой момент
     autoprefixer(),
     postcssNormalize()
   ]

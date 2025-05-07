@@ -83,31 +83,14 @@ onMounted(() => {
   fetchWalletInfo();
   import("lottie-web").then((lottie) => {
     const container = document.getElementById("lottie");
-    if (!container) {
-      console.error("No lottie container");
-      walletStore.fetchTotalInfo();
-      walletStore.fetchWalletInfo();
-      return;
-    }
+    if (!container) return;
 
-    let animation = lottie.default.loadAnimation({
+    lottie.default.loadAnimation({
       container,
       renderer: "svg",
       loop: true,
       autoplay: true,
       path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
-    });
-
-    animation.addEventListener("data_ready", () => {
-      console.log("Lottie ready");
-      walletStore.fetchTotalInfo();
-      walletStore.fetchWalletInfo();
-    });
-
-    animation.addEventListener("data_failed", () => {
-      console.error("Lottie failed");
-      walletStore.fetchTotalInfo();
-      walletStore.fetchWalletInfo();
     });
   });
 });
@@ -170,7 +153,11 @@ onMounted(() => {
           :key="card.translation"
           class="aboutus-other-card items-center gap-2"
         >
-          <img src="../assets/img/Star.svg" alt="" class="img-16 p-133 lazy-img" />
+          <img
+            src="../assets/img/Star.svg"
+            alt=""
+            class="img-16 p-133 lazy-img"
+          />
           <p class="text-24 lh-120 letter-spacing-05 font-400 text-white">
             {{ card.value }}
           </p>
@@ -201,7 +188,11 @@ onMounted(() => {
               class="accordion-checkbox jse"
               :class="{ 'accordion-checkbox-active': isAccordionActive(index) }"
             >
-              <img src="../assets/img/Arrow down.svg" alt="" class="img-24 lazy-img" />
+              <img
+                src="../assets/img/Arrow down.svg"
+                alt=""
+                class="img-24 lazy-img"
+              />
             </div>
           </div>
           <div
