@@ -11,7 +11,6 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
- 
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -44,19 +43,25 @@ const incrementInterval = ref(null);
 const holdTimer = ref(null);
 const currentAmount = ref(0);
 const minCount = ref(50);
+const isTouchEvent = ref(false);
 
-const startIncrement = (amount) => {
+const startIncrement = (amount, event) => {
+  // Предотвратим двойное срабатывание
+  if (event.type === "touchstart") {
+    isTouchEvent.value = true;
+  } else if (isTouchEvent.value && event.type === "mousedown") {
+    return; // Игнорируем mousedown, если уже был touchstart
+  }
+
   if (stars.value > 1000000 - amount) return;
 
   currentAmount.value = amount;
-  stars.value += amount; // Мгновенное первое увеличение
+  stars.value += amount;
 
-  // Очищаем предыдущий интервал, если он есть
   clearInterval(incrementInterval.value);
 
-  // Функция для запуска и обновления интервала
   const runInterval = () => {
-    clearInterval(incrementInterval.value); // Очищаем текущий интервал
+    clearInterval(incrementInterval.value);
     incrementInterval.value = setInterval(() => {
       if (stars.value <= 1000000 - amount) {
         stars.value += amount;
@@ -65,26 +70,24 @@ const startIncrement = (amount) => {
         return;
       }
 
-      // Уменьшаем задержку
       if (holdDelay.value > minDelay.value) {
         holdDelay.value = Math.max(
           minDelay.value,
           holdDelay.value / speedFactor.value
         );
-        // Перезапускаем интервал с новой задержкой
         runInterval();
       }
     }, holdDelay.value);
   };
 
-  // Запускаем таймер для начала автоинкремента
-  holdTimer.value = setTimeout(runInterval, 500); // Задержка перед началом автоинкремента
+  holdTimer.value = setTimeout(runInterval, 500);
 };
 
 const stopIncrement = () => {
   clearTimeout(holdTimer.value);
   clearInterval(incrementInterval.value);
-  holdDelay.value = 1000; // Сбрасываем задержку до начальной
+  holdDelay.value = 1000;
+  isTouchEvent.value = false; // Сбросить флаг после завершения
 };
 
 const switchType = (type) => (currentType.value = type);
@@ -380,10 +383,10 @@ onMounted(() => {
             <div
               v-for="amount in [100, 1000, 10000]"
               :key="amount"
-              @mousedown="startIncrement(amount)"
+              @mousedown="startIncrement(amount, $event)"
               @mouseup="stopIncrement"
               @mouseleave="stopIncrement"
-              @touchstart="startIncrement(amount)"
+              @touchstart="startIncrement(amount, $event)"
               @touchend="stopIncrement"
               class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo usen"
             >
