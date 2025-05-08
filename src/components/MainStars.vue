@@ -43,23 +43,19 @@ const incrementInterval = ref(null);
 const holdTimer = ref(null);
 const currentAmount = ref(0);
 const minCount = ref(50);
-const isTouchEvent = ref(false);
+const hasTouch = ref(false);
 
 const startIncrement = (amount, event) => {
-  // Предотвратим двойное срабатывание
   if (event.type === "touchstart") {
-    isTouchEvent.value = true;
-  } else if (isTouchEvent.value && event.type === "mousedown") {
-    return; // Игнорируем mousedown, если уже был touchstart
+    hasTouch.value = true;
   }
-
+  if (event.type === "mousedown" && hasTouch.value) {
+    return; // Игнорировать mousedown, если уже был touchstart
+  }
   if (stars.value > 1000000 - amount) return;
-
   currentAmount.value = amount;
   stars.value += amount;
-
   clearInterval(incrementInterval.value);
-
   const runInterval = () => {
     clearInterval(incrementInterval.value);
     incrementInterval.value = setInterval(() => {
@@ -69,7 +65,6 @@ const startIncrement = (amount, event) => {
         stopIncrement();
         return;
       }
-
       if (holdDelay.value > minDelay.value) {
         holdDelay.value = Math.max(
           minDelay.value,
@@ -79,7 +74,6 @@ const startIncrement = (amount, event) => {
       }
     }, holdDelay.value);
   };
-
   holdTimer.value = setTimeout(runInterval, 500);
 };
 
@@ -87,7 +81,6 @@ const stopIncrement = () => {
   clearTimeout(holdTimer.value);
   clearInterval(incrementInterval.value);
   holdDelay.value = 1000;
-  isTouchEvent.value = false; // Сбросить флаг после завершения
 };
 
 const switchType = (type) => (currentType.value = type);
