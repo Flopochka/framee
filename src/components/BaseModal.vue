@@ -151,26 +151,4 @@ const resetHeight = () => {
 </template>
 
 <style scoped>
-
-.madal-screen-body {
-  gap: 8px;
-  transition: height 0.3s ease;
-  overflow-y: auto;
-  max-height: 60vh;
-  padding: 16px;
-}
-
-.madal-screen-swipka {
-  width: 40px;
-  height: 4px;
-  background: var(--Surface-white-20, #ffffff33);
-  border-radius: 2px;
-  margin: 8px auto;
-  cursor: grab;
-  user-select: none;
-}
-
-.madal-screen-swipka:active {
-  cursor: grabbing;
-}
 </style>

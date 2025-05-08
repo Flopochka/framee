@@ -106,7 +106,7 @@ body {
 .items-center {
   align-items: center;
 }
-.items-start{
+.items-start {
   align-items: start;
 }
 .justify-center {
@@ -118,7 +118,7 @@ body {
 .jcsb {
   justify-content: space-between;
 }
-.tae{
+.tae {
   text-align: end;
 }
 
@@ -224,7 +224,7 @@ body {
 .text-neutral-200 {
   color: var(--neutral-200);
 }
-.text-red{
+.text-red {
   color: var(--red);
 }
 .font-geist {
@@ -346,7 +346,7 @@ body {
   width: 20px;
   height: 20px;
 }
-.img-24{
+.img-24 {
   width: 24px;
   height: 24px;
 }
@@ -367,25 +367,25 @@ body {
   height: 44px;
 }
 
-.cupo{
+.cupo {
   cursor: pointer;
 }
 
-.cute{
+.cute {
   cursor: text;
 }
 
-.cugr{
+.cugr {
   cursor: grab;
 }
 
-.cude{
+.cude {
   cursor: default;
 }
-.usen{
+.usen {
   user-select: none;
 }
-.usea{
+.usea {
   user-select: auto;
 }
 /* Custom styles */
@@ -488,6 +488,16 @@ main {
   background: #ffffff26;
   justify-self: center;
   border-radius: 4px;
+  width: 40px;
+  height: 4px;
+  background: var(--Surface-white-20, #ffffff33);
+  border-radius: 2px;
+  margin: 8px auto;
+  cursor: grab;
+  user-select: none;
+}
+.madal-screen-swipka:active {
+  cursor: grabbing;
 }
 .madal-screen-title {
   font-family: Geist;
@@ -517,6 +527,11 @@ main {
   flex-direction: column;
   transform: translatey(100vh);
   transition: transform 0.3s;
+  gap: 8px;
+  transition: height 0.3s ease;
+  overflow-y: auto;
+  max-height: 60vh;
+  padding: 24px;
 }
 .madal-active .madal-screen-body {
   transform: translateY(0);
