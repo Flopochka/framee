@@ -449,6 +449,7 @@ main {
   left: 12px;
   color: #757575;
   font-family: Geist;
+  -webkit-font-smoothing: antialiased;
 }
 .with-dog-inputed::after {
   color: var(--neutral-700);
