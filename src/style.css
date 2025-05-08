@@ -447,8 +447,7 @@ main {
   font-size: 16px;
   bottom: 18px;
   left: 12px;
-  color: var(--neutral-500);
-  /* color: #ccc; */
+  color: #757575;
   font-family: Geist;
 }
 .with-dog-inputed::after {
