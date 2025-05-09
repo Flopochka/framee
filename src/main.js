@@ -4,9 +4,14 @@ import "./style.css";
 import App from "./App.vue";
 import router from "./router";
 import { WebApp } from "@twa-dev/sdk";
-const tg = window.Telegram?.WebApp;
-tg.ready();
-tg.expand();
+try {
+  WebApp();
+} catch (error) {}
+try {
+  const tg = window.Telegram?.WebApp;
+  tg.ready();
+  tg.expand();
+} catch (error) {}
 const app = createApp(App);
 app.use(createPinia());
 app.use(router);
