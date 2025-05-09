@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
       <WithdrawScreen />
     </div>
   </div>
-  <MenuModule />
+  <MenuModule v-if="!isKeyboardOpen" />
   <ModalScreens />
 </template>
 
