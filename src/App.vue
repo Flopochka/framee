@@ -114,19 +114,34 @@ onBeforeUnmount(() => {
     class="screen"
     :style="{ transform: `translateX(-${getCurrentScreen() * 100}vw)` }"
   >
-    <div class="screen-item">
+    <div
+      class="screen-item"
+      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+    >
       <MainStars />
     </div>
-    <div class="screen-item">
+    <div
+      class="screen-item"
+      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+    >
       <Tasks />
     </div>
-    <div class="screen-item">
+    <div
+      class="screen-item"
+      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+    >
       <AboutUs />
     </div>
-    <div class="screen-item">
+    <div
+      class="screen-item"
+      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+    >
       <Profile />
     </div>
-    <div class="screen-item">
+    <div
+      class="screen-item"
+      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+    >
       <WithdrawScreen />
     </div>
   </div>
