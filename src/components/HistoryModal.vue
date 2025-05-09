@@ -38,7 +38,7 @@ const historyLoop = setInterval(fetchUserHistory(),30000);
   <div class="user-history-body">
     <template v-if="history">
       <template v-for="(group, index) in history" :key="index">
-        <p class="text-white-70 text-14 pl-12">
+        <p class="text-white-70 text-14 pl-12 lh-120">
           {{ getTranslation(group.date.month) }}, {{ group.date.day }}
           {{ group.date.year === currentYear ? "" : ", " + group.date.year }}
         </p>
