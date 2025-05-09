@@ -116,31 +116,31 @@ onBeforeUnmount(() => {
   >
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? "84px":"" }"
     >
       <MainStars />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? "84px":"" }"
     >
       <Tasks />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? "84px":"" }"
     >
       <AboutUs />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? "84px":"" }"
     >
       <Profile />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? "84px":"" }"
     >
       <WithdrawScreen />
     </div>
@@ -165,7 +165,6 @@ onBeforeUnmount(() => {
   transition: max-height 0.3s;
   width: 100%;
   position: relative;
-  padding-top:84px;
 }
 .blur-box {
   position: fixed;
