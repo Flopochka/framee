@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user"
+import { useUserStore } from "../stores/user";
 
 export const useHistoryStore = defineStore("history", () => {
   const history = ref(null);
