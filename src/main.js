@@ -4,7 +4,7 @@ import "./style.css";
 import App from "./App.vue";
 import router from "./router";
 import { WebApp } from "@twa-dev/sdk";
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram?.WebApp;
 tg.expand();
 tg.ready();
 tg.expand();
