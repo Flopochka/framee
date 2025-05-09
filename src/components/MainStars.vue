@@ -60,7 +60,7 @@ const startIncrement = (amount, event) => {
     clearInterval(incrementInterval.value);
     incrementInterval.value = setInterval(() => {
       if (stars.value <= 1000000 - amount) {
-        stars.value += amount;
+        stars.value = Number(stars.value) + Number(amount);
       } else {
         stopIncrement();
         return;
@@ -81,6 +81,10 @@ const stopIncrement = () => {
   clearTimeout(holdTimer.value);
   clearInterval(incrementInterval.value);
   holdDelay.value = 1000;
+};
+
+const clearStars = () => {
+  stars.value = null;
 };
 
 const switchType = (type) => (currentType.value = type);
@@ -363,6 +367,7 @@ onMounted(() => {
               :min="minCount"
               max="1000000"
             />
+            <img v-if="stars" @click="clearStars()" class="input-clear img-32" src="../assets/img/CrossRed.svg" alt="">
           </div>
           <template v-if="valueIncorrects" v-for="e in valueIncorrects">
             <p class="pl-14 text-red text-14">

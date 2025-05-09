@@ -11,7 +11,7 @@ import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";
 import { initInputNumberHandler } from "./modules/inputNumber";
 import { initInputTextHandler } from "./modules/inputText";
-import { onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import lozad from "lozad";
 
 const { getCurrentScreen, syncWithRoute } = useScreenStore();
@@ -29,6 +29,24 @@ watch(
 // Инициализация Telegram Web App
 let telegramApp;
 let observer;
+
+const isKeyboardOpen = ref(false);
+
+function isMobileDevice() {
+  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+const onFocus = () => {
+  if (isMobileDevice()) {
+    isKeyboardOpen.value = true;
+  }
+};
+
+const onBlur = () => {
+  setTimeout(() => {
+    isKeyboardOpen.value = false;
+  }, 300); // подождать закрытие клавы
+};
 
 onMounted(() => {
   window.Telegram?.WebApp?.expand();
@@ -56,6 +74,16 @@ onMounted(() => {
   // Инициализация обработчиков ввода
   initInputNumberHandler();
   initInputTextHandler();
+
+  if (!isMobileDevice()) return;
+
+  const inputs = document.querySelectorAll(
+    "input, textarea, [contenteditable]"
+  );
+  inputs.forEach((el) => {
+    el.addEventListener("focus", onFocus);
+    el.addEventListener("blur", onBlur);
+  });
 });
 
 onBeforeUnmount(() => {
@@ -63,6 +91,13 @@ onBeforeUnmount(() => {
     observer.observer.disconnect();
     observer = null;
   }
+  const inputs = document.querySelectorAll(
+    "input, textarea, [contenteditable]"
+  );
+  inputs.forEach((el) => {
+    el.removeEventListener("focus", onFocus);
+    el.removeEventListener("blur", onBlur);
+  });
 });
 </script>
 

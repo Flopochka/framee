@@ -4,7 +4,6 @@ import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
 import { ref } from "vue";
 import { useHistoryStore } from "../stores/history";
- 
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -17,6 +16,10 @@ const valueCorrect = ref(true);
 const valueIncorrects = ref([]);
 const walletCorrect = ref(true);
 const walletIncorrects = ref([]);
+
+const clearTON = () => {
+  withdrawTonAmmount.value = null;
+};
 
 const withdraw = async () => {
   valueIncorrects.value = [];
@@ -67,7 +70,7 @@ const withdraw = async () => {
 
 <template>
   <div class="withdrawstars-body jcsb">
-    <div class="withdraw-inputs flex-col gap-8">
+    <div class="withdraw-inputs flex-col gap-8" style="position: relative">
       <p class="pl-14 text-neutral-300 text-14">
         {{ getTranslation("amount") }}
       </p>
@@ -79,6 +82,14 @@ const withdraw = async () => {
         min="0.5"
         max="1000000"
         v-model="withdrawTonAmmount"
+      />
+      <img
+        v-if="withdrawTonAmmount"
+        @click="clearTON()"
+        class="input-clear img-32"
+        style="top: 36px"
+        src="../assets/img/CrossRed.svg"
+        alt=""
       />
       <template v-if="valueIncorrects" v-for="e in valueIncorrects">
         <p class="pl-14 text-red text-14">{{ getTranslation(e) }}</p>

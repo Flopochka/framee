@@ -454,6 +454,11 @@ main {
 .with-dog-inputed::after {
   color: var(--neutral-700);
 }
+.input-clear{
+  position: absolute;
+  right: 10px;
+  bottom: 11.5px;
+}
 .madal-screen {
   height: auto;
   overflow: hidden;
