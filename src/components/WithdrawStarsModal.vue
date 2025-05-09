@@ -9,8 +9,6 @@ import { useHistoryStore } from "../stores/history";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const { getUserBalance, getUser } = useUserStore();
-const { fetchUserHistory } = useHistoryStore();
 
 // Переменные для withdrawstars (уже есть)
 const targetUserName = ref(""); // Имя пользователя для withdrawstars
@@ -43,7 +41,7 @@ watch(targetUserName, (newValue) => {
 
 const fetchStarsPrice = async () => {
   const payload = {
-    user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    user_id: useUserStore().getUserId(),
     amount: 1000000,
   };
   try {
@@ -77,7 +75,7 @@ const searchRecipient = async (username) => {
 };
 
 const buyForMyself = () => {
-  targetUserName.value = getUser();
+  targetUserName.value = useUserStore().getUser();
 };
 
 const withdraw = async () => {
@@ -85,7 +83,7 @@ const withdraw = async () => {
   recipientIncorrects.value = [];
 
   const amount = withdrawAmount.value || 0;
-  if (amount >= 0.1 && amount <= 1000000 && amount <= getUserBalance()) {
+  if (amount >= 0.1 && amount <= 1000000 && amount <= useUserStore().getUserBalance()) {
     valueCorrect.value = true;
   } else {
     valueCorrect.value = false;
@@ -101,15 +99,16 @@ const withdraw = async () => {
   }
 
   if (valueCorrect.value && recipientCorrect.value) {
+    
     const payload = {
-      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      user_id: useUserStore().getUserId(),
       amount: Math.floor(withdrawAmount.value * kef.value),
       adress: targetUserName.value,
     };
     try {
       await sendToBackend("/withdraw", payload);
       toggleModal("popupstars");
-      fetchUserHistory();
+      useHistoryStore().fetchUserHistory();
     } catch (error) {
       console.error("Withdraw failed:", error);
       toggleModal("Error");

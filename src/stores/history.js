@@ -1,7 +1,7 @@
-// src/stores/userStore.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
+import { useUserStore } from "../stores/user"
 
 export const useHistoryStore = defineStore("history", () => {
   const history = ref(null);
@@ -42,8 +42,7 @@ export const useHistoryStore = defineStore("history", () => {
       history.value = historyCache.value;
     }
     const payload = {
-      // user_id: 227363776,
-      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      user_id: useUserStore().getUserId(),
     };
     try {
       const result = await sendToBackend("/get_user_history", payload);

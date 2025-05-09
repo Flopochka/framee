@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
+import { useUserStore } from "../stores/user"
 
 export const useWalletStore = defineStore("wallet", () => {
   const IsWalletConected = ref(false);
@@ -50,10 +51,9 @@ export const useWalletStore = defineStore("wallet", () => {
       }
     }
   }
-  const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
   const connectWallet = async (e) => {
     const payload = {
-      user_id: userId.value,
+      user_id: useUserStore().getUserId(),
       wallet: e,
     };
     try {
@@ -69,7 +69,7 @@ export const useWalletStore = defineStore("wallet", () => {
   const disconnectWallet = async () => {
     try {
       const payload = {
-        user_id: userId.value,
+        user_id: useUserStore().getUserId(),
       };
       const result = await sendToBackend("/disconnect_wallet", payload);
       fetchWalletInfo();
@@ -83,7 +83,7 @@ export const useWalletStore = defineStore("wallet", () => {
 
     const tryFetch = async () => {
       const payload = {
-        user_id: userId.value,
+        user_id: useUserStore().getUserId(),
       };
       const result = await sendToBackend("/check_connect_wallet", payload);
       return result.data.data.connection;

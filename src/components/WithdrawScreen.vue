@@ -4,26 +4,51 @@ import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
 import { ref, onMounted } from "vue";
- 
 import refPhoto from "../assets/img/TESTReferalPhoto.png";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const { updateUser, getUserName, getUser, getUserPhoto, getUserBalance } =
-  useUserStore();
 
-const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 const referals = ref([]);
 
 const fetchUserReferals = async () => {
+  const CACHE_KEY = "referrals_cache";
+  const CACHE_TTL = 5 * 60 * 1000; // 5 минут
+
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      const now = Date.now();
+
+      if (now - parsed.timestamp < CACHE_TTL) {
+        referals.value = parsed.data;
+        console.log("Loaded from cache");
+      }
+    } catch (e) {
+      console.warn("Bad cache format:", e);
+    }
+  }
+
+  // Пока показываем кеш, но всё равно обновим
   const payload = {
-    user_id: userId.value,
+    user_id: useUserStore().getUserId(),
   };
+
   try {
     const result = await sendToBackend("/get_user_referrals", payload);
     const data = result.data.data;
-    console.log("Response:", result.data);
     referals.value = data.income;
+
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        data: data.income,
+        timestamp: Date.now(),
+      })
+    );
+
+    console.log("Fetched fresh:", result.data);
   } catch (error) {
     console.error("Failed:", error);
   }
@@ -31,18 +56,18 @@ const fetchUserReferals = async () => {
 
 const fetchWithdraw = async () => {
   const payload = {
-    user_id: userId.value,
+    user_id: useUserStore().getUserId(),
   };
   try {
     const result = await sendToBackend("/page_withdraw_info", payload);
     const data = result.data.data;
     console.log("Response:", result.data);
-    updateUser(
+    useUserStore().updateUser(
       data.user_profile.name,
       data.username,
       data.user_profile.photo,
       data.balance,
-      userId.value
+      window.Telegram?.WebApp?.initDataUnsafe?.user?.id
     );
   } catch (error) {
     console.error("Failed:", error);
@@ -61,7 +86,7 @@ onMounted(() => {
     <div class="withdraw-info">
       <p class="text-20 text-white">{{ getTranslation("Yourbalance") }}</p>
       <p class="text-24 text-white jse">
-        {{ getUserBalance()
+        {{ useUserStore().getUserBalance()
         }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
       </p>
       <div
@@ -88,15 +113,15 @@ onMounted(() => {
           <img
             style="grid-area: A"
             :src="
-              getUserPhoto()
-                ? 'data:image/png;base64,' + getUserPhoto()
+              useUserStore().getUserPhoto()
+                ? 'data:image/png;base64,' + useUserStore().getUserPhoto()
                 : refPhoto
             "
             alt=""
             class="img-44 rounded-22"
           />
-          <p class="text-20 text-white">{{ getUserName() }}</p>
-          <p class="text-16 text-white-60">@{{ getUser() }}</p>
+          <p class="text-20 text-white">{{ useUserStore().getUserName() }}</p>
+          <p class="text-16 text-white-60">@{{ useUserStore().getUser() }}</p>
         </div>
         <div
           v-if="referals && referals.length"
@@ -121,7 +146,13 @@ onMounted(() => {
         <template v-else>
           <span style="padding: 6px 14px" class="flex-col gap-8">
             <p class="text-24 lh-120">{{ getTranslation("Noreferralsyet") }}</p>
-          <p class="text-16 lh-120">{{ getTranslation("Inviteyourfriendstojoinandstartearningrewardstogether") }}</p>
+            <p class="text-16 lh-120">
+              {{
+                getTranslation(
+                  "Inviteyourfriendstojoinandstartearningrewardstogether"
+                )
+              }}
+            </p>
           </span>
         </template>
       </div>

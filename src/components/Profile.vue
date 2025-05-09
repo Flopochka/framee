@@ -4,7 +4,7 @@ import { useModalStore } from "../stores/modal";
 import { useScreenStore } from "../stores/screen";
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
- 
+import { useUserStore } from "../stores/user";
 
 const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 const referals_count = ref(0);
@@ -22,16 +22,16 @@ const shareData = {
     window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
 };
 
-function linkTo(url, options = { tryInstantView: false, target: '_blank' }) {
+function linkTo(url, options = { tryInstantView: false, target: "_blank" }) {
   // Проверяем валидность URL
   try {
     new URL(url);
   } catch (error) {
-    console.error('Invalid URL:', url, error);
+    console.error("Invalid URL:", url, error);
     if (Telegram?.WebApp?.showAlert) {
-      Telegram.WebApp.showAlert('Invalid link. Please try another.');
+      Telegram.WebApp.showAlert("Invalid link. Please try another.");
     } else {
-      alert('Invalid link. Please try another.');
+      alert("Invalid link. Please try another.");
     }
     return;
   }
@@ -39,37 +39,39 @@ function linkTo(url, options = { tryInstantView: false, target: '_blank' }) {
   // 1. Telegram Web App: используем openLink или openTelegramLink
   if (Telegram?.WebApp) {
     try {
-      if (url.startsWith('https://t.me/') || url.startsWith('tg://')) {
+      if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
         // Для Telegram-ссылок (например, каналы, чаты)
         Telegram.WebApp.openTelegramLink(url);
       } else {
         // Для внешних ссылок с возможностью Instant View
-        Telegram.WebApp.openLink(url, { try_instant_view: options.tryInstantView });
+        Telegram.WebApp.openLink(url, {
+          try_instant_view: options.tryInstantView,
+        });
       }
       return;
     } catch (error) {
-      console.error('Telegram Web App link error:', error);
-      Telegram.WebApp.showAlert('Failed to open link. Trying alternative...');
+      console.error("Telegram Web App link error:", error);
+      Telegram.WebApp.showAlert("Failed to open link. Trying alternative...");
     }
   }
 
   // 2. Fallback: открытие ссылки в браузере
   try {
-    window.open(url, options.target, 'noopener,noreferrer');
+    window.open(url, options.target, "noopener,noreferrer");
   } catch (error) {
-    console.error('Failed to open link:', error);
+    console.error("Failed to open link:", error);
     // Последний fallback: показываем URL для ручного копирования
     if (Telegram?.WebApp?.showAlert) {
       Telegram.WebApp.showAlert(`Please open this link manually: ${url}`);
     } else {
-      prompt('Please open this link manually:', url);
+      prompt("Please open this link manually:", url);
     }
   }
 }
 
 const fetchUserInfo = async () => {
   const payload = {
-    user_id: userId.value,
+    user_id: useUserStore().getUserId(),
   };
   try {
     const result = await sendToBackend("/get_user_info", payload);
@@ -92,13 +94,12 @@ function copyToClipboard(text, url) {
     } else {
       navigator.clipboard.writeText(textToCopy);
     }
-    toggleModal("Copied")
+    toggleModal("Copied");
   } catch (error) {
-    console.error('Failed to copy:', error);
+    console.error("Failed to copy:", error);
     // Fallback: показываем текст для ручного копирования
     Telegram.WebApp.showAlert(`Copy this link: ${textToCopy}`);
   }
-
 }
 
 // Функция для открытия внешних ссылок
@@ -106,7 +107,7 @@ function openShareLink(url) {
   if (Telegram?.WebApp?.openLink) {
     Telegram.WebApp.openLink(url);
   } else {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 }
 
@@ -115,7 +116,7 @@ function shareContent() {
   if (Telegram?.WebApp?.showShareMenu) {
     Telegram.WebApp.showShareMenu({
       text: `${shareData.title}\n${shareData.text}`,
-      url: shareData.url
+      url: shareData.url,
     });
     return;
   }
@@ -123,7 +124,9 @@ function shareContent() {
   // 2. Проверяем Telegram Web App и пробуем отправить в Telegram
   if (Telegram?.WebApp?.openTelegramLink) {
     const encodedUrl = encodeURIComponent(shareData.url);
-    const encodedText = encodeURIComponent(`${shareData.title}\n${shareData.text}`);
+    const encodedText = encodeURIComponent(
+      `${shareData.title}\n${shareData.text}`
+    );
     const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
     Telegram.WebApp.openTelegramLink(telegramUrl);
     return;
@@ -133,8 +136,8 @@ function shareContent() {
   if (navigator.share) {
     navigator
       .share(shareData)
-      .then(() => console.log('Share successful'))
-      .catch((error) => console.error('Share error:', error));
+      .then(() => console.log("Share successful"))
+      .catch((error) => console.error("Share error:", error));
     return;
   }
 
@@ -149,45 +152,55 @@ function shareContent() {
   const encodedText = encodeURIComponent(shareData.text);
   const shareLinks = [
     {
-      name: 'WhatsApp',
-      url: `https://wa.me/?text=${encodedText}%20${encodedUrl}`
+      name: "WhatsApp",
+      url: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
     },
     {
-      name: 'Telegram',
-      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`
+      name: "Telegram",
+      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
     },
     {
-      name: 'Twitter',
-      url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`
+      name: "Twitter",
+      url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
     },
     {
-      name: 'Facebook',
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
-    }
+      name: "Facebook",
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    },
   ];
 
   // 6. Fallback: выбор платформы или ручное копирование
-  Telegram.WebApp.showConfirm('Sharing is not fully supported. Choose a platform to share:', (confirmed) => {
-    if (!confirmed) {
-      Telegram.WebApp.showAlert(`Copy this link: ${shareData.text} ${shareData.url}`);
-      return;
-    }
-    Telegram.WebApp.showPopup({
-      title: 'Share via',
-      message: 'Select a platform:',
-      buttons: shareLinks.map((link, i) => ({
-        id: `${i}`,
-        type: 'default',
-        text: link.name
-      }))
-    }, (buttonId) => {
-      if (buttonId !== null) {
-        openShareLink(shareLinks[parseInt(buttonId)].url);
-      } else {
-        Telegram.WebApp.showAlert(`Copy this link: ${shareData.text} ${shareData.url}`);
+  Telegram.WebApp.showConfirm(
+    "Sharing is not fully supported. Choose a platform to share:",
+    (confirmed) => {
+      if (!confirmed) {
+        Telegram.WebApp.showAlert(
+          `Copy this link: ${shareData.text} ${shareData.url}`
+        );
+        return;
       }
-    });
-  });
+      Telegram.WebApp.showPopup(
+        {
+          title: "Share via",
+          message: "Select a platform:",
+          buttons: shareLinks.map((link, i) => ({
+            id: `${i}`,
+            type: "default",
+            text: link.name,
+          })),
+        },
+        (buttonId) => {
+          if (buttonId !== null) {
+            openShareLink(shareLinks[parseInt(buttonId)].url);
+          } else {
+            Telegram.WebApp.showAlert(
+              `Copy this link: ${shareData.text} ${shareData.url}`
+            );
+          }
+        }
+      );
+    }
+  );
 }
 
 // Инициализация user_id после загрузки компонента
@@ -209,7 +222,11 @@ onMounted(() => {
       </p>
       <p class="text-20 font-600 lh-120 flex-row items-center justify-center">
         {{ income }}
-        <img src="../assets/img/TONMinimal.svg" alt="" class="img-20 lazy-img" />
+        <img
+          src="../assets/img/TONMinimal.svg"
+          alt=""
+          class="img-20 lazy-img"
+        />
       </p>
       <div
         @click="switchScreen(4)"
@@ -294,8 +311,7 @@ onMounted(() => {
   align-items: center;
   justify-items: center;
   gap: 6px;
-  background: url('../assets/img/SmoshStars.svg')
-      no-repeat center,
+  background: url("../assets/img/SmoshStars.svg") no-repeat center,
     linear-gradient(90deg, #133e67 0%, #0f497d 100%);
   background-size: contain;
 }

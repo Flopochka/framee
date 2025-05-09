@@ -7,8 +7,6 @@ import { useHistoryStore } from "../stores/history";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
-const { getUserBalance } = useUserStore();
-const { fetchUserHistory } = useHistoryStore();
 
 const withdrawTonAmmount = ref(null);
 const targetWallet = ref(null);
@@ -27,7 +25,7 @@ const withdraw = async () => {
   if (
     100 < withdrawTonAmmount.value &&
     withdrawTonAmmount.value < 1000000 &&
-    withdrawTonAmmount.value <= getUserBalance()
+    withdrawTonAmmount.value <= useUserStore().getUserBalance()
   ) {
     valueCorrect.value = true;
   } else {
@@ -48,7 +46,7 @@ const withdraw = async () => {
   }
   if (valueCorrect.value && walletCorrect.value) {
     const payload = {
-      user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+      user_id: useUserStore().getUserId(),
       amount:
         withdrawTonAmmount.value % 1 === 0
           ? withdrawTonAmmount.value + ".0"
@@ -59,7 +57,7 @@ const withdraw = async () => {
       const result = await sendToBackend("/withdraw", payload);
       console.log("Response:", result.data);
       toggleModal("popupwallet");
-      fetchUserHistory();
+      useHistoryStore().fetchUserHistory();
     } catch (error) {
       console.error("Failed:", error);
       toggleModal("Error");

@@ -1,4 +1,3 @@
-// src/stores/userStore.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -8,6 +7,7 @@ export const useUserStore = defineStore("user", () => {
   const userPhoto = ref(null);
   const userBalance = ref(0);
   const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+  // const userId = ref(227363776);
   const isLoading = ref(false); // Для отслеживания загрузки
 
   // Инициализация: загрузка данных из localStorage
