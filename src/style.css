@@ -517,7 +517,7 @@ main {
 .madal-screen-close {
   padding: 4px;
   border-radius: 16px;
-  /* aspect-ratio: 1/1; */
+  aspect-ratio: 1/1;
   background: #ffffff1a;
   display: flex;
 }
