@@ -5,6 +5,7 @@ import App from "./App.vue";
 import router from "./router";
 import WebApp from "@twa-dev/sdk";
 WebApp.ready();
+console.log(WebApp.isExpanded)
 WebApp.expand();
 const app = createApp(App);
 app.use(createPinia());
