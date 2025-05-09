@@ -515,6 +515,8 @@ main {
   color: var(--white-100);
 }
 .madal-screen-close {
+  width: 32px;
+  height: 32px;
   padding: 4px;
   border-radius: 16px;
   aspect-ratio: 1/1;
