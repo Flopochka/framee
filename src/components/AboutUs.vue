@@ -191,7 +191,7 @@ onMounted(() => {
               <img
                 src="../assets/img/Arrow down.svg"
                 alt=""
-                class="img-24 lazy-img"
+                class="img-24"
               />
             </div>
           </div>
