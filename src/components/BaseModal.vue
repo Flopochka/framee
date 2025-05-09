@@ -74,7 +74,8 @@ const stopDragging = () => {
   modalBody.style.transition = "height 0.3s ease";
 
   if (isFullScreen.value) {
-    const closeThreshold = (maxHeight - currentHeight.value) / (maxHeight - minHeight);
+    const closeThreshold =
+      (maxHeight - currentHeight.value) / (maxHeight - minHeight);
     if (closeThreshold > 0.2) {
       modalHeight.value = minHeight;
       setTimeout(() => {
@@ -85,8 +86,12 @@ const stopDragging = () => {
       modalHeight.value = maxHeight;
     }
   } else {
-    const openThreshold = (currentHeight.value - defaultHeight.value) / (maxHeight - defaultHeight.value);
-    const closeThreshold = (defaultHeight.value - currentHeight.value) / (defaultHeight.value - minHeight);
+    const openThreshold =
+      (currentHeight.value - defaultHeight.value) /
+      (maxHeight - defaultHeight.value);
+    const closeThreshold =
+      (defaultHeight.value - currentHeight.value) /
+      (defaultHeight.value - minHeight);
 
     if (openThreshold > 0.2) {
       modalHeight.value = maxHeight;
@@ -133,22 +138,34 @@ const resetHeight = () => {
       @mousedown="startDragging"
       @touchstart="startDragging"
     ></div>
-    <div class="text-20 madal-screen-title">
-      <slot name="title" />
-    </div>
-    <div @click="() => { toggleModal(null); resetHeight(); }" class="madal-screen-close">
-      <img src="../assets/img/Cross.svg" alt="Close" class="img-24" />
-    </div>
+    <span>
+      <div class="text-20 madal-screen-title">
+        <slot name="title" />
+      </div>
+      <div
+        @click="
+          () => {
+            toggleModal(null);
+            resetHeight();
+          }
+        "
+        class="madal-screen-close"
+      >
+        <img src="../assets/img/Cross.svg" alt="Close" class="img-24" />
+      </div>
+    </span>
   </div>
   <div
     @click.stop
     :id="`modal-body-${modalId}`"
     class="madal-screen-body madal-screen-body-high"
-    :style="{ height: typeof modalHeight === 'number' ? modalHeight + 'px' : modalHeight }"
+    :style="{
+      height:
+        typeof modalHeight === 'number' ? modalHeight + 'px' : modalHeight,
+    }"
   >
     <slot />
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

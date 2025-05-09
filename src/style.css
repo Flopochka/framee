@@ -349,7 +349,6 @@ body {
 .img-24 {
   width: 24px;
   height: 24px;
-  background: red;
 }
 .img-28 {
   width: 28px;
@@ -479,11 +478,16 @@ main {
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
   padding: 12px 24px;
-  display: grid;
-  grid-template-areas: "A A" "B C";
-  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
   transform: translateY(100vh);
   transition: transform 0.3s;
+}
+.madal-screen-head span{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
 .madal-active .madal-screen-head {
   transform: translateY(0);
