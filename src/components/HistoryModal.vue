@@ -30,8 +30,6 @@ const getIconPath = (type, count) => {
       return StarGold;
   }
 }
-
-const historyLoop = setInterval(fetchUserHistory(),30000);
 </script>
 
 <template>
@@ -40,7 +38,7 @@ const historyLoop = setInterval(fetchUserHistory(),30000);
       <template v-for="(group, index) in history" :key="index">
         <p class="text-white-70 text-14 pl-12 lh-120" style="margin-bottom: 4px;">
           {{ getTranslation(group.date.month) }}, {{ group.date.day }}
-          {{ group.date.year === currentYear ? "" : ", " + group.date.year }}
+          {{ group.date.year === currentYear ? "" : " " + group.date.year }}
         </p>
         <div class="history-cards flex-col rounded-24">
           <div
