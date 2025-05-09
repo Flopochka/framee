@@ -29,21 +29,22 @@ watch(
 let observer;
 
 const isKeyboardOpen = ref(false);
+let blurTimeout = null;
 
 function isMobileDevice() {
   return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
 const onFocus = () => {
-  if (isMobileDevice()) {
-    isKeyboardOpen.value = true;
-  }
+  clearTimeout(blurTimeout); // отменяем отложенный blur
+  isKeyboardOpen.value = true;
 };
 
 const onBlur = () => {
-  setTimeout(() => {
+  // ждём чуть-чуть: если в это время произойдёт focus, мы его отменим
+  blurTimeout = setTimeout(() => {
     isKeyboardOpen.value = false;
-  }, 300); // подождать закрытие клавы
+  }, 100); // 100мс — хватает для переключения между инпутами
 };
 
 onMounted(() => {
@@ -96,6 +97,7 @@ onBeforeUnmount(() => {
     el.removeEventListener("focus", onFocus);
     el.removeEventListener("blur", onBlur);
   });
+  clearTimeout(blurTimeout);
 });
 </script>
 
