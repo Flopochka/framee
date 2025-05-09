@@ -165,6 +165,7 @@ onBeforeUnmount(() => {
   transition: max-height 0.3s;
   width: 100%;
   position: relative;
+  padding-top:84px;
 }
 .blur-box {
   position: fixed;
