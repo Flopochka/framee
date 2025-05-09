@@ -13,7 +13,7 @@ const { switchLanguage, langs, getCurrentLanguage } = useLanguageStore();
         @click="switchLanguage(key)"
         class="lang-select-card flex-row cupo usen"
       >
-        <p class="text-16 font-400">{{ label }}</p>
+        <p class="text-16 font-400 lh-100">{{ label }}</p>
         <img
           src="../assets/img/Check.svg"
           :alt="getCurrentLanguage() === key ? 'Selected' : 'Not selected'"
