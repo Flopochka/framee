@@ -5,7 +5,10 @@ import App from "./App.vue";
 import router from "./router";
 import WebApp from "@twa-dev/sdk";
 WebApp.ready();
-console.log(WebApp.isExpanded)
+console.log('isExpanded:', WebApp.isExpanded);
+console.log('isExpandable:', WebApp.isExpandable);
+console.log('viewportHeight:', WebApp.viewportHeight);
+console.log('viewportStableHeight:', WebApp.viewportStableHeight);
 WebApp.expand();
 const app = createApp(App);
 app.use(createPinia());
