@@ -26,8 +26,6 @@ watch(
   { immediate: true }
 );
 
-// Инициализация Telegram Web App
-let telegramApp;
 let observer;
 
 const isKeyboardOpen = ref(false);
@@ -116,31 +114,31 @@ onBeforeUnmount(() => {
   >
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
     >
       <MainStars />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
     >
       <Tasks />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
     >
       <AboutUs />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
     >
       <Profile />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? 'calc(100vh - 84px)' : '100vh' }"
+      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)' }"
     >
       <WithdrawScreen />
     </div>
