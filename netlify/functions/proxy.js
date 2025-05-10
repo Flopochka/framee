@@ -132,7 +132,7 @@ export async function handler(event) {
     const response = await axios(requestConfig);
     console.log("Backend response from",requestConfig.url,":", {
       status: response.status,
-      data: response.data,
+      data: JSON.parse(response.data),
     });
 
     return {
