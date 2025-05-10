@@ -1,6 +1,5 @@
 import axios from "axios";
 import querystring from "querystring";
-import { isValid } from "@telegram-apps/init-data-node";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const BASE_BACKEND_URL = "http://77.222.47.219:8006";
@@ -14,43 +13,43 @@ function verifyTelegramInitData(initData) {
     return false;
   }
 
-  // Подготовка данных для проверки
-  let dataToCheck;
-  if (typeof initData === "object" && initData !== null) {
-    // Преобразуем объект в строку формата query string
-    const params = Object.entries(initData)
-      .map(([key, value]) =>
-        key === "user" ? `${key}=${JSON.stringify(value)}` : `${key}=${value}`
-      )
-      .sort()
-      .join("\n");
-    dataToCheck = params;
-  } else if (typeof initData === "string") {
-    dataToCheck = initData; // Библиотека принимает строку как есть
+  let rawString;
+  if (typeof initData === "string") {
+    rawString = initData;
+  } else if (typeof initData === "object" && initData !== null) {
+    rawString = querystring.stringify(initData);
   } else {
     console.log("Invalid initData format");
     return false;
   }
 
-  // Проверка с помощью isValid
-  const valid = isValid(dataToCheck, BOT_TOKEN);
-  console.log("Signature valid:", valid);
-
-  // Проверка возраста данных (библиотека этого не делает)
-  const authDate =
-    initData.auth_date ||
-    (typeof initData === "string"
-      ? new URLSearchParams(initData).get("auth_date")
-      : null);
-  if (!authDate) {
-    console.log("No auth_date provided");
+  const params = new URLSearchParams(rawString);
+  const authDate = params.get("auth_date");
+  const hash = params.get("hash");
+  if (!authDate || !hash) {
+    console.log("Missing auth_date or hash");
     return false;
   }
+
+  params.delete("hash");
+  const dataCheckString = [...params.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join("\n");
+
+  const crypto = require("crypto");
+  const secretKey = crypto.createHash("sha256").update(BOT_TOKEN).digest();
+  const hmac = crypto.createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
+
+  const valid = hmac === hash;
+  console.log("Expected hash:", hash);
+  console.log("Computed hash:", hmac);
+  console.log("Signature valid:", valid);
+
   const now = Math.floor(Date.now() / 1000);
   const age = now - parseInt(authDate, 10);
   console.log("Auth date age (seconds):", age);
   if (age > 86400) {
-    // 24 часа
     console.log("Data is too old");
     return false;
   }
