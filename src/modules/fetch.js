@@ -5,11 +5,14 @@ const API_URL =
 
 export async function sendToBackend(target, payload) {
   const initData = window.Telegram?.WebApp?.initData;
-  if (!window.Telegram.WebApp.initData) {console.warn("Unable to retrieve launch parameters from any known source. Perhaps, you have opened your app outside Telegram?"); return}
-  try {
-    console.log(
-      target, payload
+  if (!window.Telegram.WebApp.initData) {
+    console.warn(
+      "Unable to retrieve launch parameters from any known source. Perhaps, you have opened your app outside Telegram?"
     );
+    return;
+  }
+  try {
+    console.log(target, payload);
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -29,7 +32,7 @@ export async function sendToBackend(target, payload) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error sending request:", error);
+    console.error("Error sending request to ", target, ":", error);
     throw error;
   }
 }
