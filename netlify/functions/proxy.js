@@ -3,10 +3,12 @@ import querystring from "querystring";
 import { isValid } from "@telegram-apps/init-data-node";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const BASE_BACKEND_URL = "http://185.105.90.37:8010";
+const BASE_BACKEND_URL = "http://77.222.47.219:8006";
 
 // Проверка подписи Telegram initData с использованием библиотеки
 function verifyTelegramInitData(initData) {
+  console.log("Verifying initData:", JSON.stringify(initData, null, 2));
+
   if (!BOT_TOKEN) {
     console.error("BOT_TOKEN is not defined");
     return false;
@@ -32,6 +34,7 @@ function verifyTelegramInitData(initData) {
 
   // Проверка с помощью isValid
   const valid = isValid(dataToCheck, BOT_TOKEN);
+  console.log("Signature valid:", valid);
 
   // Проверка возраста данных (библиотека этого не делает)
   const authDate =
@@ -45,6 +48,7 @@ function verifyTelegramInitData(initData) {
   }
   const now = Math.floor(Date.now() / 1000);
   const age = now - parseInt(authDate, 10);
+  console.log("Auth date age (seconds):", age);
   if (age > 86400) {
     // 24 часа
     console.log("Data is too old");
@@ -81,6 +85,7 @@ export async function handler(event) {
   }
 
   const { initData, target, payload } = parsedBody;
+  console.log("Parsed body:", { initData, target, payload });
 
   // Проверка initData
   if (!initData || !verifyTelegramInitData(initData)) {
@@ -110,6 +115,7 @@ export async function handler(event) {
 
   // Формирование URL для бэкенда
   const backendUrl = `${BASE_BACKEND_URL}${target}`;
+  console.log("Backend URL:", backendUrl);
 
   // Отправка запроса на бэкенд
   try {
@@ -122,26 +128,20 @@ export async function handler(event) {
         Accept: "application/json",
       },
     };
-    // console.log("Sending to backend:", {
-    //   method: requestConfig.method,
-    //   url: requestConfig.url,
-    //   headers: requestConfig.headers,
-    //   body: requestConfig.data,
-    // });
+    console.log("Sending to backend:", {
+      method: requestConfig.method,
+      url: requestConfig.url,
+      headers: requestConfig.headers,
+      body: requestConfig.data,
+    });
 
     const response = await axios(requestConfig);
-    console.log(
-      "Backend response from",
-      requestConfig.url,
-      ":\n",
-      JSON.stringify(
-        typeof response.data === "string"
-          ? tryParseJson(response.data)
-          : response.data,
-        null,
-        2
-      )
-    );
+    console.log("Backend response:", {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+      data: response.data,
+    });
 
     return {
       statusCode: 200,
