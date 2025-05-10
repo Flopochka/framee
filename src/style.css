@@ -491,6 +491,7 @@ main {
 }
 .madal-active .madal-screen-head {
   transform: translateY(0);
+  touch-action: none;
 }
 .madal-screen-swipka {
   grid-area: A;
