@@ -12,6 +12,7 @@ const { getTranslation } = useLanguageStore();
 const referals = ref([]);
 
 const fetchUserReferals = async () => {
+  return
   const CACHE_KEY = "referrals_cache";
   const CACHE_TTL = 5 * 60 * 1000; // 5 минут
 
