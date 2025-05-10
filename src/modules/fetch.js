@@ -37,9 +37,6 @@ export async function sendToBackend(target, payload) {
       `❌ Backend call failed for "${target}": ${error.message || error}`
     );
     console.error(finalError);
-    Telegram?.WebApp?.showAlert?.(
-      "Ошибка при загрузке данных. Попробуйте позже."
-    );
     throw finalError;
   }
 }
