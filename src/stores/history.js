@@ -46,7 +46,7 @@ export const useHistoryStore = defineStore("history", () => {
     };
     try {
       const result = await sendToBackend("/get_user_history", payload);
-      const data = result.data.data;
+      const data = result.data;
 
       const groupedByDate = data.history.reduce((acc, item) => {
         const { date, ...rest } = item;

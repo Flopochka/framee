@@ -149,12 +149,9 @@ export const useLanguageStore = defineStore("language", () => {
         user_id: useUserStore().getUserId(),
         lang: lang,
       };
-      try {
-        const result = await sendToBackend("/change_user_lang", payload);
-        console.log("Response:", result.data);
-      } catch (error) {
-        console.error("Failed:", error);
-      }
+      sendToBackend("/change_user_lang", payload)
+        .then((result) => {})
+        .catch(() => {});
     } else {
       console.warn(`Не удалось загрузить язык ${lang}`);
       // Возвращаемся к английскому в случае ошибки

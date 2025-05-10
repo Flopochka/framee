@@ -145,11 +145,7 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        success: true,
-        data: response.data,
-        backendUrl,
-      }),
+      body: JSON.stringify(response.data),
     };
   } catch (error) {
     console.error("Backend error:", error.message);

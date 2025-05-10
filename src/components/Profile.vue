@@ -32,17 +32,17 @@ const fetchUserInfo = async () => {
   const payload = {
     user_id: useUserStore().getUserId(),
   };
-  try {
-    const result = await sendToBackend("/get_user_info", payload);
-    const data = result.data.data;
-    referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    if (useLanguageStore().getCurrentLanguage() != data.language.slice(0, 2)) {
-      useLanguageStore().switchLanguage(data.language.slice(0, 2));
-    }
-    console.log("Response:", result.data);
-  } catch (error) {
-    console.error("Failed:", error);
-  }
+  sendToBackend("/get_user_info", payload)
+    .then((result) => {
+      const data = result.data;
+      referals_count.value = result.data.count_referrals; // Обновляем счетчик рефералов
+      if (
+        useLanguageStore().getCurrentLanguage() != data.language.slice(0, 2)
+      ) {
+        useLanguageStore().switchLanguage(data.language.slice(0, 2));
+      }
+    })
+    .catch(() => {});
 };
 
 function copyToClipboard(text) {

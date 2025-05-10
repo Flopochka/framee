@@ -114,8 +114,7 @@ const searchRecipient = async (username) => {
     const payload = { username: username };
     sendToBackend("/search_recipient", payload)
       .then((result) => {
-        console.log("Response:", result);
-        var data = result.data.data;
+        var data = result.data;
         if (result.data.status.message != "Пользователь не найден") {
           recipientName.value = data.name;
           recipientPhoto.value = data.photo;
@@ -185,7 +184,7 @@ const createorder = async () => {
     try {
       toggleModal("filler");
       sendToBackend("/create_order", payload).then((result) => {
-        const data = result.data.data;
+        const data = result.data;
         setPaymentLink(data.redirectLink);
         const orderId = data.order_id;
         Telegram.WebApp.openLink(data.redirectLink);
@@ -202,15 +201,13 @@ const createorder = async () => {
 const getorderinfo = async (order_id) => {
   console.log("Searching for:", order_id);
   const payload = { order_id: order_id };
-  try {
-    const result = await sendToBackend("/get_status_order", payload);
-    console.log("Response:", result);
-    if (result.data.status === "success") {
-      toggleModal(null);
-    }
-  } catch (error) {
-    console.error("Failed:", error);
-  }
+  sendToBackend("/get_status_order", payload)
+    .then((result) => {
+      if (result.data.status === "success") {
+        toggleModal(null);
+      }
+    })
+    .catch(() => {});
 };
 
 const setupTabReturnListener = (order_id) => {

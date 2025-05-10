@@ -37,7 +37,7 @@ const fetchUserReferals = async () => {
 
   try {
     const result = await sendToBackend("/get_user_referrals", payload);
-    const data = result.data.data;
+    const data = result.data;
     referals.value = data.income;
 
     localStorage.setItem(
@@ -58,20 +58,18 @@ const fetchWithdraw = async () => {
   const payload = {
     user_id: useUserStore().getUserId(),
   };
-  try {
-    const result = await sendToBackend("/page_withdraw_info", payload);
-    const data = result.data.data;
-    console.log("Response:", result.data);
-    useUserStore().updateUser(
-      data.user_profile.name,
-      data.username,
-      data.user_profile.photo,
-      data.balance,
-      window.Telegram?.WebApp?.initDataUnsafe?.user?.id
-    );
-  } catch (error) {
-    console.error("Failed:", error);
-  }
+  sendToBackend("/page_withdraw_info", payload)
+    .then((result) => {
+      const data = result.data;
+      useUserStore().updateUser(
+        data.user_profile.name,
+        data.username,
+        data.user_profile.photo,
+        data.balance,
+        window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+      );
+    })
+    .catch(() => {});
 };
 
 // Инициализация user_id после загрузки компонента

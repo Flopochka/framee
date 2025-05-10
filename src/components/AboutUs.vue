@@ -61,7 +61,7 @@ function formatNumber(num) {
 const fetchTotalInfo = async () => {
   sendToBackend("/get_stat_stars", {})
     .then((result) => {
-      const data = result.data.data;
+      const data = result.data;
       boughtToday.value =
         data.stats[0] != 0
           ? formatNumber(data.stats[0])
@@ -72,7 +72,6 @@ const fetchTotalInfo = async () => {
           : formatNumber(Math.round(Math.random() * 25) * 50);
       boughtAlltime.value = formatNumber(data.stats[2]);
       boughtMonthPremium.value = formatNumber(data.stats[3]);
-      console.log("Response:", result.data);
     })
     .catch(() => {});
 };

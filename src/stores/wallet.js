@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user"
+import { useUserStore } from "../stores/user";
 
 export const useWalletStore = defineStore("wallet", () => {
   const IsWalletConected = ref(false);
@@ -56,27 +56,23 @@ export const useWalletStore = defineStore("wallet", () => {
       user_id: useUserStore().getUserId(),
       wallet: e,
     };
-    try {
-      const result = await sendToBackend("/generate_url", payload);
-      const data = result.data.data;
-      linkTo(data.url);
-      fetchWalletInfo();
-      console.log("Response:", result.data);
-    } catch (error) {
-      console.error("Failed:", error);
-    }
+    sendToBackend("/generate_url", payload)
+      .then((result) => {
+        const data = result.data;
+        linkTo(data.url);
+        fetchWalletInfo();
+      })
+      .catch(() => {});
   };
   const disconnectWallet = async () => {
-    try {
-      const payload = {
-        user_id: useUserStore().getUserId(),
-      };
-      const result = await sendToBackend("/disconnect_wallet", payload);
-      fetchWalletInfo();
-      console.log("Response:", result.data);
-    } catch (error) {
-      console.error("Failed:", error);
-    }
+    const payload = {
+      user_id: useUserStore().getUserId(),
+    };
+    sendToBackend("/disconnect_wallet", payload)
+      .then((result) => {
+        fetchWalletInfo();
+      })
+      .catch(() => {});
   };
   const fetchWalletInfo = async () => {
     const retryDelays = [1000, 2000, 4000, 8000, 10000]; // 1, 2, 4, 8, 10 seconds
@@ -86,7 +82,7 @@ export const useWalletStore = defineStore("wallet", () => {
         user_id: useUserStore().getUserId(),
       };
       const result = await sendToBackend("/check_connect_wallet", payload);
-      return result.data.data.connection;
+      return result.data.connection;
     };
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

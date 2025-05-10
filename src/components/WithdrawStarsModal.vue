@@ -46,7 +46,7 @@ const fetchStarsPrice = async () => {
   };
   try {
     const result = await sendToBackend("/get_price_stars", payload);
-    const data = result.data.data;
+    const data = result.data;
     kef.value = data.count_stars / 1000000;
   } catch (error) {
     console.error("Failed to fetch stars price:", error);
@@ -60,9 +60,9 @@ const searchRecipient = async (username) => {
     const result = await sendToBackend("/search_recipient", payload);
     const data = result.data;
     if (data.status.message !== "Пользователь не найден") {
-      recipientName.value = data.data.name;
-      recipientPhoto.value = data.data.photo;
-      recipient.value = data.data.recipient;
+      recipientName.value = data.name;
+      recipientPhoto.value = data.photo;
+      recipient.value = data.recipient;
       recipientCorrect.value = true;
     } else {
       recipient.value = null;

@@ -53,15 +53,12 @@ const withdraw = async () => {
           : withdrawTonAmmount.value,
       adress: targetWallet.value,
     };
-    try {
-      const result = await sendToBackend("/withdraw", payload);
-      console.log("Response:", result.data);
+    sendToBackend("/withdraw", payload)
+    .then((result) => {
       toggleModal("popupwallet");
       useHistoryStore().fetchUserHistory();
-    } catch (error) {
-      console.error("Failed:", error);
-      toggleModal("Error");
-    }
+    })
+    .catch(() => {});
   }
 };
 </script>
