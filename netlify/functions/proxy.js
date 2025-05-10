@@ -130,10 +130,8 @@ export async function handler(event) {
     // });
 
     const response = await axios(requestConfig);
-    console.log("Backend response:", {
+    console.log("Backend response from",requestConfig.url,":", {
       status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
       data: response.data,
     });
 
