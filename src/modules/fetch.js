@@ -12,7 +12,7 @@ export async function sendToBackend(target, payload) {
     return;
   }
   try {
-    console.log(target, payload);
+    console.log("Sending request to ", target, ": ", payload);
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -30,6 +30,7 @@ export async function sendToBackend(target, payload) {
     }
 
     const data = await response.json();
+    console.log("Response from ", target, ": ", data);
     return data;
   } catch (error) {
     console.error("Error sending request to ", target, ":", error);
