@@ -9,8 +9,59 @@ import refPhoto from "../assets/img/TESTReferalPhoto.png";
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 
-const pageInfo = ref([0, 0]);
-const referals = ref([]);
+const pageInfo = ref([97, 0]);
+const referals = ref([
+  {
+    name: "maxd3v",
+    photo: "",
+    income: "0.5599337499999999",
+  },
+  {
+    name: "markevichegorka",
+    photo: "",
+    income: "0.46103000000000005",
+  },
+  {
+    name: "dolorkas",
+    photo: "",
+    income: "0.0101",
+  },
+  {
+    name: "TGBarry",
+    photo: "",
+    income: "0.19295",
+  },
+  {
+    name: "Ch_Elyor",
+    photo: "",
+    income: "0.0",
+  },
+  {
+    name: "Shohjahon_03_24",
+    photo: "",
+    income: "0.021920000000000002",
+  },
+  {
+    name: "bernardoladipo",
+    photo: "",
+    income: "0.07994000000000001",
+  },
+  {
+    name: "MansourGentil",
+    photo: "",
+    income: "0.0",
+  },
+  {
+    name: "LilDreamich",
+    photo: "",
+    income: "0.0",
+  },
+  {
+    name: "vmmvp",
+    photo: "",
+    income: "0.0",
+  },
+]);
 
 const setPage = (page) => {
   fetchUserReferals(page);
@@ -24,20 +75,36 @@ const visiblePages = computed(() => {
   const current = pageInfo.value[1];
 
   let start = Math.max(1, current - 2);
-  let end = Math.min(total - 1, current + 2);
+  let end = Math.min(total - 2, current + 2); // фикс: не включаем последнюю (total - 1)
 
   if (end - start < 4) {
-    if (start === 1) end = Math.min(total - 1, start + 4);
-    else if (end === total - 1) start = Math.max(1, end - 4);
+    if (start === 1) end = Math.min(total - 2, start + 4);
+    else if (end === total - 2) start = Math.max(1, end - 4);
   }
 
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 });
 
-const fetchUserReferals = async (i) => {
+const CACHE_KEY = "cached_referrals";
+
+const fetchUserReferals = async (pageIndex) => {
+  const userId = useUserStore().getUserId();
+  const cacheKey = `${CACHE_KEY}_${userId}_${pageIndex}`;
+
+  // Пробуем достать из кэша
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      referals.value = JSON.parse(cached);
+    } catch (e) {
+      localStorage.removeItem(cacheKey);
+    }
+  }
+
+  // Загружаем с бэка
   const payload = {
-    user_id: useUserStore().getUserId(),
-    current_page: i,
+    user_id: userId,
+    current_page: pageIndex,
   };
 
   try {
@@ -45,7 +112,12 @@ const fetchUserReferals = async (i) => {
     const data = result.data;
     referals.value = data.referrals;
     pageInfo.value[0] = data.pages;
-  } catch (у) {}
+
+    // Обновляем кэш
+    localStorage.setItem(cacheKey, JSON.stringify(data.referrals));
+  } catch (e) {
+    console.error("Fetch failed:", e);
+  }
 };
 
 const fetchWithdraw = async () => {
@@ -160,7 +232,7 @@ onMounted(() => {
             <div
               class="page-btn"
               @click="setPage(pageInfo[0] - 1)"
-              :class="pageInfo[1] == pageInfo[0] ? 'page-btn-current' : ''"
+              :class="pageInfo[1] == pageInfo[0] - 1 ? 'page-btn-current' : ''"
             >
               <p class="text-14">{{ pageInfo[0] }}</p>
             </div>
