@@ -5,7 +5,7 @@ const API_URL =
 
 export async function sendToBackend(target, payload) {
   const initData = window.Telegram?.WebApp?.initData;
-  if (!window.Telegram?.WebApp?.initData) {console.warn("Unable to retrieve launch parameters from any known source. Perhaps, you have opened your app outside Telegram?"); return}
+  if (!window.Telegram.WebApp.initData) {console.warn("Unable to retrieve launch parameters from any known source. Perhaps, you have opened your app outside Telegram?"); return}
   try {
     console.log(
       target, payload
