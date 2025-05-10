@@ -59,23 +59,22 @@ function formatNumber(num) {
 }
 
 const fetchTotalInfo = async () => {
-  try {
-    const result = await sendToBackend("/get_stat_stars", {});
-    const data = result.data.data;
-    boughtToday.value =
-      data.stats[0] != 0
-        ? formatNumber(data.stats[0])
-        : formatNumber(Math.round(Math.random() * 25) * 50);
-    boughtYesterday.value =
-      data.stats[1] != 0
-        ? formatNumber(data.stats[1])
-        : formatNumber(Math.round(Math.random() * 25) * 50);
-    boughtAlltime.value = formatNumber(data.stats[2]);
-    boughtMonthPremium.value = formatNumber(data.stats[3]);
-    console.log("Response:", result.data);
-  } catch (error) {
-    console.error("Failed:", error);
-  }
+  sendToBackend("/get_stat_stars", {})
+    .then((result) => {
+      const data = result.data.data;
+      boughtToday.value =
+        data.stats[0] != 0
+          ? formatNumber(data.stats[0])
+          : formatNumber(Math.round(Math.random() * 25) * 50);
+      boughtYesterday.value =
+        data.stats[1] != 0
+          ? formatNumber(data.stats[1])
+          : formatNumber(Math.round(Math.random() * 25) * 50);
+      boughtAlltime.value = formatNumber(data.stats[2]);
+      boughtMonthPremium.value = formatNumber(data.stats[3]);
+      console.log("Response:", result.data);
+    })
+    .catch(() => {});
 };
 
 onMounted(() => {

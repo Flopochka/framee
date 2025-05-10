@@ -112,22 +112,21 @@ const searchRecipient = async (username) => {
   if (username && username != "") {
     console.log("Searching for:", username); // Заглушка
     const payload = { username: username };
-    try {
-      const result = await sendToBackend("/search_recipient", payload);
-      console.log("Response:", result);
-      var data = result.data.data;
-      if (result.data.status.message != "Пользователь не найден") {
-        recipientName.value = data.name;
-        recipientPhoto.value = data.photo;
-        recipient.value = data.recipient;
-        recipientCorrect.value = true;
-      } else {
-        recipient.value = null;
-        recipientCorrect.value = false;
-      }
-    } catch (error) {
-      console.error("Failed:", error);
-    }
+    sendToBackend("/search_recipient", payload)
+      .then((result) => {
+        console.log("Response:", result);
+        var data = result.data.data;
+        if (result.data.status.message != "Пользователь не найден") {
+          recipientName.value = data.name;
+          recipientPhoto.value = data.photo;
+          recipient.value = data.recipient;
+          recipientCorrect.value = true;
+        } else {
+          recipient.value = null;
+          recipientCorrect.value = false;
+        }
+      })
+      .catch(() => {});
   } else {
     recipient.value = null;
     recipientCorrect.value = false;
@@ -367,7 +366,13 @@ onMounted(() => {
               :min="minCount"
               max="1000000"
             />
-            <img v-if="stars" @click="clearStars()" class="input-clear img-32" src="../assets/img/CrossRed.svg" alt="">
+            <img
+              v-if="stars"
+              @click="clearStars()"
+              class="input-clear img-32"
+              src="../assets/img/CrossRed.svg"
+              alt=""
+            />
           </div>
           <template v-if="valueIncorrects" v-for="e in valueIncorrects">
             <p class="pl-14 text-red text-14">

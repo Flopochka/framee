@@ -5,11 +5,11 @@ const API_URL =
 
 export async function sendToBackend(target, payload) {
   const initData = window.Telegram?.WebApp?.initData;
-  if (!window.Telegram.WebApp.initData) {
-    console.warn(
-      "Unable to retrieve launch parameters from any known source. Perhaps, you have opened your app outside Telegram?"
-    );
-    return;
+  if (!initData) {
+    const msg =
+      "No Telegram initData — WebApp probably opened outside Telegram.";
+    console.warn(msg);
+    throw new Error(msg);
   }
   try {
     console.log("Sending request to ", target, ": ", payload);
@@ -33,7 +33,13 @@ export async function sendToBackend(target, payload) {
     console.log("Response from ", target, ": ", data);
     return data;
   } catch (error) {
-    console.error("Error sending request to ", target, ":", error);
-    throw error;
+    const finalError = new Error(
+      `❌ Backend call failed for "${target}": ${error.message || error}`
+    );
+    console.error(finalError);
+    Telegram?.WebApp?.showAlert?.(
+      "Ошибка при загрузке данных. Попробуйте позже."
+    );
+    throw finalError;
   }
 }
