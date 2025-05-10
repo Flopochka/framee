@@ -85,6 +85,7 @@ export async function handler(event) {
   console.log("Payload keys:", payload ? Object.keys(payload) : "No payload");
 
   if (!initData || !verifyTelegramInitData(initData)) {
+    console.log("Invalid init data",initData)
     return {
       statusCode: 403,
       body: JSON.stringify({
