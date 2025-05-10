@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
 import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user"
+import { useUserStore } from "../stores/user";
 
 // Хранилище для языковых данных
 export const useLanguageStore = defineStore("language", () => {

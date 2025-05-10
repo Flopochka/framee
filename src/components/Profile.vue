@@ -6,66 +6,25 @@ import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
 import { useUserStore } from "../stores/user";
 
-const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
 const referals_count = ref(0);
 const income = ref(0);
 
-const { switchScreen } = useScreenStore();
 const { toggleModal } = useModalStore();
-const { getTranslation, langs, getCurrentLanguage, switchLanguage } =
-  useLanguageStore();
+const { getTranslation } = useLanguageStore();
 const shareData = {
-  title: "FRAME Stars",
   text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇",
   url:
     "https://t.me/Framestars_bot?start=" +
     window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
 };
 
-function linkTo(url, options = { tryInstantView: false, target: "_blank" }) {
-  // Проверяем валидность URL
-  try {
-    new URL(url);
-  } catch (error) {
-    console.error("Invalid URL:", url, error);
-    if (Telegram?.WebApp?.showAlert) {
-      Telegram.WebApp.showAlert("Invalid link. Please try another.");
-    } else {
-      alert("Invalid link. Please try another.");
-    }
-    return;
-  }
-
-  // 1. Telegram Web App: используем openLink или openTelegramLink
-  if (Telegram?.WebApp) {
-    try {
-      if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
-        // Для Telegram-ссылок (например, каналы, чаты)
-        Telegram.WebApp.openTelegramLink(url);
-      } else {
-        // Для внешних ссылок с возможностью Instant View
-        Telegram.WebApp.openLink(url, {
-          try_instant_view: options.tryInstantView,
-        });
-      }
-      return;
-    } catch (error) {
-      console.error("Telegram Web App link error:", error);
-      Telegram.WebApp.showAlert("Failed to open link. Trying alternative...");
-    }
-  }
-
-  // 2. Fallback: открытие ссылки в браузере
-  try {
-    window.open(url, options.target, "noopener,noreferrer");
-  } catch (error) {
-    console.error("Failed to open link:", error);
-    // Последний fallback: показываем URL для ручного копирования
-    if (Telegram?.WebApp?.showAlert) {
-      Telegram.WebApp.showAlert(`Please open this link manually: ${url}`);
-    } else {
-      prompt("Please open this link manually:", url);
-    }
+function linkTo(url, options = { tryInstantView: false }) {
+  if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
+    Telegram.WebApp.openTelegramLink(url);
+  } else {
+    Telegram.WebApp.openLink(url, {
+      try_instant_view: options.tryInstantView,
+    });
   }
 }
 
@@ -77,8 +36,8 @@ const fetchUserInfo = async () => {
     const result = await sendToBackend("/get_user_info", payload);
     const data = result.data.data;
     referals_count.value = result.data.data.count_referrals; // Обновляем счетчик рефералов
-    if (getCurrentLanguage() != data.language.slice(0, 2)) {
-      switchLanguage(data.language.slice(0, 2));
+    if (useLanguageStore().getCurrentLanguage() != data.language.slice(0, 2)) {
+      useLanguageStore().switchLanguage(data.language.slice(0, 2));
     }
     console.log("Response:", result.data);
   } catch (error) {
@@ -86,121 +45,15 @@ const fetchUserInfo = async () => {
   }
 };
 
-function copyToClipboard(text, url) {
-  const textToCopy = `${text} ${url || ""}`;
-  try {
-    if (Telegram?.WebApp?.writeTextToClipboard) {
-      Telegram.WebApp.writeTextToClipboard(textToCopy);
-    } else {
-      navigator.clipboard.writeText(textToCopy);
-    }
-    toggleModal("Copied");
-  } catch (error) {
-    console.error("Failed to copy:", error);
-    // Fallback: показываем текст для ручного копирования
-    Telegram.WebApp.showAlert(`Copy this link: ${textToCopy}`);
-  }
-}
-
-// Функция для открытия внешних ссылок
-function openShareLink(url) {
-  if (Telegram?.WebApp?.openLink) {
-    Telegram.WebApp.openLink(url);
-  } else {
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
+function copyToClipboard(text) {
+  Telegram?.WebApp?.writeTextToClipboard(`${text}`);
+  toggleModal("Copied");
 }
 
 function shareContent() {
-  // 1. Проверяем Telegram Web App и используем нативный шаринг
-  if (Telegram?.WebApp?.showShareMenu) {
-    Telegram.WebApp.showShareMenu({
-      text: `${shareData.title}\n${shareData.text}`,
-      url: shareData.url,
-    });
-    return;
-  }
-
-  // 2. Проверяем Telegram Web App и пробуем отправить в Telegram
-  if (Telegram?.WebApp?.openTelegramLink) {
-    const encodedUrl = encodeURIComponent(shareData.url);
-    const encodedText = encodeURIComponent(
-      `${shareData.title}\n${shareData.text}`
-    );
-    const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
-    Telegram.WebApp.openTelegramLink(telegramUrl);
-    return;
-  }
-
-  // 3. Проверяем Web Share API (для случаев вне Telegram Web App)
-  if (navigator.share) {
-    navigator
-      .share(shareData)
-      .then(() => console.log("Share successful"))
-      .catch((error) => console.error("Share error:", error));
-    return;
-  }
-
-  // 4. Проверяем Clipboard API
-  if (navigator.clipboard || Telegram?.WebApp?.writeTextToClipboard) {
-    copyToClipboard(shareData.text, shareData.url);
-    return;
-  }
-
-  // 5. Формируем ссылки для других платформ
-  const encodedUrl = encodeURIComponent(shareData.url);
-  const encodedText = encodeURIComponent(shareData.text);
-  const shareLinks = [
-    {
-      name: "WhatsApp",
-      url: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
-    },
-    {
-      name: "Telegram",
-      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
-    },
-    {
-      name: "Twitter",
-      url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
-    },
-    {
-      name: "Facebook",
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    },
-  ];
-
-  // 6. Fallback: выбор платформы или ручное копирование
-  Telegram.WebApp.showConfirm(
-    "Sharing is not fully supported. Choose a platform to share:",
-    (confirmed) => {
-      if (!confirmed) {
-        Telegram.WebApp.showAlert(
-          `Copy this link: ${shareData.text} ${shareData.url}`
-        );
-        return;
-      }
-      Telegram.WebApp.showPopup(
-        {
-          title: "Share via",
-          message: "Select a platform:",
-          buttons: shareLinks.map((link, i) => ({
-            id: `${i}`,
-            type: "default",
-            text: link.name,
-          })),
-        },
-        (buttonId) => {
-          if (buttonId !== null) {
-            openShareLink(shareLinks[parseInt(buttonId)].url);
-          } else {
-            Telegram.WebApp.showAlert(
-              `Copy this link: ${shareData.text} ${shareData.url}`
-            );
-          }
-        }
-      );
-    }
-  );
+  Telegram?.WebApp?.showShareMenu({
+    text: `${shareData.text} \n @Framestars_bot (${shareData.url})`,
+  });
 }
 
 // Инициализация user_id после загрузки компонента
@@ -229,7 +82,7 @@ onMounted(() => {
         />
       </p>
       <div
-        @click="switchScreen(4)"
+        @click="useScreenStore().switchScreen(4)"
         class="user-stat-box-btn btn rounded-8 cupo"
       >
         <p class="user-stat-box-btn-text letter-spacing-04 text-14 lh-22 usen">
@@ -253,7 +106,11 @@ onMounted(() => {
         </p>
       </div>
       <div
-        @click="copyToClipboard('', shareData.url)"
+        @click="
+          copyToClipboard(
+            `${shareData.text} \n @Framestars_bot (${shareData.url})`
+          )
+        "
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
       >
         <img src="../assets/img/Copy.svg" alt="" class="img-28 lazy-img" />
@@ -295,7 +152,9 @@ onMounted(() => {
         class="user-language-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
       >
         <p class="text-16 font-400 text-neutral-200">
-          {{ langs[getCurrentLanguage()] }}
+          {{
+            useLanguageStore().langs[useLanguageStore().getCurrentLanguage()]
+          }}
         </p>
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24" />
       </div>
