@@ -48,7 +48,6 @@ const onBlur = () => {
 };
 
 onMounted(() => {
-  Telegram.WebApp.setScrollableArea(document.querySelector(".madal-screen-head"));
   // Инициализация аналитики (раскомментируй и укажи токен)
   telegramAnalytics.init({
     token:
