@@ -9,63 +9,12 @@ import refPhoto from "../assets/img/TESTReferalPhoto.png";
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 
-const pageInfo = ref([97, 0]);
-const referals = ref([
-  {
-    name: "maxd3v",
-    photo: "",
-    income: "0.5599337499999999",
-  },
-  {
-    name: "markevichegorka",
-    photo: "",
-    income: "0.46103000000000005",
-  },
-  {
-    name: "dolorkas",
-    photo: "",
-    income: "0.0101",
-  },
-  {
-    name: "TGBarry",
-    photo: "",
-    income: "0.19295",
-  },
-  {
-    name: "Ch_Elyor",
-    photo: "",
-    income: "0.0",
-  },
-  {
-    name: "Shohjahon_03_24",
-    photo: "",
-    income: "0.021920000000000002",
-  },
-  {
-    name: "bernardoladipo",
-    photo: "",
-    income: "0.07994000000000001",
-  },
-  {
-    name: "MansourGentil",
-    photo: "",
-    income: "0.0",
-  },
-  {
-    name: "LilDreamich",
-    photo: "",
-    income: "0.0",
-  },
-  {
-    name: "vmmvp",
-    photo: "",
-    income: "0.0",
-  },
-]);
+const pageInfo = ref([0, 0]);
+const referals = ref([]);
 
 const setPage = (page) => {
   fetchUserReferals(page);
-  if (page >= 0 && page < pageInfo.value[0]) {
+  if (page >= 0 && page <= pageInfo.value[0]) {
     pageInfo.value[1] = page;
   }
 };
@@ -74,12 +23,19 @@ const visiblePages = computed(() => {
   const total = pageInfo.value[0];
   const current = pageInfo.value[1];
 
+  // Если страниц меньше 3 — нечего вычислять
+  if (total <= 1) {
+    return total > 2
+      ? Array.from({ length: total - 1 }, (_, i) => i + 1)
+      : [];
+  }
+
   let start = Math.max(1, current - 2);
-  let end = Math.min(total - 2, current + 2); // фикс: не включаем последнюю (total - 1)
+  let end = Math.min(total - 2, current + 2);
 
   if (end - start < 4) {
-    if (start === 1) end = Math.min(total - 2, start + 4);
-    else if (end === total - 2) start = Math.max(1, end - 4);
+    if (start === 1) end = Math.min(total - 1, start + 4);
+    else if (end === total - 1) start = Math.max(1, end - 4);
   }
 
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -207,7 +163,7 @@ onMounted(() => {
               }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
             </p>
           </div>
-          <div class="referal-pages">
+          <div class="referal-pages" v-if="pageInfo[0] > 0">
             <!-- Кнопка первой страницы -->
             <div
               class="page-btn"
@@ -230,11 +186,12 @@ onMounted(() => {
 
             <!-- Кнопка последней страницы -->
             <div
+              v-if="pageInfo[0] > 0"
               class="page-btn"
-              @click="setPage(pageInfo[0] - 1)"
-              :class="pageInfo[1] == pageInfo[0] - 1 ? 'page-btn-current' : ''"
+              @click="setPage(pageInfo[0])"
+              :class="pageInfo[1] == pageInfo[0] ? 'page-btn-current' : ''"
             >
-              <p class="text-14">{{ pageInfo[0] }}</p>
+              <p class="text-14">{{ pageInfo[0]+1 }}</p>
             </div>
           </div>
         </template>
