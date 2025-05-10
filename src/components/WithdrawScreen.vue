@@ -3,55 +3,49 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import refPhoto from "../assets/img/TESTReferalPhoto.png";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 
+const pageInfo = ref([0, 0]);
 const referals = ref([]);
 
-const fetchUserReferals = async () => {
-  const CACHE_KEY = "referrals_cache";
-  const CACHE_TTL = 5 * 60 * 1000; // 5 минут
+const setPage = (page) => {
+  fetchUserReferals(page);
+  if (page >= 0 && page < pageInfo.value[0]) {
+    pageInfo.value[1] = page;
+  }
+};
 
-  const cached = localStorage.getItem(CACHE_KEY);
-  if (cached) {
-    try {
-      const parsed = JSON.parse(cached);
-      const now = Date.now();
+const visiblePages = computed(() => {
+  const total = pageInfo.value[0];
+  const current = pageInfo.value[1];
 
-      if (now - parsed.timestamp < CACHE_TTL) {
-        referals.value = parsed.data;
-        console.log("Loaded from cache");
-      }
-    } catch (e) {
-      console.warn("Bad cache format:", e);
-    }
+  let start = Math.max(1, current - 2);
+  let end = Math.min(total - 1, current + 2);
+
+  if (end - start < 4) {
+    if (start === 1) end = Math.min(total - 1, start + 4);
+    else if (end === total - 1) start = Math.max(1, end - 4);
   }
 
-  // Пока показываем кеш, но всё равно обновим
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+});
+
+const fetchUserReferals = async (i) => {
   const payload = {
     user_id: useUserStore().getUserId(),
+    current_page: i,
   };
 
   try {
     const result = await sendToBackend("/get_user_referrals", payload);
     const data = result.data;
-    referals.value = data.income;
-
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify({
-        data: data.income,
-        timestamp: Date.now(),
-      })
-    );
-
-    console.log("Fetched fresh:", result.data);
-  } catch (error) {
-    console.error("Failed:", error);
-  }
+    referals.value = data.referrals;
+    pageInfo.value[0] = data.pages;
+  } catch (у) {}
 };
 
 const fetchWithdraw = async () => {
@@ -74,7 +68,7 @@ const fetchWithdraw = async () => {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  fetchUserReferals();
+  fetchUserReferals(0);
   fetchWithdraw();
 });
 </script>
@@ -121,26 +115,57 @@ onMounted(() => {
           <p class="text-20 text-white">{{ useUserStore().getUserName() }}</p>
           <p class="text-16 text-white-60">@{{ useUserStore().getUser() }}</p>
         </div>
-        <div
-          v-if="referals && referals.length"
-          v-for="referal in referals"
-          class="referal-card items-center gap-8"
-        >
-          <img
-            :src="
-              referal.photo
-                ? 'data:image/png;base64,' + referal.photo
-                : refPhoto
-            "
-            alt=""
-            class="img-40 rounded-20"
-          />
-          <p class="text-16 text-white-60">{{ referal.name }}</p>
-          <p class="text-16 text-neutral-200 jse flex-row">
-            + {{ referal.income
-            }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
-          </p>
-        </div>
+        <template v-if="referals && referals.length">
+          <div
+            v-for="referal in referals"
+            class="referal-card items-center gap-8"
+          >
+            <img
+              :src="
+                referal.photo
+                  ? 'data:image/png;base64,' + referal.photo
+                  : refPhoto
+              "
+              alt=""
+              class="img-40 rounded-20"
+            />
+            <p class="text-16 text-white-60">{{ referal.name }}</p>
+            <p class="text-16 text-neutral-200 jse flex-row">
+              + {{ referal.income
+              }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
+            </p>
+          </div>
+          <div class="referal-pages">
+            <!-- Кнопка первой страницы -->
+            <div
+              class="page-btn"
+              @click="setPage(0)"
+              :class="pageInfo[1] == 0 ? 'page-btn-current' : ''"
+            >
+              <p class="text-14">1</p>
+            </div>
+
+            <!-- Динамический диапазон -->
+            <div
+              v-for="page in visiblePages"
+              :key="page"
+              class="page-btn"
+              :class="{ 'page-btn-current': page === pageInfo[1] }"
+              @click="setPage(page)"
+            >
+              <p class="text-14">{{ page + 1 }}</p>
+            </div>
+
+            <!-- Кнопка последней страницы -->
+            <div
+              class="page-btn"
+              @click="setPage(pageInfo[0] - 1)"
+              :class="pageInfo[1] == pageInfo[0] ? 'page-btn-current' : ''"
+            >
+              <p class="text-14">{{ pageInfo[0] }}</p>
+            </div>
+          </div>
+        </template>
         <template v-else>
           <span style="padding: 6px 14px" class="flex-col gap-8">
             <p class="text-24 lh-120">{{ getTranslation("Noreferralsyet") }}</p>
@@ -211,5 +236,23 @@ onMounted(() => {
   background: var(--blue-900-60);
   left: 10%;
   top: -4px;
+}
+.referal-pages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 42px);
+  gap: 16px;
+  justify-content: space-between;
+  align-content: center;
+  padding: 16px;
+}
+.page-btn {
+  background: var(--blue-600);
+  padding: 12px;
+  border-radius: 12px;
+  aspect-ratio: 1/1;
+  text-align: center;
+}
+.page-btn-current {
+  background: var(--blue-900);
 }
 </style>
