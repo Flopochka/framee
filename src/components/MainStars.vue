@@ -191,9 +191,9 @@ const createorder = async () => {
       toggleModal("filler");
       sendToBackend("/create_order", payload).then((result) => {
         const data = result.data;
-        setPaymentLink(data.payment_link);
+        setPaymentLink(data.payment_link || data.redirectLink);
         const orderId = data.order_id;
-        Telegram.WebApp.openLink(data.payment_link);
+        Telegram.WebApp.openLink(data.payment_link || data.redirectLink);
         setupTabReturnListener(orderId);
       });
     } catch (error) {
