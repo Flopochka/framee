@@ -47,12 +47,12 @@ const fetchUserInfo = async () => {
 };
 
 function copyToClipboard(text) {
-  Telegram?.WebApp?.writeTextToClipboard(`${text}`);
+  Telegram.WebApp.writeTextToClipboard(`${text}`);
   toggleModal("Copied");
 }
 
 function shareContent() {
-  Telegram?.WebApp?.showShareMenu({
+  Telegram.WebApp.showShareMenu({
     text: `${shareData.text} \n @Framestars_bot (${shareData.url})`,
   });
 }
