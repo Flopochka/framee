@@ -59,7 +59,7 @@ const searchRecipient = async (username) => {
   try {
     const result = await sendToBackend("/search_recipient", payload);
     const data = result.data;
-    if (data.status.message !== "Пользователь не найден") {
+    if (result.status.message !== "Пользователь не найден") {
       recipientName.value = data.name;
       recipientPhoto.value = data.photo;
       recipient.value = data.recipient;

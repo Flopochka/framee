@@ -115,7 +115,7 @@ const searchRecipient = async (username) => {
     sendToBackend("/search_recipient", payload)
       .then((result) => {
         var data = result.data;
-        if (data.status.message == "Пользователь не найден") {
+        if (result.status.message == "Пользователь не найден") {
           recipient.value = null;
           recipientCorrect.value = false;
         } else {
@@ -123,6 +123,7 @@ const searchRecipient = async (username) => {
           recipientPhoto.value = data.photo;
           recipient.value = data.recipient;
           recipientCorrect.value = true;
+          console.log(recipientName.value, recipientPhoto.value, recipient.value, recipientCorrect.value)
         }
       })
       .catch(() => {});
