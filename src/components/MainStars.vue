@@ -265,6 +265,7 @@ const idkhin = async (order_id) => {
 };
 
 const fetchResult = async (order_id) => {
+  toggleModal(null);
   fetchUserHistory();
   const result = await idkhin(order_id);
   if (result) {
