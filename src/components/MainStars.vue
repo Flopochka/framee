@@ -115,14 +115,14 @@ const searchRecipient = async (username) => {
     sendToBackend("/search_recipient", payload)
       .then((result) => {
         var data = result.data;
-        if (result.data.status.message != "Пользователь не найден") {
+        if (data.status.message == "Пользователь не найден") {
+          recipient.value = null;
+          recipientCorrect.value = false;
+        } else {
           recipientName.value = data.name;
           recipientPhoto.value = data.photo;
           recipient.value = data.recipient;
           recipientCorrect.value = true;
-        } else {
-          recipient.value = null;
-          recipientCorrect.value = false;
         }
       })
       .catch(() => {});

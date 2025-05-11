@@ -10,8 +10,8 @@ import Cancelled from "../assets/img/Cancelled.svg";
 
 const { getHistory } = useHistoryStore();
 const { getTranslation } = useLanguageStore();
-const { fetchUserHistory } = useHistoryStore();
 
+const pageInfo = ref([0, 0]);
 const history = getHistory();
 const withdrawType = ref(["TON", "Stars", "Stars", "Stars"]);
 
@@ -29,14 +29,17 @@ const getIconPath = (type, count) => {
     default:
       return StarGold;
   }
-}
+};
 </script>
 
 <template>
   <div class="user-history-body">
     <template v-if="history">
       <template v-for="(group, index) in history" :key="index">
-        <p class="text-white-70 text-14 pl-12 lh-120" style="margin-bottom: 4px;">
+        <p
+          class="text-white-70 text-14 pl-12 lh-120"
+          style="margin-bottom: 4px"
+        >
           {{ getTranslation(group.date.month) }}, {{ group.date.day }}
           {{ group.date.year === currentYear ? "" : " " + group.date.year }}
         </p>
@@ -75,6 +78,37 @@ const getIconPath = (type, count) => {
           </div>
         </div>
       </template>
+      <div class="history-pages" v-if="pageInfo[0] > 0">
+        <!-- Кнопка первой страницы -->
+        <div
+          class="page-btn"
+          @click="setPage(0)"
+          :class="pageInfo[1] == 0 ? 'page-btn-current' : ''"
+        >
+          <p class="text-14">1</p>
+        </div>
+
+        <!-- Динамический диапазон -->
+        <div
+          v-for="page in visiblePages"
+          :key="page"
+          class="page-btn"
+          :class="{ 'page-btn-current': page === pageInfo[1] }"
+          @click="setPage(page)"
+        >
+          <p class="text-14">{{ page + 1 }}</p>
+        </div>
+
+        <!-- Кнопка последней страницы -->
+        <div
+          v-if="pageInfo[0] > 0"
+          class="page-btn"
+          @click="setPage(pageInfo[0])"
+          :class="pageInfo[1] == pageInfo[0] ? 'page-btn-current' : ''"
+        >
+          <p class="text-14">{{ pageInfo[0] + 1 }}</p>
+        </div>
+      </div>
     </template>
     <template v-else>
       <span style="padding: 6px 14px" class="flex-col gap-8">
@@ -114,5 +148,23 @@ const getIconPath = (type, count) => {
 .madal_active .processing-icon {
   transform: rotate(3600deg);
   transition: transform 10s;
+}
+.history-pages {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(1fr, 32px));
+  gap: 16px;
+  justify-content: space-between;
+  align-content: center;
+  padding: 16px;
+}
+.page-btn {
+  background: var(--blue-600);
+  padding: 12px;
+  border-radius: 12px;
+  aspect-ratio: 1/1;
+  text-align: center;
+}
+.page-btn-current {
+  background: var(--blue-900);
 }
 </style>

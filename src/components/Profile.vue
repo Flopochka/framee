@@ -35,7 +35,8 @@ const fetchUserInfo = async () => {
   sendToBackend("/get_user_info", payload)
     .then((result) => {
       const data = result.data;
-      referals_count.value = result.data.count_referrals; // Обновляем счетчик рефералов
+      referals_count.value = data.count_referrals; // Обновляем счетчик рефералов
+      income.value = data.income;
       if (
         useLanguageStore().getCurrentLanguage() != data.language.slice(0, 2)
       ) {

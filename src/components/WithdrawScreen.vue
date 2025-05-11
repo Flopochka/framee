@@ -268,7 +268,7 @@ onMounted(() => {
 }
 .referal-pages {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 42px);
+  grid-template-columns: repeat(5, minmax(1fr, 32px));
   gap: 16px;
   justify-content: space-between;
   align-content: center;
