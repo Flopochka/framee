@@ -223,7 +223,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const status = ref(null)
 try {
   const data = await getorderinfo(order_id);
-  status.value = data.status == "Wait payment" ? null : data.status == "No" ? false : true;
+  status.value = data.status == "Wait payment" ? null : data.status == "Expired" ? false : true;
   console.log("Initial payment check:", data.status);
   return status.value;
 } catch (error) {
@@ -235,7 +235,7 @@ for (const delay of retryDelays) {
   await sleep(delay);
   try {
     const data = await getorderinfo(order_id);
-    status.value = data.status == "Wait payment" ? null : data.status == "No" ? false : true;
+    status.value = data.status == "Wait payment" ? null : data.status == "Expired" ? false : true;
     console.log(`Retry after ${delay}ms:`, data.status);
     if (status.value) return status.value; // Exit if connected
   } catch (error) {
