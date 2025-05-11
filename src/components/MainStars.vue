@@ -123,7 +123,12 @@ const searchRecipient = async (username) => {
           recipientPhoto.value = data.photo;
           recipient.value = data.recipient;
           recipientCorrect.value = true;
-          console.log(recipientName.value, recipientPhoto.value, recipient.value, recipientCorrect.value)
+          console.log(
+            recipientName.value,
+            recipientPhoto.value,
+            recipient.value,
+            recipientCorrect.value
+          );
         }
       })
       .catch(() => {});
@@ -186,9 +191,9 @@ const createorder = async () => {
       toggleModal("filler");
       sendToBackend("/create_order", payload).then((result) => {
         const data = result.data;
-        setPaymentLink(data.redirectLink);
+        setPaymentLink(data.payment_link);
         const orderId = data.order_id;
-        Telegram.WebApp.openLink(data.redirectLink);
+        Telegram.WebApp.openLink(data.payment_link);
         setupTabReturnListener(orderId);
       });
     } catch (error) {
@@ -211,20 +216,24 @@ const getorderinfo = async (order_id) => {
     .catch(() => {});
 };
 
+const fetchResult = (order_id) => {
+  // toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
+  fetchUserHistory();
+  getorderinfo(order_id)
+};
+
 const setupTabReturnListener = (order_id) => {
   const handleVisibilityChange = () => {
     if (document.visibilityState === "visible") {
       console.log("User returned to tab");
-      toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
-      fetchUserHistory();
+      fetchResult(order_id);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
   };
   document.addEventListener("visibilitychange", handleVisibilityChange);
   const handleFocus = () => {
     console.log("Tab focused");
-    toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
-    fetchUserHistory();
+    fetchResult(order_id);
     window.removeEventListener("focus", handleFocus);
   };
   window.addEventListener("focus", handleFocus);

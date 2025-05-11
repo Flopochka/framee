@@ -13,8 +13,9 @@ const {
   getHistory,
   fetchUserHistory,
   setPage,
-  visiblePages,
-  pageInfo,
+  getVisiblePages,
+  getCurrentPage,
+  getPagesCount,
 } = useHistoryStore();
 
 const history = ref([]);
@@ -48,7 +49,6 @@ const getIconPath = (type, count) => {
   }
 };
 </script>
-
 
 <template>
   <div class="user-history-body">
@@ -96,22 +96,22 @@ const getIconPath = (type, count) => {
           </div>
         </div>
       </template>
-      <div class="history-pages" v-if="pageInfo[0] > 0">
+      <div class="history-pages" v-if="getPagesCount() > 0">
         <!-- Кнопка первой страницы -->
         <div
           class="page-btn"
           @click="setPage(0)"
-          :class="pageInfo[1] == 0 ? 'page-btn-current' : ''"
+          :class="getCurrentPage() == 0 ? 'page-btn-current' : ''"
         >
           <p class="text-14">1</p>
         </div>
 
         <!-- Динамический диапазон -->
         <div
-          v-for="page in visiblePages"
+          v-for="page in getVisiblePages()"
           :key="page"
           class="page-btn"
-          :class="{ 'page-btn-current': page === pageInfo[1] }"
+          :class="{ 'page-btn-current': page === getCurrentPage() }"
           @click="setPage(page)"
         >
           <p class="text-14">{{ page + 1 }}</p>
@@ -119,12 +119,14 @@ const getIconPath = (type, count) => {
 
         <!-- Кнопка последней страницы -->
         <div
-          v-if="pageInfo[0] > 0"
+          v-if="getPagesCount() > 0"
           class="page-btn"
-          @click="setPage(pageInfo[0])"
-          :class="pageInfo[1] == pageInfo[0] ? 'page-btn-current' : ''"
+          @click="setPage(getPagesCount())"
+          :class="
+            getCurrentPage() == getPagesCount() ? 'page-btn-current' : ''
+          "
         >
-          <p class="text-14">{{ pageInfo[0] + 1 }}</p>
+          <p class="text-14">{{ getPagesCount() + 1 }}</p>
         </div>
       </div>
     </template>

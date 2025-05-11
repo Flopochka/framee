@@ -40,7 +40,7 @@ export const useHistoryStore = defineStore("history", () => {
     }
   };
 
-  const visiblePages = computed(() => {
+  const getVisiblePages = () => {
     const total = pageInfo.value[0];
     const current = pageInfo.value[1];
 
@@ -57,9 +57,12 @@ export const useHistoryStore = defineStore("history", () => {
       if (start === 1) end = Math.min(total - 1, start + 4);
       else if (end === total - 1) start = Math.max(1, end - 4);
     }
-
+    console.log(Array.from({ length: end - start + 1 }, (_, i) => start + i));
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  });
+  };
+
+  const getCurrentPage = () => pageInfo.value[1];
+  const getPagesCount = () => pageInfo.value[0];
 
   const fetchUserHistory = async (pageIndex = 0) => {
     const userId = useUserStore().getUserId();
@@ -119,7 +122,8 @@ export const useHistoryStore = defineStore("history", () => {
     getHistory,
     fetchUserHistory,
     setPage,
-    visiblePages,
-    pageInfo,
+    getVisiblePages,
+    getCurrentPage,
+    getPagesCount,
   };
 });
