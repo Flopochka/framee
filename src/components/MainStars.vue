@@ -210,35 +210,47 @@ const getorderinfo = async (order_id) => {
   sendToBackend("/get_status_order", payload)
     .then((result) => {
       if (result.data.status === "success") {
-        return result.data
+        return result.data;
       }
     })
     .catch(() => {});
 };
 
-const idkhin = (order_id) => {
-  const retryDelays = [1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000];
+const idkhin = async (order_id) => {
+  const retryDelays = [
+    1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000,
+  ];
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const status = ref(null)
-try {
-  const data = await getorderinfo(order_id);
-  status.value = data.status == "Wait payment" ? null : data.status == "Expired" ? false : true;
-  console.log("Initial payment check:", data.status);
-  return status.value;
-} catch (error) {
-  console.error("Initial payment check failed:", error);
-}
-
-// Retry logic if initial attempt fails or returns disconnected
-for (const delay of retryDelays) {
-  await sleep(delay);
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const status = ref(null);
   try {
     const data = await getorderinfo(order_id);
-    status.value = data.status == "Wait payment" ? null : data.status == "Expired" ? false : true;
-    console.log(`Retry after ${delay}ms:`, data.status);
-    if (status.value) return status.value; // Exit if connected
+    status.value =
+      data.status == "Wait payment"
+        ? null
+        : data.status == "Expired"
+        ? false
+        : true;
+    console.log("Initial payment check:", data.status);
+    return status.value;
   } catch (error) {
+    console.error("Initial payment check failed:", error);
+  }
+
+  // Retry logic if initial attempt fails or returns disconnected
+  for (const delay of retryDelays) {
+    await sleep(delay);
+    try {
+      const data = await getorderinfo(order_id);
+      status.value =
+        data.status == "Wait payment"
+          ? null
+          : data.status == "Expired"
+          ? false
+          : true;
+      console.log(`Retry after ${delay}ms:`, data.status);
+      if (status.value) return status.value; // Exit if connected
+    } catch (error) {
       console.error(`Retry after ${delay}ms failed:`, error);
     }
   }
@@ -246,17 +258,17 @@ for (const delay of retryDelays) {
   // Final state after all retries
   status.value = false;
   console.log("All wallet connection attempts failed");
-}
+};
 
 const fetchResult = (order_id) => {
   fetchUserHistory();
-  const result = ref(idkhin(order_id))
-  if (result.value){
+  const result = await idkhin(order_id);
+  if (result) {
     toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
   } else {
     toggleModal("error");
   }
-  };
+};
 
 const setupTabReturnListener = (order_id) => {
   const handleVisibilityChange = () => {
