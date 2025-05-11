@@ -268,7 +268,7 @@ onMounted(() => {
 }
 .referal-pages {
   display: grid;
-  grid-template-columns: repeat(5, minmax(1fr, 32px));
+  grid-template-columns: repeat(7, minmax(0, 64px));
   gap: 16px;
   justify-content: space-between;
   align-content: center;
@@ -280,6 +280,9 @@ onMounted(() => {
   border-radius: 12px;
   aspect-ratio: 1/1;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .page-btn-current {
   background: var(--blue-900);

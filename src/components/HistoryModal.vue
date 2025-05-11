@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useLanguageStore } from "../stores/language";
 import { useHistoryStore } from "../stores/history";
 import StarGold from "../assets/img/StarGold.svg";
@@ -8,12 +8,29 @@ import TONMinimal from "../assets/img/TONMinimal.svg";
 import Processing from "../assets/img/Processing.svg";
 import Cancelled from "../assets/img/Cancelled.svg";
 
-const { getHistory } = useHistoryStore();
 const { getTranslation } = useLanguageStore();
+const {
+  getHistory,
+  fetchUserHistory,
+  setPage,
+  visiblePages,
+  pageInfo,
+} = useHistoryStore();
 
-const pageInfo = ref([0, 0]);
-const history = getHistory();
+const history = ref([]);
 const withdrawType = ref(["TON", "Stars", "Stars", "Stars"]);
+const currentYear = new Date().getFullYear();
+
+// Подгружаем первую страницу при монтировании
+watchEffect(async () => {
+  await fetchUserHistory(0);
+  history.value = getHistory();
+});
+
+// Обновляем данные при смене страницы
+watchEffect(() => {
+  history.value = getHistory();
+});
 
 const getIconPath = (type, count) => {
   switch (type) {
@@ -31,6 +48,7 @@ const getIconPath = (type, count) => {
   }
 };
 </script>
+
 
 <template>
   <div class="user-history-body">
@@ -151,7 +169,7 @@ const getIconPath = (type, count) => {
 }
 .history-pages {
   display: grid;
-  grid-template-columns: repeat(5, minmax(1fr, 32px));
+  grid-template-columns: repeat(7, minmax(0, 64px));
   gap: 16px;
   justify-content: space-between;
   align-content: center;
@@ -163,6 +181,9 @@ const getIconPath = (type, count) => {
   border-radius: 12px;
   aspect-ratio: 1/1;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .page-btn-current {
   background: var(--blue-900);
