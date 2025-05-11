@@ -35,9 +35,6 @@ function verifyTelegramInitData(initData) {
   const valid = isValid(initDataStr, BOT_TOKEN);
   console.log("Signature valid for",BOT_TOKEN,":", valid);
 
-  const oldValid = isValid(initDataStr, '7351450370:AAGq1h9ET-PJdsawq16XWmOOe7AXA2w2PD8');
-  console.log("Signature valid for 7351450370:AAGq1h9ET-PJdsawq16XWmOOe7AXA2w2PD8 :", valid);
-
   // Проверка возраста данных
   const authDate = new URLSearchParams(initDataStr).get("auth_date");
   if (!authDate) {
