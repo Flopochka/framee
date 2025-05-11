@@ -207,13 +207,17 @@ const createorder = async () => {
 const getorderinfo = async (order_id) => {
   console.log("Searching for:", order_id);
   const payload = { order_id: order_id };
-  sendToBackend("/get_status_order", payload)
-    .then((result) => {
-      if (result.data.status === "success") {
-        return result.data;
-      }
-    })
-    .catch(() => {});
+  try {
+    const result = await sendToBackend("/get_status_order", payload);
+    if (result.data.status === "success") {
+      return result.data;
+    } else {
+      throw new Error("Status not success");
+    }
+  } catch (e) {
+    console.error("getorderinfo failed:", e);
+    throw e;
+  }
 };
 
 const idkhin = async (order_id) => {
@@ -260,7 +264,7 @@ const idkhin = async (order_id) => {
   console.log("All wallet connection attempts failed");
 };
 
-const fetchResult = (order_id) => {
+const fetchResult = async (order_id) => {
   fetchUserHistory();
   const result = await idkhin(order_id);
   if (result) {
