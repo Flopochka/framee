@@ -13,7 +13,7 @@ const income = ref(0);
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 const shareData = {
-  text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇",
+  text: getTranslation("FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself"),
   url:
     "https://t.me/Framestars_bot?start=" +
     WebApp.initDataUnsafe?.user?.id,
