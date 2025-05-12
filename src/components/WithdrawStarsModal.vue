@@ -25,17 +25,14 @@ const valueIncorrects = ref([]);
 
 const MAX_LENGTH = 45;
 
-watch(targetUserName, (newVal, oldVal) => {
-  if (newVal && newVal.length > MAX_LENGTH) {
-    targetUserName.value = newVal.slice(0, MAX_LENGTH);
-  }
-});
-
 const clearStars = () => {
   withdrawAmount.value = null;
 };
 
 watch(targetUserName, (newValue) => {
+  if (newVal && newVal.length > MAX_LENGTH) {
+    targetUserName.value = newVal.slice(0, MAX_LENGTH);
+  }
   clearTimeout(searchTimeout.value);
   searchTimeout.value = setTimeout(async () => {
     if (newValue && newValue.length >= 3) {
