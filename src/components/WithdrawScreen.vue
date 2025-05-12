@@ -25,9 +25,7 @@ const visiblePages = computed(() => {
 
   // Если страниц меньше 3 — нечего вычислять
   if (total <= 1) {
-    return total > 2
-      ? Array.from({ length: total - 1 }, (_, i) => i + 1)
-      : [];
+    return total > 2 ? Array.from({ length: total - 1 }, (_, i) => i + 1) : [];
   }
 
   let start = Math.max(1, current - 2);
@@ -146,7 +144,7 @@ onMounted(() => {
         <template v-if="referals && referals.length">
           <div
             v-for="referal in referals"
-            class="referal-card items-center gap-8"
+            class="referal-card items-center gap-12"
           >
             <img
               :src="
@@ -155,9 +153,21 @@ onMounted(() => {
                   : refPhoto
               "
               alt=""
-              class="img-40 rounded-20"
+              class="img-44 rounded-20"
             />
-            <p class="text-16 text-white-60">{{ referal.name }}</p>
+            <div class="ref-info flex-col gap-8">
+              <template v-if="referal.name"
+                ><p class="text-20 text-white">
+                  {{ referal.name }}
+                </p>
+                <p class="text-16 text-white-60">
+                  @{{ referal.username }}
+                </p></template
+              >
+              <p v-else class="text-16 text-white-60">
+                  @{{ referal.username }}
+                </p>
+            </div>
             <p class="text-16 text-neutral-200 jse flex-row">
               + {{ referal.income
               }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
@@ -191,7 +201,7 @@ onMounted(() => {
               @click="setPage(pageInfo[0])"
               :class="pageInfo[1] == pageInfo[0] ? 'page-btn-current' : ''"
             >
-              <p class="text-14">{{ pageInfo[0]+1 }}</p>
+              <p class="text-14">{{ pageInfo[0] + 1 }}</p>
             </div>
           </div>
         </template>
@@ -253,7 +263,7 @@ onMounted(() => {
 .referal-card {
   display: grid;
   grid-template-columns: auto auto 1fr;
-  padding: 0 16px;
+  padding: 0 12px;
   width: 100%;
   position: relative;
 }

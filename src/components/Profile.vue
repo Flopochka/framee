@@ -5,6 +5,7 @@ import { useScreenStore } from "../stores/screen";
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
 import { useUserStore } from "../stores/user";
+import WebApp from "@twa-dev/sdk";
 
 const referals_count = ref(0);
 const income = ref(0);
@@ -15,14 +16,14 @@ const shareData = {
   text: "FRAME — твой лучший выбор для покупки звезд! Цены ниже, чем в официальном боте Telegram, и никакой KYC верификации. Заходи и убедись сам 👇",
   url:
     "https://t.me/Framestars_bot?start=" +
-    window.Telegram?.WebApp?.initDataUnsafe?.user?.id,
+    WebApp.initDataUnsafe?.user?.id,
 };
 
 function linkTo(url, options = { tryInstantView: false }) {
   if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
-    Telegram.WebApp.openTelegramLink(url);
+    WebApp.openTelegramLink(url);
   } else {
-    Telegram.WebApp.openLink(url, {
+    WebApp.openLink(url, {
       try_instant_view: options.tryInstantView,
     });
   }
@@ -47,12 +48,12 @@ const fetchUserInfo = async () => {
 };
 
 function copyToClipboard(text) {
-  window.Telegram.WebApp.writeTextToClipboard(`${text}`);
+  WebApp.writeTextToClipboard(`${text}`);
   toggleModal("Copied");
 }
 
 function shareContent() {
-  window.Telegram.WebApp.showShareMenu({
+  WebApp.showShareMenu({
     text: `${shareData.text} \n @Framestars_bot (${shareData.url})`,
   });
 }
