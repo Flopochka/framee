@@ -223,7 +223,7 @@ const getorderinfo = async (order_id) => {
 
 const idkhin = async (order_id) => {
   const retryDelays = [
-    1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000,
+    1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000
   ];
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
