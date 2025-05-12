@@ -219,6 +219,7 @@ const createorder = async () => {
     try {
       toggleModal("filler");
       sendToBackend("/create_order", payload).then((result) => {
+        if(result == null){toggleModal("error"); return}
         const data = result.data;
         setPaymentLink(data.payment_link || data.redirectLink);
         const orderId = data.order_id;
