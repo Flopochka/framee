@@ -169,7 +169,7 @@ onMounted(() => {
                 </p>
             </div>
             <p class="text-16 text-neutral-200 jse flex-row">
-              + {{ referal.income
+              + {{ (+referal.income).toFixed(5)
               }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
             </p>
           </div>
