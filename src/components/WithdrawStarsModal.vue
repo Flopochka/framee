@@ -83,12 +83,12 @@ const withdraw = async () => {
   recipientIncorrects.value = [];
 
   const amount = withdrawAmount.value || 0;
-  if (amount >= 0.1 && amount <= 1000000 && amount <= useUserStore().getUserBalance()) {
+  if (amount >= 0.5 && amount <= 1000000 && amount <= useUserStore().getUserBalance()) {
     valueCorrect.value = true;
   } else {
     valueCorrect.value = false;
     valueIncorrects.value.push(
-      amount < 0.1 ? "Min01" : amount > 1000000 ? "Max1000000" : "Notenoughbalace"
+      amount < 0.5 ? "Min01" : amount > 1000000 ? "Max1000000" : "Notenoughbalace"
     );
   }
 
@@ -129,8 +129,8 @@ onMounted(() => {
         type="number"
         :class="{ incorrect: !valueCorrect }"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
-        placeholder="Min 0.1"
-        min="0.1"
+        placeholder="Min 0.5"
+        min="0.5"
         max="1000000"
         v-model="withdrawAmount"
       />
