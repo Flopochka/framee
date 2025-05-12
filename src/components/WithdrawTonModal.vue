@@ -16,6 +16,15 @@ const valueIncorrects = ref([]);
 const walletCorrect = ref(true);
 const walletIncorrects = ref([]);
 
+
+const MAX_LENGTH = 90;
+
+watch(targetWallet, (newVal, oldVal) => {
+  if (newVal && newVal.length > MAX_LENGTH) {
+    targetWallet.value = newVal.slice(0, MAX_LENGTH);
+  }
+});
+
 const clearTON = () => {
   withdrawTonAmmount.value = null;
 };

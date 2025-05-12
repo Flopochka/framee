@@ -23,6 +23,14 @@ const kef = ref(187.265917);
 const valueCorrect = ref(true);
 const valueIncorrects = ref([]);
 
+const MAX_LENGTH = 45;
+
+watch(targetUserName, (newVal, oldVal) => {
+  if (newVal && newVal.length > MAX_LENGTH) {
+    targetUserName.value = newVal.slice(0, MAX_LENGTH);
+  }
+});
+
 const clearStars = () => {
   withdrawAmount.value = null;
 };
