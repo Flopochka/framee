@@ -65,16 +65,13 @@ async function copyToClipboard(text) {
 }
 
 function shareContent() {
-  const combinedText = `${shareData.text}\n${shareData.url}`;
-  const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(combinedText)}`;
-
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}`;
   if (window.Telegram?.WebApp?.openTelegramLink) {
     window.Telegram.WebApp.openTelegramLink(shareUrl);
   } else {
     window.open(shareUrl, "_blank");
   }
 }
-
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
