@@ -127,7 +127,7 @@ onMounted(() => {
       <div
         @click="
           copyToClipboard(
-            `${shareData.text} \n ${shareData.url}`
+            `${shareData.url}`
           )
         "
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
