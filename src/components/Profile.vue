@@ -64,33 +64,7 @@ async function copyToClipboard(text) {
   }
 }
 
-
 function shareContent() {
-  const textToShare = `${shareData.text} \n @Framestars_bot (${shareData.url})`;
-
-  const rawWebApp = window.Telegram?.WebApp;
-
-  if (typeof rawWebApp?.showShareMenu === "function") {
-    rawWebApp.showShareMenu({ text: textToShare });
-    return;
-  }
-
-  if (navigator.share) {
-    navigator.share({
-      title: "FRAME",
-      text: shareData.text,
-      url: shareData.url,
-    }).catch((err) => {
-      console.warn("Web share failed:", err);
-      fallbackToTelegram();
-    });
-    return;
-  }
-
-  fallbackToTelegram();
-}
-
-function fallbackToTelegram() {
   const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}`;
   if (window.Telegram?.WebApp?.openTelegramLink) {
     window.Telegram.WebApp.openTelegramLink(shareUrl);
