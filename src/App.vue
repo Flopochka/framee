@@ -71,7 +71,6 @@ onMounted(() => {
 
   // Инициализация обработчиков ввода
   initInputNumberHandler();
-  initInputTextHandler();
 
   if (!isMobileDevice()) return;
 
