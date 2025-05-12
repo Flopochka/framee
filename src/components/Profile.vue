@@ -65,55 +65,39 @@ async function copyToClipboard(text) {
 }
 
 
-let isSharing = false;
-
-async function shareContent() {
+function shareContent() {
   const textToShare = `${shareData.text} \n @Framestars_bot (${shareData.url})`;
 
-  // Telegram WebApp
-  if (typeof WebApp.showShareMenu === "function") {
-    WebApp.showShareMenu({ text: textToShare });
+  const rawWebApp = window.Telegram?.WebApp;
+
+  if (typeof rawWebApp?.showShareMenu === "function") {
+    rawWebApp.showShareMenu({ text: textToShare });
     return;
   }
 
-  // Web Share API
   if (navigator.share) {
-    if (isSharing) {
-      console.warn("Sharing already in progress...");
-      return;
-    }
-
-    isSharing = true;
-    try {
-      await navigator.share({
-        title: "FRAME",
-        text: shareData.text,
-        url: shareData.url,
-      });
-    } catch (error) {
-      console.warn("Sharing failed:", error);
-      toggleModal("Не удалось поделиться");
-    } finally {
-      isSharing = false;
-    }
+    navigator.share({
+      title: "FRAME",
+      text: shareData.text,
+      url: shareData.url,
+    }).catch((err) => {
+      console.warn("Web share failed:", err);
+      fallbackToTelegram();
+    });
     return;
   }
 
-  // Фолбэк: копировать ссылку
-  if (navigator.clipboard) {
-    try {
-      await navigator.clipboard.writeText(shareData.url);
-      toggleModal("Ссылка скопирована");
-    } catch (err) {
-      console.error("Clipboard error:", err);
-      toggleModal("Ошибка копирования");
-    }
-  } else {
-    toggleModal("Поделиться невозможно на этом устройстве");
-  }
+  fallbackToTelegram();
 }
 
-
+function fallbackToTelegram() {
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}`;
+  if (window.Telegram?.WebApp?.openTelegramLink) {
+    window.Telegram.WebApp.openTelegramLink(shareUrl);
+  } else {
+    window.open(shareUrl, "_blank");
+  }
+}
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
