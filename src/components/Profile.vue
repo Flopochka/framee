@@ -47,16 +47,59 @@ const fetchUserInfo = async () => {
     .catch(() => {});
 };
 
-function copyToClipboard(text) {
-  WebApp.writeTextToClipboard(`${text}`);
-  toggleModal("Copied");
+async function copyToClipboard(text) {
+  if (typeof WebApp.writeTextToClipboard === "function") {
+    WebApp.writeTextToClipboard(text);
+    toggleModal("Copied");
+  } else if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toggleModal("Copied");
+    } catch (e) {
+      toggleModal("Clipboard error");
+      console.error("Clipboard write failed:", e);
+    }
+  } else {
+    toggleModal("Copy not supported");
+  }
 }
 
+
 function shareContent() {
-  WebApp.showShareMenu({
-    text: `${shareData.text} \n @Framestars_bot (${shareData.url})`,
-  });
+  const textToShare = `${shareData.text} \n @Framestars_bot (${shareData.url})`;
+
+  // 1. Telegram WebApp API
+  if (typeof WebApp.showShareMenu === "function") {
+    WebApp.showShareMenu({ text: textToShare });
+    return;
+  }
+
+  // 2. Web Share API (на большинстве мобильных браузеров)
+  if (navigator.share) {
+    navigator.share({
+      title: "FRAME",
+      text: shareData.text,
+      url: shareData.url,
+    }).catch((error) => {
+      console.warn("Sharing failed:", error);
+      toggleModal("Не удалось поделиться");
+    });
+    return;
+  }
+
+  // 3. Фолбэк: копировать ссылку в буфер и показать модалку
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareData.url)
+      .then(() => toggleModal("Ссылка скопирована"))
+      .catch((err) => {
+        console.error("Clipboard error:", err);
+        toggleModal("Ошибка копирования");
+      });
+  } else {
+    toggleModal("Поделиться невозможно на этом устройстве");
+  }
 }
+
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
