@@ -25,6 +25,27 @@ const valueIncorrects = ref([]);
 
 const MAX_LENGTH = 45;
 
+// Максимальное допустимое значение
+const MAX_NUMBER = 1000000; // замените на нужное значение
+
+// Watcher — ограничивает ввод чисел по max
+watch(withdrawAmount, (newVal, oldVal) => {
+  if (newVal === "") return;
+
+  // Разрешаем числа с точкой на конце (например, "1.")
+  if (/^\d+\.$/.test(newVal)) return;
+
+  const parsed = parseFloat(newVal);
+  if (!isNaN(parsed) && parsed > MAX_NUMBER) {
+    // Если на единицу больше max и это целое — удаляем последнюю цифру
+    if (Number.isInteger(parsed) && parsed === MAX_NUMBER + 1) {
+      withdrawAmount.value = newVal.slice(0, -1);
+    } else {
+      withdrawAmount.value = String(MAX_NUMBER);
+    }
+  }
+});
+
 const clearStars = () => {
   withdrawAmount.value = null;
 };

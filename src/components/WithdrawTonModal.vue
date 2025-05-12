@@ -25,6 +25,27 @@ watch(targetWallet, (newVal, oldVal) => {
   }
 });
 
+// Максимальное допустимое значение
+const MAX_NUMBER = 1000000; // замените на нужное значение
+
+// Watcher — ограничивает ввод чисел по max
+watch(withdrawTonAmmount, (newVal, oldVal) => {
+  if (newVal === "") return;
+
+  // Разрешаем числа с точкой на конце (например, "1.")
+  if (/^\d+\.$/.test(newVal)) return;
+
+  const parsed = parseFloat(newVal);
+  if (!isNaN(parsed) && parsed > MAX_NUMBER) {
+    // Если на единицу больше max и это целое — удаляем последнюю цифру
+    if (Number.isInteger(parsed) && parsed === MAX_NUMBER + 1) {
+      withdrawTonAmmount.value = newVal.slice(0, -1);
+    } else {
+      withdrawTonAmmount.value = String(MAX_NUMBER);
+    }
+  }
+});
+
 const clearTON = () => {
   withdrawTonAmmount.value = null;
 };

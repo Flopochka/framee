@@ -9,7 +9,6 @@ import WithdrawScreen from "./components/WithdrawScreen.vue";
 import telegramAnalytics from "@telegram-apps/analytics";
 import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";
-import { initInputNumberHandler } from "./modules/inputNumber";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import lozad from "lozad";
 
@@ -68,9 +67,6 @@ onMounted(() => {
   } catch (error) {
     console.error("Lozad init failed:", error);
   }
-
-  // Инициализация обработчиков ввода
-  initInputNumberHandler();
 
   if (!isMobileDevice()) return;
 
