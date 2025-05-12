@@ -10,7 +10,6 @@ import telegramAnalytics from "@telegram-apps/analytics";
 import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";
 import { initInputNumberHandler } from "./modules/inputNumber";
-import { initInputTextHandler } from "./modules/inputText";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import lozad from "lozad";
 

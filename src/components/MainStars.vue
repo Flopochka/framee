@@ -11,7 +11,6 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
-import WebApp from "@twa-dev/sdk";
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -45,6 +44,14 @@ const holdTimer = ref(null);
 const currentAmount = ref(0);
 const minCount = ref(50);
 const hasTouch = ref(false);
+
+const MAX_LENGTH = 45;
+
+watch(targetUserName, (newVal, oldVal) => {
+  if (newVal && newVal.length > MAX_LENGTH) {
+    targetUserName.value = newVal.slice(0, MAX_LENGTH);
+  }
+});
 
 const startIncrement = (amount, event) => {
   if (event.type === "touchstart") {
