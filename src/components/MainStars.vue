@@ -170,7 +170,7 @@ const createorder = async () => {
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
     const payload = {
-      sender_id: WebApp.initDataUnsafe.user.id,
+      sender_id: useUserStore().getUserId(),
       count:
         currentType.value == 0
           ? stars.value
@@ -210,11 +210,7 @@ const getorderinfo = async (order_id) => {
   const payload = { order_id: order_id };
   try {
     const result = await sendToBackend("/get_status_order", payload);
-    if (result.data.status === "success") {
-      return result.data;
-    } else {
-      throw new Error("Status not success");
-    }
+    return result.data;
   } catch (e) {
     console.error("getorderinfo failed:", e);
     throw e;
@@ -223,7 +219,8 @@ const getorderinfo = async (order_id) => {
 
 const idkhin = async (order_id) => {
   const retryDelays = [
-    1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000
+    1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000,
+    13000, 14000, 15000,
   ];
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -238,9 +235,10 @@ const idkhin = async (order_id) => {
 
   try {
     const data = await getorderinfo(order_id);
+    console.log(data);
     const orderStatus = data.order_status || data.status; // <-- зависит от API
     status.value = extractStatus(orderStatus);
-    console.log("Initial payment check:", orderStatus);
+    console.log("Initial payment check:", status.value, orderStatus);
     if (status.value != null) return status.value;
   } catch (error) {
     console.error("Initial payment check failed:", error);
@@ -263,7 +261,6 @@ const idkhin = async (order_id) => {
   console.log("All wallet connection attempts failed");
 };
 
-
 const fetchResult = async (order_id) => {
   toggleModal(null);
   fetchUserHistory();
@@ -276,9 +273,12 @@ const fetchResult = async (order_id) => {
 };
 
 const setupTabReturnListener = (order_id) => {
+  let isReturned = false;
   const handleVisibilityChange = () => {
     if (document.visibilityState === "visible") {
       console.log("User returned to tab");
+      if (isReturned) return;
+      isReturned = true;
       fetchResult(order_id);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
@@ -286,6 +286,8 @@ const setupTabReturnListener = (order_id) => {
   document.addEventListener("visibilitychange", handleVisibilityChange);
   const handleFocus = () => {
     console.log("Tab focused");
+    if (isReturned) return;
+    isReturned = true;
     fetchResult(order_id);
     window.removeEventListener("focus", handleFocus);
   };
