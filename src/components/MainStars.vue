@@ -237,7 +237,7 @@ const idkhin = async (order_id) => {
         ? false
         : true;
     console.log("Initial payment check:", data.status);
-    return status.value;
+    if (status.value != null) return status.value; // Exit if connected
   } catch (error) {
     console.error("Initial payment check failed:", error);
   }
@@ -254,7 +254,7 @@ const idkhin = async (order_id) => {
           ? false
           : true;
       console.log(`Retry after ${delay}ms:`, data.status);
-      if (status.value) return status.value; // Exit if connected
+      if (status.value != null) return status.value; // Exit if connected
     } catch (error) {
       console.error(`Retry after ${delay}ms failed:`, error);
     }
