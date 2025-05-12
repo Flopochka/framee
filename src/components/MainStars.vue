@@ -228,42 +228,41 @@ const idkhin = async (order_id) => {
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const status = ref(null);
+
+  const extractStatus = (orderStatus) => {
+    if (orderStatus === "Wait payment") return null;
+    if (orderStatus === "Accepted") return true;
+    if (orderStatus === "Expired") return false;
+    return false; // fallback
+  };
+
   try {
     const data = await getorderinfo(order_id);
-    status.value =
-      data.status == "Wait payment"
-        ? null
-        : data.status == "Expired"
-        ? false
-        : true;
-    console.log("Initial payment check:", data.status);
-    if (status.value != null) return status.value; // Exit if connected
+    const orderStatus = data.order_status || data.status; // <-- зависит от API
+    status.value = extractStatus(orderStatus);
+    console.log("Initial payment check:", orderStatus);
+    if (status.value != null) return status.value;
   } catch (error) {
     console.error("Initial payment check failed:", error);
   }
 
-  // Retry logic if initial attempt fails or returns disconnected
   for (const delay of retryDelays) {
     await sleep(delay);
     try {
       const data = await getorderinfo(order_id);
-      status.value =
-        data.status == "Wait payment"
-          ? null
-          : data.status == "Expired"
-          ? false
-          : true;
-      console.log(`Retry after ${delay}ms:`, data.status);
-      if (status.value != null) return status.value; // Exit if connected
+      const orderStatus = data.order_status || data.status;
+      status.value = extractStatus(orderStatus);
+      console.log(`Retry after ${delay}ms:`, orderStatus);
+      if (status.value != null) return status.value;
     } catch (error) {
       console.error(`Retry after ${delay}ms failed:`, error);
     }
   }
 
-  // Final state after all retries
   status.value = false;
   console.log("All wallet connection attempts failed");
 };
+
 
 const fetchResult = async (order_id) => {
   toggleModal(null);
