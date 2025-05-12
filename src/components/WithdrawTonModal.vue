@@ -4,6 +4,7 @@ import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
 import { ref } from "vue";
 import { useHistoryStore } from "../stores/history";
+import { sendToBackend } from "../modules/fetch";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -23,7 +24,7 @@ const withdraw = async () => {
   valueIncorrects.value = [];
   walletIncorrects.value = [];
   if (
-    100 < withdrawTonAmmount.value &&
+    0.5 <= withdrawTonAmmount.value &&
     withdrawTonAmmount.value < 1000000 &&
     withdrawTonAmmount.value <= useUserStore().getUserBalance()
   ) {
