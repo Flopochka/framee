@@ -6,7 +6,7 @@ const { getTranslation } = useLanguageStore();
 
 <template>
   <div class="terms-menu-body">
-    <p class="text-14">{{ getTranslation("termstext") }}</p>
+    <p class="text-14" v-html="getTranslation('termstext')"></p>
   </div>
 </template>
 
