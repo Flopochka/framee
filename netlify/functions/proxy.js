@@ -33,7 +33,7 @@ function verifyTelegramInitData(initData) {
 
   // Проверка подписи
   const valid = isValid(initDataStr, BOT_TOKEN);
-  console.log("Signature valid for",BOT_TOKEN,":", valid);
+  console.log("Signature valid for", BOT_TOKEN, ":", valid);
 
   // Проверка возраста данных
   const authDate = new URLSearchParams(initDataStr).get("auth_date");
@@ -83,16 +83,18 @@ export async function handler(event) {
   console.log("Parsed body:", { initData, target, payload });
 
   // Проверка initData
-  if (!initData || !verifyTelegramInitData(initData)) {
-    return {
-      statusCode: 403,
-      body: JSON.stringify({
-        error: "Invalid Telegram signature or data",
-        initDataProvided: !!initData,
-        signatureValid: initData ? verifyTelegramInitData(initData) : false,
-        initData: initData || "none",
-      }),
-    };
+  if (import.meta.env.PROD) {
+    if (!initData || !verifyTelegramInitData(initData)) {
+      return {
+        statusCode: 403,
+        body: JSON.stringify({
+          error: "Invalid Telegram signature or data",
+          initDataProvided: !!initData,
+          signatureValid: initData ? verifyTelegramInitData(initData) : false,
+          initData: initData || "none",
+        }),
+      };
+    }
   }
 
   // Проверка target

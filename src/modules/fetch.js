@@ -5,12 +5,15 @@ const API_URL =
 
 export async function sendToBackend(target, payload) {
   const initData = window.Telegram?.WebApp?.initData;
-  if (!initData) {
-    const msg =
-      "No Telegram initData — WebApp probably opened outside Telegram.";
-    console.warn(msg);
-    throw new Error(msg);
+  if (import.meta.env.PROD) {
+    if (!initData) {
+      const msg =
+        "No Telegram initData — WebApp probably opened outside Telegram.";
+      console.warn(msg);
+      throw new Error(msg);
+    }
   }
+
   try {
     console.log("Sending request to ", target, ": ", payload);
     const response = await fetch(API_URL, {
