@@ -163,6 +163,15 @@ onMounted(() => {
         </p>
         <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
+      <div
+        @click="toggleModal('terms')"
+        class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
+      >
+        <p class="text-16 font-400 text-neutral-200">
+          {{ getTranslation("Termsofservice") }}
+        </p>
+        <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
+      </div>
     </div>
     <div class="user-language flex-col gap-6">
       <p class="text-14 pl-12">{{ getTranslation("Language") }}</p>

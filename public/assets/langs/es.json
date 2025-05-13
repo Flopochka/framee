@@ -23,7 +23,7 @@
   "connectWallet": "Conectar billetera",
   "theBestChoiceforPurchasingTelegramStarsandPremium": "La mejor opción para comprar Estrellas de Telegram y Premium.",
   "paywithTONUSDTorcardpayments": "Paga con TON, USDT o pagos con tarjeta.",
-  "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired": "Disfruta de precios más bajos que el bot oficial de Telegram sin necesidad de verificación KYC.",
+  "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired": "Disfruta de precios más bajos que el bot oficial de Telegram con pagos seguros usando TON, USDT o tarjeta.",
   "aboutus": "Sobre nosotros",
   "boughttoday": "Comprado hoy",
   "boughtyesterday": "Comprado ayer",
@@ -67,7 +67,7 @@
   "totalUsers": "Total de usuarios",
   "totalEarnings": "Ganancias totales",
   "Withdraw": "Retirar",
-  "Invitefriendsandearn5fromtheirpurchases": "Invita a amigos y gana un 10% de sus compras!",
+  "Invitefriendsandearn5fromtheirpurchases": "¡Invita a tus amigos a unirse a FRAME!",
   "Inviteafriend": "Invitar a un amigo",
   "History": "Historial",
   "Support": "Soporte",
@@ -129,5 +129,6 @@
   "For": "Por",
   "TONhavebeensent": "Se han enviado TON",
   "Thereplenishmentwillarrivetoyourwalletwithinacoupleofminutes": "La recarga llegará a tu billetera en un par de minutos",
-  "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself": "FRAME — tu mejor opción para comprar estrellas. ¡Los precios son más bajos que en el bot oficial de Telegram y no hay verificación KYC! Entra y compruébalo tú mismo 👇"
+  "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself": "¡FRAME es tu mejor opción para comprar estrellas! Los precios son más bajos que en el bot oficial de Telegram, y hay pagos seguros con TON, USDT o tarjeta. Ven y compruébalo tú mismo 👇",
+  "termstext":"Términos de Servicio de FRAME\n\nAl utilizar la interfaz de FRAME, afirmas y aceptas lo siguiente:\n\nDescripción del Servicio: FRAME es un servicio que permite a los usuarios comprar Telegram Stars y Premium a precios competitivos. FRAME no ofrece ganancias, inversiones ni rendimientos financieros. Todas las transacciones son únicamente para la compra de servicios digitales proporcionados por Telegram.\n\nJurisdicción: Confirmas que tu uso de FRAME cumple con todas las leyes y regulaciones locales aplicables a la compra de servicios digitales como Telegram Stars y Premium en tu región. FRAME no está diseñado para su uso en jurisdicciones donde dichas transacciones estén prohibidas o sean ilegales.\n\nActividad No Sancionada: No posees, controlas ni has recibido activos de ninguna dirección de blockchain incluida en una lista de sanciones o su equivalente mantenida por jurisdicciones principales.\n\nTransacciones No Ilegales: No tienes intención de realizar transacciones con territorios restringidos o personas incluidas en listas de sanciones.\n\nPrograma de Referidos: FRAME puede ofrecer un programa de referidos mediante el cual los usuarios pueden invitar a amigos a usar FRAME y recibir un 10% de descuento en su próxima compra de Telegram Stars o Premium como agradecimiento. Esto no es una recompensa en efectivo ni un incentivo financiero.\n\nFines Informativos: El contenido proporcionado por FRAME es únicamente informativo y no constituye asesoramiento legal, fiscal, de inversión, financiero u otro tipo de asesoramiento. No tomes decisiones basándote únicamente en este contenido u otra información que proporcionemos. Consulta con un profesional independiente y calificado antes de tomar cualquier decisión.\n\nActualizaciones de Red: Algunas operaciones, como los retiros de TON en la blockchain de TON, pueden estar temporalmente deshabilitadas debido a actualizaciones de la red. Esto aplica solo al procesamiento de pagos y no está relacionado con ganancias de los usuarios.\n\nConocimiento Técnico: Posees el conocimiento técnico necesario para comprender y evaluar los riesgos de usar la aplicación FRAME.\n\nCumplimiento: Tu uso de FRAME cumple con todas las leyes, reglas y regulaciones relevantes, no viola ni facilita la violación de ninguna ley aplicable, ni contribuye ni facilita ninguna actividad ilegal. Los pagos pueden requerir verificación KYC según las leyes locales.\n\nSeguridad: Reconoces que la aplicación FRAME puede contener vulnerabilidades o errores en sus contratos inteligentes o experimentar fallos del sistema. Estas circunstancias pueden generar riesgos de seguridad significativos. Al usar FRAME, aceptas estos riesgos potenciales y utilizas la aplicación bajo tu propia responsabilidad.\n\nResponsabilidad: Entiendes y aceptas que el equipo de FRAME no es responsable de ningún riesgo o pérdida potencial que pueda surgir del uso de la aplicación."
 }

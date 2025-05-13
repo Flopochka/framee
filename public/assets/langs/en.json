@@ -23,7 +23,7 @@
   "connectWallet": "Connect Wallet",
   "theBestChoiceforPurchasingTelegramStarsandPremium": "The best choice for purchasing Telegram Stars and Premium.",
   "paywithTONUSDTorcardpayments": "Pay with TON, USDT, or card payments.",
-  "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired": "Enjoy lower prices than the official Telegram bot with no KYC verification required.",
+  "enjoylowerpricesthantheofficialTelegrambotwithnoKYCverificationrequired": "Enjoy lower prices than the official Telegram bot with secure payments with TON, USDT, or card.",
   "aboutus": "About us",
   "boughttoday": "Bought today",
   "boughtyesterday": "Bought yesterday",
@@ -67,7 +67,7 @@
   "totalUsers": "Total Users",
   "totalEarnings": "Total Earnings",
   "Withdraw": "Withdraw",
-  "Invitefriendsandearn5fromtheirpurchases": "Invite friends and earn 10% from their purchases!",
+  "Invitefriendsandearn5fromtheirpurchases": "Invite friends to join FRAME!",
   "Inviteafriend": "Invite a friend",
   "History": "History",
   "Support": "Support",
@@ -130,5 +130,7 @@
   "Errorpleasetryagainlater": "Error, please try again later",
   "TONhavebeensent": "TON have been sent",
   "Thereplenishmentwillarrivetoyourwalletwithinacoupleofminutes": "The replenishment will arrive to your wallet within a couple of minutes",
-  "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself": "FRAME — your best choice for buying stars! Prices are lower than in the official Telegram bot, and there's no KYC verification. Come and see for yourself 👇"
+  "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself": "FRAME — your best choice for buying stars! Prices are lower than in the official Telegram bot, and there's secure payments with TON, USDT, or card. Come and see for yourself 👇",
+  "Termsofservice":"Terms of service",
+  "termstext":"FRAME Terms of Service\n\nBy using the FRAME interface, you affirm and agree to the following:\n\nService Description: FRAME is a service that allows users to purchase Telegram Stars and Premium at competitive rates. FRAME does not offer earnings, investments, or financial returns. All transactions are for the purchase of digital services provided by Telegram.\n\nJurisdiction: You confirm that your use of FRAME complies with all local laws and regulations applicable to the purchase of digital services like Telegram Stars and Premium in your region. FRAME is not intended for use in jurisdictions where such transactions are prohibited or illegal.\n\nNon-Sanctioned Activity: You do not directly or indirectly own, control, or have received any assets from any blockchain address listed on a sanctions list or equivalent maintained by major jurisdictions.\n\nNon-Illegal Transactions: You do not intend to transact with any restricted territories or persons on sanctions lists.\n\nReferral Program: FRAME may offer a referral program where users can invite friends to use FRAME and receive a 10% discount on their next purchase of Telegram Stars or Premium as a thank-you. This is not a cash reward or financial incentive.\n\nInformational Purposes: The content provided by FRAME is purely informational and does not constitute legal, tax, investment, financial, or other advice. Do not base decisions solely on this content. Seek independent professional advice from a qualified licensed individual before making any decisions.\n\nNetwork Upgrades: Certain operations, such as TON withdrawals on the TON blockchain, may be temporarily disabled due to network upgrades. This applies only to payment processing and does not involve user earnings.\n\nTechnical Knowledge: You have the technical knowledge to understand and evaluate the risks of using the FRAME application.\n\nCompliance: Your use of FRAME adheres to all relevant laws, rules, and regulations and does not violate or facilitate the violation of any applicable laws or regulations, nor contribute to or facilitate any illegal activity. Payments may require KYC verification per local laws.\n\nSecurity: You acknowledge that the FRAME application may contain vulnerabilities or bugs within its smart contracts or experience system failures. These circumstances may lead to security risks. By using FRAME, you accept these potential risks and proceed at your own discretion.\n\nLiability: You understand and accept that the FRAME team is not responsible for any risks or potential losses that may arise from using the application."
 }
