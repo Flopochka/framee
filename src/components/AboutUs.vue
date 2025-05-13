@@ -83,16 +83,15 @@ onMounted(async () => {
   fetchWalletInfo();
 
   const lottie = await import("lottie-web");
-
-  if (lottieContainer.value) {
-    lottie.default.loadAnimation({
-      container: lottieContainer.value,
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
-    });
-  }
+  const container = lottieContainer.value;
+  console.log(lottieContainer)
+  lottie.default.loadAnimation({
+    container,
+    renderer: "svg",
+    loop: true,
+    autoplay: true,
+    path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
+  });
 });
 </script>
 
@@ -130,7 +129,7 @@ onMounted(async () => {
       <div
         class="aboutus-cover-card rounded-18 flex-col items-center justify-center gap-32"
       >
-        <div id="lottie" class="aboutus-cover-card-img"></div>
+        <div ref="lottieContainer" class="aboutus-cover-card-img"></div>
         <p class="text-white text-24 font-600 letter-spacing-05 lh-100 tac twb">
           {{ getTranslation("paywithTONUSDTorcardpayments") }}
         </p>
