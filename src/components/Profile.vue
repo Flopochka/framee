@@ -65,7 +65,7 @@ async function copyToClipboard(text) {
 }
 
 function shareContent() {
-  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}`;
+  const shareUrl = `https://t.me/share/url?url=&text=${encodeURIComponent(shareData.text+'\n'+shareData.url)}`;
   if (window.Telegram?.WebApp?.openTelegramLink) {
     window.Telegram.WebApp.openTelegramLink(shareUrl);
   } else {
