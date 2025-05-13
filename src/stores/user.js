@@ -8,9 +8,9 @@ export const useUserStore = defineStore("user", () => {
   const userPhoto = ref(null);
   const userBalance = ref(0);
   const userId = ref(WebApp.initDataUnsafe?.user?.id);
-  // if (import.meta.env.DEV) {
-  //   userId.value = 227363776;
-  // }
+  if (import.meta.env.DEV) {
+    userId.value = 227363776;
+  }
 
   const isLoading = ref(false); // Для отслеживания загрузки
 
