@@ -83,7 +83,7 @@ export async function handler(event) {
   console.log("Parsed body:", { initData, target, payload });
 
   // Проверка initData
-  if (import.meta.env.PROD) {
+  if (process.env.NODE_ENV === 'production') {
     if (!initData || !verifyTelegramInitData(initData)) {
       return {
         statusCode: 403,

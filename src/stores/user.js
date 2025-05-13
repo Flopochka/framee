@@ -7,11 +7,9 @@ export const useUserStore = defineStore("user", () => {
   const userLogin = ref(null);
   const userPhoto = ref(null);
   const userBalance = ref(0);
-  if (import.meta.env.PROD) {
-    const userId = ref(WebApp.initDataUnsafe?.user?.id);
-  }
+  const userId = ref(WebApp.initDataUnsafe?.user?.id);
   if (import.meta.env.DEV) {
-    const userId = ref(227363776);
+    userId.value = 227363776;
   }
 
   const isLoading = ref(false); // Для отслеживания загрузки
