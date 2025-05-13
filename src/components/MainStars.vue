@@ -8,7 +8,7 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useHistoryStore } from "../stores/history";
 import { usePaymentStore } from "../stores/payment";
-import { ref, onMounted, watch, nextTick } from "vue";
+import { ref, onMounted, watch, nextTick, computed } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
 
@@ -219,7 +219,10 @@ const createorder = async () => {
     try {
       toggleModal("filler");
       sendToBackend("/create_order", payload).then((result) => {
-        if(result == null){toggleModal("error"); return}
+        if (result == null) {
+          toggleModal("error");
+          return;
+        }
         const data = result.data;
         setPaymentLink(data.payment_link || data.redirectLink);
         const orderId = data.order_id;
@@ -327,6 +330,31 @@ const buyformyself = async () => {
   targetUserName.value = getUser();
 };
 
+// Вычисляемая длина для имени получателя с округлением
+const formattedRecipientName = computed(() => {
+  // Получаем ширину инпута и текста
+  const inputWidth =
+    getTextWidth(targetUserName.value, "16px");
+  const recipientNameWidth = getTextWidth(recipientName.value, "16px");
+
+  // Если ширина инпута + имя больше доступной ширины, обрезаем имя
+  const availableWidth = document.querySelector(".select-top-item-input-text")?.offsetWidth - 84; // Примерное пространство для имени
+  console.log(inputWidth, recipientNameWidth, availableWidth)
+  if (recipientNameWidth + inputWidth > availableWidth) {
+    return `${recipientName.value.slice(0, 8)}...`; // Обрезаем имя с многоточием
+  }
+  return recipientName.value;
+});
+
+// Функция для вычисления ширины текста
+const getTextWidth = (text, fontSize) => {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  context.font = `${fontSize} Arial`;
+  return context.measureText(text).width;
+};
+
+// Логика для отслеживания ввода имени пользователя
 watch(targetUserName, (newValue, oldValue) => {
   if (newValue !== oldValue) {
     targetUserNameChanged.value = Date.now(); // Записываем время изменения
@@ -421,7 +449,7 @@ onMounted(() => {
           class="input-recipient flex-row gap-16 items-center text-neutral-700"
           v-if="recipient"
         >
-          <p>{{ recipientName }}</p>
+          <p>{{ formattedRecipientName }}</p>
           <img
             class="img-32 rounded-50p"
             :src="'data:image/png;base64,' + recipientPhoto"
