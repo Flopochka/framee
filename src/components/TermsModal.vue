@@ -1,7 +1,7 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
 
-const { getCurrentLanguage } = useLanguageStore();
+const { getTranslation } = useLanguageStore();
 </script>
 
 <template>
