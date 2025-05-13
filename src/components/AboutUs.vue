@@ -32,6 +32,8 @@ const cards = ref([
   },
 ]);
 const disconWarn = ref(false);
+const lottieContainer = ref(null);
+
 const toggleWarn = () => {
   disconWarn.value = !disconWarn.value;
   const xze = setTimeout(() => {
@@ -76,21 +78,21 @@ const fetchTotalInfo = async () => {
     .catch(() => {});
 };
 
-onMounted(() => {
+onMounted(async () => {
   fetchTotalInfo();
   fetchWalletInfo();
-  import("lottie-web").then((lottie) => {
-    const container = document.getElementById("lottie");
-    if (!container) return;
 
+  const lottie = await import("lottie-web");
+
+  if (lottieContainer.value) {
     lottie.default.loadAnimation({
-      container,
+      container: lottieContainer.value,
       renderer: "svg",
       loop: true,
       autoplay: true,
       path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
     });
-  });
+  }
 });
 </script>
 

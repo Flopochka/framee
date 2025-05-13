@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onUnmounted } from "vue";
 import { useModalStore } from "../stores/modal";
 
 const { toggleModal } = useModalStore();
@@ -11,7 +11,8 @@ const props = defineProps({
   },
 });
 
-// Modal height management
+// Modal refs & state
+const modalBody = ref(null);
 const modalHeight = ref("auto");
 const isDragging = ref(false);
 const startY = ref(0);
@@ -19,21 +20,22 @@ const currentHeight = ref(0);
 const isFullScreen = ref(false);
 const defaultHeight = ref(0);
 
-// Convert vh to pixels
+// Convert vh to px
 const vhToPx = (vh) => (vh * window.innerHeight) / 100;
 const maxHeight = vhToPx(80);
 const minHeight = vhToPx(0);
 
-// Start dragging
+// Drag start
 const startDragging = async (event) => {
   isDragging.value = true;
   startY.value = event.clientY || event.touches[0].clientY;
 
-  const modalBody = document.querySelector(`#modal-body-${props.modalId}`);
   await nextTick();
+  const el = modalBody.value;
+  if (!el) return;
 
   if (modalHeight.value === "auto") {
-    const computedHeight = modalBody.offsetHeight;
+    const computedHeight = el.offsetHeight;
     defaultHeight.value = computedHeight;
     currentHeight.value = computedHeight;
     modalHeight.value = computedHeight;
@@ -41,16 +43,13 @@ const startDragging = async (event) => {
     currentHeight.value = modalHeight.value;
   }
 
-  modalBody.style.transition = "none";
-  modalBody.style.maxHeight = "none";
+  el.style.transition = "none";
+  el.style.maxHeight = "none";
 
-  document.addEventListener("mousemove", onDrag);
-  document.addEventListener("touchmove", onDrag);
-  document.addEventListener("mouseup", stopDragging);
-  document.addEventListener("touchend", stopDragging);
+  attachListeners();
 };
 
-// Dragging
+// Drag move
 const onDrag = (event) => {
   if (!isDragging.value) return;
 
@@ -65,13 +64,15 @@ const onDrag = (event) => {
   currentHeight.value = newHeight;
 };
 
-// Stop dragging
+// Drag stop
 const stopDragging = () => {
   if (!isDragging.value) return;
   isDragging.value = false;
 
-  const modalBody = document.querySelector(`#modal-body-${props.modalId}`);
-  modalBody.style.transition = "height 0.3s ease";
+  const el = modalBody.value;
+  if (!el) return;
+
+  el.style.transition = "height 0.3s ease";
 
   if (isFullScreen.value) {
     const closeThreshold =
@@ -109,11 +110,7 @@ const stopDragging = () => {
   }
 
   currentHeight.value = modalHeight.value;
-
-  document.removeEventListener("mousemove", onDrag);
-  document.removeEventListener("touchmove", onDrag);
-  document.removeEventListener("mouseup", stopDragging);
-  document.removeEventListener("touchend", stopDragging);
+  detachListeners();
 };
 
 // Reset height
@@ -123,12 +120,31 @@ const resetHeight = () => {
   defaultHeight.value = 0;
   isFullScreen.value = false;
 
-  const modalBody = document.querySelector(`#modal-body-${props.modalId}`);
-  if (modalBody) {
-    modalBody.style.transition = "height 0.3s ease";
-    modalBody.style.maxHeight = null;
+  const el = modalBody.value;
+  if (el) {
+    el.style.transition = "height 0.3s ease";
+    el.style.maxHeight = null;
   }
 };
+
+// Handle listeners
+const attachListeners = () => {
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("touchmove", onDrag);
+  document.addEventListener("mouseup", stopDragging);
+  document.addEventListener("touchend", stopDragging);
+};
+
+const detachListeners = () => {
+  document.removeEventListener("mousemove", onDrag);
+  document.removeEventListener("touchmove", onDrag);
+  document.removeEventListener("mouseup", stopDragging);
+  document.removeEventListener("touchend", stopDragging);
+};
+
+onUnmounted(() => {
+  detachListeners();
+});
 </script>
 
 <template>
@@ -155,9 +171,10 @@ const resetHeight = () => {
       </div>
     </span>
   </div>
+
   <div
     @click.stop
-    :id="`modal-body-${modalId}`"
+    ref="modalBody"
     class="madal-screen-body madal-screen-body-high"
     :style="{
       height:
@@ -167,5 +184,3 @@ const resetHeight = () => {
     <slot />
   </div>
 </template>
-
-<style scoped></style>
