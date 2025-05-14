@@ -163,7 +163,7 @@ onMounted(() => {
       <img
         v-if="withdrawAmount"
         @click="clearStars()"
-        class="input-clear img-32"
+        class="input-clear img-32 cupo"
         style="top: 36px"
         src="../assets/img/CrossRed.svg"
         alt=""

@@ -112,7 +112,7 @@ const withdraw = async () => {
       <img
         v-if="withdrawTonAmmount"
         @click="clearTON()"
-        class="input-clear img-32"
+        class="input-clear img-32 cupo"
         style="top: 36px"
         src="../assets/img/CrossRed.svg"
         alt=""
