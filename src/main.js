@@ -5,20 +5,23 @@ import App from "./App.vue";
 import router from "./router";
 import WebApp from "@twa-dev/sdk";
 
-console.log("[App Init] Запуск приложения…");
-WebApp.ready();
-console.log("[WebApp] WebApp.ready() вызван");
+async function initApp() {
+  console.log("[App Init] Запуск приложения…");
+  WebApp.ready();
+  console.log("[WebApp] WebApp.ready() вызван");
 
-if (import.meta.env.PROD) {
-  console.log("[Env] Режим: PROD");
+  if (import.meta.env.PROD) {
+    console.log("[Env] Режим: PROD");
 
-  const initDataRaw = window.Telegram?.WebApp?.initData;
-  console.log("[InitData] Сырые данные:", initDataRaw);
+    const initDataRaw = window.Telegram?.WebApp?.initData;
+    console.log("[InitData] Сырые данные:", initDataRaw);
 
-  if (!initDataRaw) {
-    console.warn("[InitData] initData отсутствует! Перенаправляем в бота…");
-    window.location.href = "https://t.me/Framestars_bot";
-  } else {
+    if (!initDataRaw) {
+      console.warn("[InitData] initData отсутствует! Перенаправляем в бота…");
+      window.location.href = "https://t.me/Framestars_bot";
+      return;
+    }
+
     const alreadyRedirected = sessionStorage.getItem("start_param_processed");
     console.log("[StartParam] Уже обрабатывался?", alreadyRedirected);
 
@@ -41,27 +44,23 @@ if (import.meta.env.PROD) {
             sessionStorage.setItem("start_param_processed", "1");
             console.log(`[Router] Обнаружен путь: ${parsed.path} — перенаправление до монтирования`);
             window.location.replace(parsed.path);
-            return; // Прерываем выполнение, чтобы не монтировать приложение
-          } else {
-            console.log("[Router] path отсутствует в start_param. Продолжаем без редиректа.");
+            return;
           }
         } catch (err) {
           console.error("[StartParam] Ошибка при разборе start_param:", err);
         }
-      } else {
-        console.log("[StartParam] start_param не найден. Продолжаем обычную загрузку.");
       }
-    } else {
-      console.log("[StartParam] Параметры уже обработаны. Пропускаем редирект.");
     }
+  } else {
+    console.log("[Env] Режим: DEV. Пропускаем обработку initData.");
   }
-} else {
-  console.log("[Env] Режим: DEV. Пропускаем обработку initData.");
+
+  console.log("[Vue] Монтирование Vue-приложения…");
+  const app = createApp(App);
+  app.use(createPinia());
+  app.use(router);
+  app.mount("#app");
+  console.log("[Vue] Приложение смонтировано.");
 }
 
-console.log("[Vue] Монтирование Vue-приложения…");
-const app = createApp(App);
-app.use(createPinia());
-app.use(router);
-app.mount("#app");
-console.log("[Vue] Приложение смонтировано.");
+initApp();

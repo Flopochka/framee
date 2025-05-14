@@ -133,7 +133,7 @@ const activeModal = computed(() => getActiveModal());
     >
       <template #title>
         <p v-if="modal.hasBalance" class="flex-row gap-14 items-center">
-          <p style="text-wrap-mode: nowrap;">{{ getTranslation("Yourbalance") }}:</p>
+          <span style="text-wrap-mode: nowrap;">{{ getTranslation("Yourbalance") }}:</span>
           <span class="lh-115 flex-row items-center">
             {{ getUserBalance() }}
             <img src="../assets/img/TONMinimal.svg" alt="TON" class="img-20 lazy-img" />
