@@ -584,6 +584,7 @@ onMounted(() => {
         </template>
       </div>
     </div>
+    <p class="text-16 tac">{{ getTranslation("By buying Telegram Stars or Telegram Premium, you affirm compliance with and agree to our Terms, and confirm that you are not U.S. resident") }}</p>
     <div
       @click="createorder()"
       class="bottom-button btn bg-gradient-blue flex-col cupo usen"
