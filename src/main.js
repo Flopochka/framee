@@ -10,6 +10,8 @@ async function initApp() {
   WebApp.ready();
   console.log("[WebApp] WebApp.ready() вызван");
 
+  let redirectPath = null;
+
   if (import.meta.env.PROD) {
     console.log("[Env] Режим: PROD");
 
@@ -42,19 +44,7 @@ async function initApp() {
 
           if (parsed.path) {
             sessionStorage.setItem("start_param_processed", "1");
-            console.log(
-              `[Router] Обнаружен путь: ${parsed.path} — перенаправление до монтирования`
-            );
-            if (parsed.path && window.location.pathname !== parsed.path) {
-              sessionStorage.setItem("start_param_processed", "1");
-              console.log(`[Router] Переход на: ${parsed.path}`);
-              window.location.replace(parsed.path);
-              return;
-            } else {
-              console.log("[Router] Путь уже текущий — редирект не требуется");
-            }
-
-            return;
+            redirectPath = parsed.path;
           }
         } catch (err) {
           console.error("[StartParam] Ошибка при разборе start_param:", err);
@@ -71,6 +61,12 @@ async function initApp() {
   app.use(router);
   app.mount("#app");
   console.log("[Vue] Приложение смонтировано.");
+
+  // Перенаправление через роутер
+  if (redirectPath && router.currentRoute.value.path !== redirectPath) {
+    console.log(`[Router] Переход на: ${redirectPath}`);
+    router.push(redirectPath);
+  }
 }
 
 initApp();
