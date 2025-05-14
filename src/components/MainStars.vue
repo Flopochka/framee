@@ -333,13 +333,13 @@ const buyformyself = async () => {
 // Вычисляемая длина для имени получателя с округлением
 const formattedRecipientName = computed(() => {
   // Получаем ширину инпута и текста
-  const inputWidth =
-    getTextWidth(targetUserName.value, "16px");
+  const inputWidth = getTextWidth(targetUserName.value, "16px");
   const recipientNameWidth = getTextWidth(recipientName.value, "16px");
 
   // Если ширина инпута + имя больше доступной ширины, обрезаем имя
-  const availableWidth = document.querySelector(".select-top-item-input-text")?.offsetWidth - 84; // Примерное пространство для имени
-  console.log(inputWidth, recipientNameWidth, availableWidth)
+  const availableWidth =
+    document.querySelector(".select-top-item-input-text")?.offsetWidth - 84; // Примерное пространство для имени
+  console.log(inputWidth, recipientNameWidth, availableWidth);
   if (recipientNameWidth + inputWidth > availableWidth) {
     return `${recipientName.value.slice(0, 8)}...`; // Обрезаем имя с многоточием
   }
@@ -550,6 +550,7 @@ onMounted(() => {
           :key="index"
         >
           <div
+            v-if="index === 0"
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
