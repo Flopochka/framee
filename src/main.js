@@ -19,31 +19,40 @@ if (import.meta.env.PROD) {
     console.warn("[InitData] initData отсутствует! Перенаправляем в бота…");
     window.location.href = "https://t.me/Framestars_bot";
   } else {
-    const unsafe = window.Telegram.WebApp.initDataUnsafe;
-    console.log("[InitDataUnsafe]", unsafe);
+    const alreadyRedirected = sessionStorage.getItem("start_param_processed");
+    console.log("[StartParam] Уже обрабатывался?", alreadyRedirected);
 
-    const rawBase64 = unsafe?.start_param;
-    console.log("[StartParam] Получен параметр:", rawBase64);
+    if (!alreadyRedirected) {
+      const unsafe = window.Telegram.WebApp.initDataUnsafe;
+      console.log("[InitDataUnsafe]", unsafe);
 
-    if (rawBase64) {
-      try {
-        const jsonStr = atob(rawBase64);
-        console.log("[StartParam] Декодированная строка JSON:", jsonStr);
+      const rawBase64 = unsafe?.start_param;
+      console.log("[StartParam] Получен параметр:", rawBase64);
 
-        const parsed = JSON.parse(jsonStr);
-        console.log("[StartParam] Распарсенные данные:", parsed);
+      if (rawBase64) {
+        try {
+          const jsonStr = atob(rawBase64);
+          console.log("[StartParam] Декодированная строка JSON:", jsonStr);
 
-        if (parsed.path) {
-          console.log(`[Router] Обнаружен путь: ${parsed.path} — перенаправление до монтирования`);
-          window.location.replace(parsed.path);
-        } else {
-          console.log("[Router] path отсутствует в start_param. Продолжаем без редиректа.");
+          const parsed = JSON.parse(jsonStr);
+          console.log("[StartParam] Распарсенные данные:", parsed);
+
+          if (parsed.path) {
+            sessionStorage.setItem("start_param_processed", "1");
+            console.log(`[Router] Обнаружен путь: ${parsed.path} — перенаправление до монтирования`);
+            window.location.replace(parsed.path);
+            return; // Прерываем выполнение, чтобы не монтировать приложение
+          } else {
+            console.log("[Router] path отсутствует в start_param. Продолжаем без редиректа.");
+          }
+        } catch (err) {
+          console.error("[StartParam] Ошибка при разборе start_param:", err);
         }
-      } catch (err) {
-        console.error("[StartParam] Ошибка при разборе start_param:", err);
+      } else {
+        console.log("[StartParam] start_param не найден. Продолжаем обычную загрузку.");
       }
     } else {
-      console.log("[StartParam] start_param не найден. Продолжаем обычную загрузку.");
+      console.log("[StartParam] Параметры уже обработаны. Пропускаем редирект.");
     }
   }
 } else {
