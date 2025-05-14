@@ -7,8 +7,6 @@ import WebApp from "@twa-dev/sdk";
 
 async function initApp() {
   console.log("[App Init] Запуск приложения…");
-  WebApp.ready();
-  console.log("[WebApp] WebApp.ready() вызван");
 
   let redirectPath = null;
 
@@ -54,11 +52,13 @@ async function initApp() {
   } else {
     console.log("[Env] Режим: DEV. Пропускаем обработку initData.");
   }
-
+  console.log("[WebApp] WebApp.ready() вызван");
+  WebApp.ready();
   console.log("[Vue] Монтирование Vue-приложения…");
   const app = createApp(App);
   app.use(createPinia());
   app.use(router);
+  await router.isReady();
   app.mount("#app");
   console.log("[Vue] Приложение смонтировано.");
 
