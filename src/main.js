@@ -42,8 +42,18 @@ async function initApp() {
 
           if (parsed.path) {
             sessionStorage.setItem("start_param_processed", "1");
-            console.log(`[Router] Обнаружен путь: ${parsed.path} — перенаправление до монтирования`);
-            window.location.replace(parsed.path);
+            console.log(
+              `[Router] Обнаружен путь: ${parsed.path} — перенаправление до монтирования`
+            );
+            if (parsed.path && window.location.pathname !== parsed.path) {
+              sessionStorage.setItem("start_param_processed", "1");
+              console.log(`[Router] Переход на: ${parsed.path}`);
+              window.location.replace(parsed.path);
+              return;
+            } else {
+              console.log("[Router] Путь уже текущий — редирект не требуется");
+            }
+
             return;
           }
         } catch (err) {
