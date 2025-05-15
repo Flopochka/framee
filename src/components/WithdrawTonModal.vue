@@ -2,7 +2,7 @@
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useHistoryStore } from "../stores/history";
 import { sendToBackend } from "../modules/fetch";
 

@@ -128,7 +128,7 @@ const activeModal = computed(() => getActiveModal());
     @click="modal.type === 'modal' ? toggleModal(null) : null"
   >
     <BaseModal
-      v-if="modal.type === 'modal' && activeModal === modal.id"
+      v-if="modal.type === 'modal'"
       :modal-id="modal.id"
     >
       <template #title>
@@ -143,7 +143,7 @@ const activeModal = computed(() => getActiveModal());
       </template>
       <component :is="modal.component" />
     </BaseModal>
-    <component v-else-if="modal.type === 'popup' && activeModal === modal.id" :is="modal.component" />
+    <component v-else-if="modal.type === 'popup'" :is="modal.component" />
   </div>
 </template>
 
