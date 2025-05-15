@@ -550,7 +550,6 @@ onMounted(() => {
           :key="index"
         >
           <div
-            
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
