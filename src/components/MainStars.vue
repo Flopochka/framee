@@ -550,7 +550,7 @@ onMounted(() => {
           :key="index"
         >
           <div
-            v-if="index === 0"
+            
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
@@ -564,7 +564,7 @@ onMounted(() => {
             </p>
             <img :src="paymentsvg[index]" alt="" class="img-28" />
           </div>
-          <!-- <div
+          <div
             v-if="typeof payment === 'object' && payment.submethods"
             :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
             class="select-botoom-subcards grid-row gap-8 usen"
@@ -580,7 +580,7 @@ onMounted(() => {
             >
               <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
             </div>
-          </div> -->
+          </div>
         </template>
       </div>
     </div>
