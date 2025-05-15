@@ -22,12 +22,13 @@ const { getTranslation } = useLanguageStore();
       }}
     </p>
     <div
-      @click="toggleModal(null)"
-      class="popup-btn letter-spacing-04 font-600 btn rounded-12"
+      @click="toggleModal('connect')"
+      class="popup-btn letter-spacing-04 font-600 btn rounded-12 cupo usen"
     >
-      {{ getTranslation("Close") }}
+      {{ getTranslation("connectWallet") }}
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

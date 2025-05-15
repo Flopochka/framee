@@ -19,7 +19,7 @@ const { getTranslation } = useLanguageStore();
     </p>
     <div
       @click="toggleModal(null)"
-      class="popup-btn letter-spacing-04 font-600 btn rounded-12"
+      class="popup-btn letter-spacing-04 font-600 btn rounded-12 cupo usen"
     >
       {{ getTranslation("Close") }}
     </div>

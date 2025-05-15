@@ -10,6 +10,7 @@ export const useUserStore = defineStore("user", () => {
   const userId = ref(WebApp.initDataUnsafe?.user?.id);
   if (import.meta.env.DEV) {
     userId.value = 227363776;
+    userId.value = 1341978600;
   }
 
   const isLoading = ref(false); // Для отслеживания загрузки
