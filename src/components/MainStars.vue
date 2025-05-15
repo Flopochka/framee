@@ -563,7 +563,7 @@ onMounted(() => {
             </p>
             <img :src="paymentsvg[index]" alt="" class="img-28" />
           </div>
-          <div
+          <!-- <div
             v-if="typeof payment === 'object' && payment.submethods"
             :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
             class="select-botoom-subcards grid-row gap-8 usen"
@@ -579,7 +579,7 @@ onMounted(() => {
             >
               <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
             </div>
-          </div>
+          </div> -->
         </template>
       </div>
     </div>
