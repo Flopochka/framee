@@ -550,6 +550,7 @@ onMounted(() => {
           :key="index"
         >
           <div
+            v-if="index == 0"
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
@@ -563,8 +564,8 @@ onMounted(() => {
             </p>
             <img :src="paymentsvg[index]" alt="" class="img-28" />
           </div>
-          <!-- <div
-            v-if="typeof payment === 'object' && payment.submethods"
+          <div
+            v-if="typeof payment === 'object' && payment.submethods && false"
             :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
             class="select-botoom-subcards grid-row gap-8 usen"
           >
@@ -579,11 +580,21 @@ onMounted(() => {
             >
               <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
             </div>
-          </div> -->
+          </div>
         </template>
       </div>
     </div>
-    <p class="text-16 tac">{{ getTranslation("By buying Telegram Stars or Telegram Premium, you affirm compliance with and agree to") }} <span class="text-16 text-blue-600 cupo" @click="toggleModal('terms')">{{ getTranslation("our Terms") }}</span> {{ getTranslation(", and confirm that you are not U.S. resident") }}</p>
+    <p class="text-16 tac">
+      {{
+        getTranslation(
+          "By buying Telegram Stars or Telegram Premium, you affirm compliance with and agree to"
+        )
+      }}
+      <span class="text-16 text-blue-600 cupo" @click="toggleModal('terms')">{{
+        getTranslation("our Terms")
+      }}</span>
+      {{ getTranslation(", and confirm that you are not U.S. resident") }}
+    </p>
     <div
       @click="createorder()"
       class="bottom-button btn bg-gradient-blue flex-col cupo usen"
