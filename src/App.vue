@@ -49,8 +49,8 @@ onMounted(() => {
   // Инициализация аналитики (раскомментируй и укажи токен)
   telegramAnalytics.init({
     token:
-      "eyJhcHBfbmFtZSI6ImZyYW1lZGF0YSIsImFwcF91cmwiOiJodHRwczovL3QubWUvRnJhbWVzdGFyc19ib3QiLCJhcHBfZG9tYWluIjoiaHR0cHM6Ly9mcmFtZS1zdGFycy5jb20ifQ==!PFVXgcAK8T2AqIn0NfxyTwY3ualDHJeY/9y7clsmzto=",
-    appName: "framedata",
+      "eyJhcHBfbmFtZSI6IkZSQU1FIiwiYXBwX3VybCI6Imh0dHBzOi8vdC5tZS9GcmFtZXN0YXJzX2JvdCIsImFwcF9kb21haW4iOiJodHRwczovL2ZyYW1lLXN0YXJzLmNvbSJ9!I+r7Qr8f0c2CpNQMdsvYo4B7ukow0dpw3pFoavLDtB0=",
+    appName: "FRAME",
   });
 
   // Инициализация lazy-loading
