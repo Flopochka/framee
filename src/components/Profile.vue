@@ -13,10 +13,10 @@ const income = ref(0);
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
 const shareData = {
-  text: getTranslation("FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself"),
-  url:
-    "https://t.me/Framestars_bot?start=" +
-    WebApp.initDataUnsafe?.user?.id,
+  text: getTranslation(
+    "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself"
+  ),
+  url: "https://t.me/Framestars_bot?start=" + WebApp.initDataUnsafe?.user?.id,
 };
 
 function linkTo(url, options = { tryInstantView: false }) {
@@ -65,7 +65,9 @@ async function copyToClipboard(text) {
 }
 
 function shareContent() {
-  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(' ')}&text=${encodeURIComponent(shareData.text+'\n'+shareData.url)}`;
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
+    " "
+  )}&text=${encodeURIComponent(shareData.text + "\n" + shareData.url)}`;
   if (window.Telegram?.WebApp?.openTelegramLink) {
     window.Telegram.WebApp.openTelegramLink(shareUrl);
   } else {
@@ -76,7 +78,7 @@ function shareContent() {
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
   console.log("Platform:", WebApp.platform);
-  WebApp.ready()
+  WebApp.ready();
   fetchUserInfo();
 });
 </script>
@@ -125,11 +127,7 @@ onMounted(() => {
         </p>
       </div>
       <div
-        @click="
-          copyToClipboard(
-            `${shareData.url}`
-          )
-        "
+        @click="copyToClipboard(`${shareData.url}`)"
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
       >
         <img src="../assets/img/Copy.svg" alt="" class="img-28 lazy-img" />
