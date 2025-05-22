@@ -1,14 +1,28 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import { sendToBackend } from "../modules/fetch";
 import "./style.css";
 import App from "./App.vue";
 import router from "./router";
 import WebApp from "@twa-dev/sdk";
 
+async function convertImageUrlToBase64(url) {
+  const response = await fetch(url);
+  const blob = await response.blob();
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result); // это будет строка в формате base64
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 async function initApp() {
   console.log("[App Init] Запуск приложения…");
 
   let redirectPath = null;
+  let referal = 0;
 
   if (import.meta.env.PROD) {
     console.log("[Env] Режим: PROD");
@@ -44,6 +58,9 @@ async function initApp() {
             sessionStorage.setItem("start_param_processed", "1");
             redirectPath = parsed.path;
           }
+          if (parsed.referal) {
+            referal = parsed.referal;
+          }
         } catch (err) {
           console.error("[StartParam] Ошибка при разборе start_param:", err);
         }
@@ -61,6 +78,26 @@ async function initApp() {
   await router.isReady();
   app.mount("#app");
   console.log("[Vue] Приложение смонтировано.");
+
+  const user = WebApp.initDataUnsafe?.user;
+  let photo_base64 = null;
+  if (user?.photo_url) {
+    try {
+      photo_base64 = await convertImageUrlToBase64(user.photo_url);
+    } catch (error) {
+      console.error("Ошибка при преобразовании изображения в base64:", error);
+    }
+  }
+
+  const payload = {
+    user_id: user?.id,
+    referral: referal,
+    lang: user?.language_code,
+    username: user?.username,
+    photo_base64: photo_base64,
+    name: user?.first_name,
+  };
+  sendToBackend("/update_user_info", payload);
 
   // Перенаправление через роутер
   if (redirectPath && router.currentRoute.value.path !== redirectPath) {
