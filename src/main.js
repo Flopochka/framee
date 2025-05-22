@@ -6,18 +6,6 @@ import App from "./App.vue";
 import router from "./router";
 import WebApp from "@twa-dev/sdk";
 
-async function convertImageUrlToBase64(url) {
-  const response = await fetch(url);
-  const blob = await response.blob();
-
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result); // это будет строка в формате base64
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
-
 async function initApp() {
   console.log("[App Init] Запуск приложения…");
 
@@ -80,21 +68,12 @@ async function initApp() {
   console.log("[Vue] Приложение смонтировано.");
 
   const user = WebApp.initDataUnsafe?.user;
-  let photo_base64 = null;
-  if (user?.photo_url) {
-    try {
-      photo_base64 = await convertImageUrlToBase64(user.photo_url);
-    } catch (error) {
-      console.error("Ошибка при преобразовании изображения в base64:", error);
-    }
-  }
-
   const payload = {
     user_id: user?.id,
     referral: referal,
     lang: user?.language_code,
     username: user?.username,
-    photo_base64: photo_base64,
+    photo_url: user?.photo_url,
     name: user?.first_name,
   };
   sendToBackend("/update_user_info", payload);
