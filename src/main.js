@@ -73,7 +73,7 @@ async function initApp() {
     referral:
       typeof referral === "object"
         ? JSON.stringify(referral)
-        : String(referral ?? ""),
+        : String(referal ?? ""),
     lang: user?.language_code,
     username: user?.username,
     photo_url: user?.photo_url,
