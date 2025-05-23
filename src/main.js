@@ -79,9 +79,17 @@ async function initApp() {
     photo_url: user?.photo_url,
     name: user?.first_name,
   };
+  Telegram.WebApp.requestWriteAccess().then((granted) => {
+    if (granted) {
+      console.log("Доступ к записи разрешён ✅");
+      // продолжай выполнение, например, отправка данных в бот
+    } else {
+      console.log('Пользователь нажал "Отмена" ❌');
+      Telegram.WebApp.close(); // закрываем миниапп
+    }
+  });
 
   sendToBackend("/update_user_info", payload);
-
   // Перенаправление через роутер
   if (redirectPath && router.currentRoute.value.path !== redirectPath) {
     console.log(`[Router] Переход на: ${redirectPath}`);
