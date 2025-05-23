@@ -70,12 +70,16 @@ async function initApp() {
   const user = WebApp.initDataUnsafe?.user;
   const payload = {
     user_id: user?.id,
-    referral: referal,
+    referral:
+      typeof referral === "object"
+        ? JSON.stringify(referral)
+        : String(referral ?? ""),
     lang: user?.language_code,
     username: user?.username,
     photo_url: user?.photo_url,
     name: user?.first_name,
   };
+
   sendToBackend("/update_user_info", payload);
 
   // Перенаправление через роутер
