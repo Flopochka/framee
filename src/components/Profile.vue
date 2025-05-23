@@ -16,7 +16,17 @@ const shareData = {
   text: getTranslation(
     "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself"
   ),
-  url: "https://t.me/Framestars_bot?start=" + WebApp.initDataUnsafe?.user?.id,
+  url:
+    "https://t.me/framestars_bot?startapp=" +
+    btoa(
+      unescape(
+        encodeURIComponent(
+          JSON.stringify({
+            referal: WebApp.initDataUnsafe?.user?.id || useUserStore().getUserId(),
+          })
+        )
+      )
+    ),
 };
 
 function linkTo(url, options = { tryInstantView: false }) {
