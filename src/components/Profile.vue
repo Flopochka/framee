@@ -12,21 +12,23 @@ const income = ref(0);
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
+function toBase64(obj) {
+  const jsonStr = JSON.stringify(obj);
+  const bytes = new TextEncoder().encode(jsonStr); // UTF-8
+  let binary = "";
+  for (let b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary);
+}
+
 const shareData = {
   text: getTranslation(
     "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself"
   ),
   url:
     "https://t.me/framestars_bot?startapp=" +
-    btoa(
-      unescape(
-        encodeURIComponent(
-          JSON.stringify({
-            referal: WebApp.initDataUnsafe?.user?.id || useUserStore().getUserId(),
-          })
-        )
-      )
-    ),
+    toBase64({
+      referal: WebApp.initDataUnsafe?.user?.id || useUserStore().getUserId(),
+    }),
 };
 
 function linkTo(url, options = { tryInstantView: false }) {
