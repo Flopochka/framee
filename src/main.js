@@ -79,7 +79,26 @@ async function initApp() {
     photo_url: user?.photo_url,
     name: user?.first_name,
   };
-  Telegram.WebApp.requestWriteAccess()
+  function requestAccessLoop() {
+  Telegram.WebApp.requestWriteAccess((isGranted) => {
+    if (isGranted) {
+      // Пользователь дал доступ — ничего не делаем
+      return;
+    } else {
+      // Пользователь отклонил — показываем сообщение и пробуем снова
+      Telegram.WebApp.showAlert("Разрешение необходимо, чтобы бот мог отправлять вам сообщения.");
+
+      // Пробуем снова через короткую задержку, чтобы не зациклить мгновенно
+      setTimeout(() => {
+        requestAccessLoop();
+      }, 500); // задержка 500 мс
+    }
+  });
+}
+
+// Вызываем при запуске или по кнопке
+requestAccessLoop();
+
 
   sendToBackend("/update_user_info", payload);
   // Перенаправление через роутер
