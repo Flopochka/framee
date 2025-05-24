@@ -77,7 +77,7 @@ async function copyToClipboard(text) {
 }
 
 function shareContent() {
-  const safeText = `${shareData.text}\n${shareData.url}`;
+  const safeText = `${shareData.text}.\n${shareData.url}`;
   const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
     " "
   )}&text=${encodeURIComponent(safeText)}`;
