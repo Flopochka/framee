@@ -8,6 +8,17 @@ import "./style.css";
 
 console.log("[load-app] загрузка приложения...");
 
+// Проверяем, если на ПК — выходим из полноэкранного режима
+if (window.innerWidth > 1024) {
+  if (document.fullscreenElement) {
+    document.exitFullscreen().then(() => {
+      console.log("[load-app] Выход из полноэкранного режима.");
+    }).catch((error) => {
+      console.error("[load-app] Не удалось выйти из полноэкранного режима:", error);
+    });
+  }
+}
+
 const app = createApp(App);
 app.use(createPinia());
 app.use(router);
