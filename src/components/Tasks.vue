@@ -118,7 +118,7 @@ function onTaskReject(task) {
 onMounted(() => {
   loadTraffyScript()
     .then(() => {
-      if (traffyTasks.value && window.Traffy) {
+      if (traffyTasks.value) {
         window.Traffy.renderTasks(traffyTasks.value, {
           max_tasks: 3,
           onTaskLoad,
