@@ -18,7 +18,7 @@ function isMobileDevice() {
 // Если это не мобильное устройство, выходим из полноэкранного режима
 if (!isMobileDevice()) {
   console.log("[load-app] не мобильное устройство");
-  document
+  WebApp
     .exitFullscreen()
     .then(() => {
       console.log("[load-app] Выход из полноэкранного режима.");
