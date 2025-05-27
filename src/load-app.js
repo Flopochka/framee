@@ -17,19 +17,20 @@ function isMobileDevice() {
 
 // Если это не мобильное устройство, выходим из полноэкранного режима
 if (!isMobileDevice()) {
-  if (document.fullscreenElement) {
-    document
-      .exitFullscreen()
-      .then(() => {
-        console.log("[load-app] Выход из полноэкранного режима.");
-      })
-      .catch((error) => {
-        console.error(
-          "[load-app] Не удалось выйти из полноэкранного режима:",
-          error
-        );
-      });
-  }
+  console.log("[load-app] не мобильное устройство");
+  document
+    .exitFullscreen()
+    .then(() => {
+      console.log("[load-app] Выход из полноэкранного режима.");
+    })
+    .catch((error) => {
+      console.error(
+        "[load-app] Не удалось выйти из полноэкранного режима:",
+        error
+      );
+    });
+}else{
+    console.log("[load-app] мобильное устройство");
 }
 
 WebApp.ready();
