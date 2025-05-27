@@ -5,6 +5,7 @@ import { sendToBackend } from "../modules/fetch";
 import { useUserStore } from "../stores/user";
 import { ref, onMounted, computed } from "vue";
 import refPhoto from "../assets/img/TESTReferalPhoto.png";
+import { getImageSrc } from "../modules/base64img.js";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -131,9 +132,11 @@ onMounted(() => {
           <img
             style="grid-area: A"
             :src="
-              useUserStore().getUserPhoto()
-                ? 'data:image/png;base64,' + useUserStore().getUserPhoto()
-                : refPhoto
+              getImageSrc(
+                useUserStore().getUserPhoto()
+                  ? useUserStore().getUserPhoto()
+                  : refPhoto
+              )
             "
             alt=""
             class="img-44 rounded-22"
@@ -149,7 +152,7 @@ onMounted(() => {
             <img
               :src="
                 referal.photo
-                  ? 'data:image/png;base64,' + referal.photo
+                  ? getImageSrc(referal.photo)
                   : refPhoto
               "
               alt=""
@@ -165,8 +168,8 @@ onMounted(() => {
                 </p></template
               >
               <p v-else class="text-16 text-white-60">
-                  @{{ referal.username }}
-                </p>
+                @{{ referal.username }}
+              </p>
             </div>
             <p class="text-16 text-neutral-200 jse flex-row">
               + {{ (+referal.income).toFixed(5)

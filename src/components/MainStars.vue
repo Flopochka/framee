@@ -11,6 +11,7 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick, computed } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
+import { getImageSrc } from '../modules/base64img.js';
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -48,8 +49,13 @@ const hasTouch = ref(false);
 const MAX_LENGTH = 45;
 
 watch(targetUserName, (newVal, oldVal) => {
-  if (newVal && newVal.length > MAX_LENGTH) {
-    targetUserName.value = newVal.slice(0, MAX_LENGTH);
+  if (newVal) {
+    let cleanedVal = newVal.startsWith('@') ? newVal.slice(1) : newVal;
+    if (cleanedVal.length > MAX_LENGTH) {
+      cleanedVal = cleanedVal.slice(0, MAX_LENGTH);
+    }
+    targetUserName.value = cleanedVal;
+    console.log('Очищенное имя пользователя:', cleanedVal); // Для отладки
   }
 });
 
@@ -452,7 +458,7 @@ onMounted(() => {
           <p>{{ formattedRecipientName }}</p>
           <img
             class="img-32 rounded-50p"
-            :src="'data:image/png;base64,' + recipientPhoto"
+            :src="getImageSrc(recipientPhoto)"
             alt=""
           />
         </div>

@@ -16,11 +16,15 @@ function isMobileDevice() {
 }
 
 // Если это не мобильное устройство, выходим из полноэкранного режима
-if (!isMobileDevice()) {
+try{
+  if (!isMobileDevice()) {
   console.log("[load-app] не мобильное устройство");
   WebApp.exitFullscreen()
 } else {
   console.log("[load-app] мобильное устройство");
+}
+}catch{
+  
 }
 
 WebApp.ready();
