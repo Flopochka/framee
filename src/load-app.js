@@ -34,6 +34,16 @@ if (!isMobileDevice()) {
 
 WebApp.ready();
 
+console.log("[load-app] загрузка приложения...");
+
+const app = createApp(App);
+app.use(createPinia());
+app.use(router);
+
+app.mount("#app");
+
+WebApp.ready();
+
 const user = WebApp.initDataUnsafe?.user;
 
 let start = {};
