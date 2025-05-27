@@ -8,8 +8,13 @@ import "./style.css";
 
 console.log("[load-app] загрузка приложения...");
 
-// Проверяем, если на ПК — выходим из полноэкранного режима
-if (window.innerWidth > 1024) {
+// Функция для проверки, что это не мобильное устройство
+function isMobileDevice() {
+  return /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+}
+
+// Если это не мобильное устройство, выходим из полноэкранного режима
+if (!isMobileDevice()) {
   if (document.fullscreenElement) {
     document.exitFullscreen().then(() => {
       console.log("[load-app] Выход из полноэкранного режима.");
@@ -48,3 +53,4 @@ WebApp.requestWriteAccess((granted) => {
     WebApp.showAlert("Пожалуйста, разрешите доступ к сообщениям.");
   }
 });
+
