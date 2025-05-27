@@ -1,99 +1,71 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
-import { sendToBackend } from "./modules/fetch";
-import "./style.css";
-import App from "./App.vue";
-import router from "./router";
-import WebApp from "@twa-dev/sdk";
+// main.ts
+// НЕ импортируем Telegram SDK здесь — он должен быть использован ТОЛЬКО после проверки среды
 
 async function precheckRedirect() {
-  if (!import.meta.env.PROD) {
-    console.log("[Env] Режим: DEV. Пропускаем обработку initData.");
-    return null;
+  const tg = window.Telegram?.WebApp;
+  const initData = tg?.initData;
+  const unsafe = tg?.initDataUnsafe;
+
+  if (!initData || !unsafe) {
+    // Не в Telegram, безопасно завершить — можно позволить dev запуск если нужно
+    if (import.meta.env.DEV) return null;
+    // В проде — уходим
+    window.location.href = "https://t.me/your_bot";
+    return "abort";
   }
 
-  const initDataRaw = window.Telegram?.WebApp?.initData;
-  if (!initDataRaw) {
-    console.warn("[InitData] initData отсутствует! Перенаправляем в бота…");
-    window.location.href = "https://t.me/Framestars_bot";
-    return "redirected";
-  }
-
+  // Проверка на повторный редирект
   const alreadyRedirected = sessionStorage.getItem("start_param_processed");
   if (alreadyRedirected) return null;
 
-  const unsafe = window.Telegram.WebApp.initDataUnsafe;
-  const rawBase64 = unsafe?.start_param;
+  const rawStart = unsafe?.start_param;
+  if (!rawStart) return null;
 
-  if (rawBase64) {
-    try {
-      const jsonStr = atob(rawBase64);
-      const parsed = JSON.parse(jsonStr);
-
-      if (parsed.path && parsed.path !== window.location.pathname) {
-        sessionStorage.setItem("start_param_processed", "1");
-        console.log(`[Redirect] Перенаправление на ${parsed.path}`);
-        window.location.replace(parsed.path); // мгновенный переход
-        return "redirected";
-      }
-    } catch (err) {
-      console.error("[StartParam] Ошибка при разборе start_param:", err);
+  try {
+    const parsed = JSON.parse(atob(rawStart));
+    if (parsed?.path && parsed.path !== window.location.pathname) {
+      sessionStorage.setItem("start_param_processed", "1");
+      window.location.replace(parsed.path);
+      return "redirected";
     }
+  } catch (err) {
+    console.warn("[StartParam] Ошибка парсинга:", err);
   }
 
   return null;
 }
 
-async function initApp() {
-  console.log("[App Init] Запуск приложения…");
+(async () => {
+  const result = await precheckRedirect();
+  if (result === "redirected" || result === "abort") return;
 
-  const precheck = await precheckRedirect();
-  if (precheck === "redirected") return;
+  // Только теперь импортируем Telegram SDK и Vue
+  const { default: WebApp } = await import("@twa-dev/sdk");
+  import("./style.css");
+
+  const { createApp } = await import("vue");
+  const { createPinia } = await import("pinia");
+  const App = (await import("./App.vue")).default;
+  const router = (await import("./router")).default;
+  const { sendToBackend } = await import("./modules/fetch");
 
   WebApp.ready();
+
   const app = createApp(App);
   app.use(createPinia());
   app.use(router);
   await router.isReady();
   app.mount("#app");
-  console.log("[Vue] Приложение смонтировано.");
 
-  const user = WebApp.initDataUnsafe?.user;
-  const referal = (() => {
-    try {
-      const jsonStr = atob(WebApp.initDataUnsafe?.start_param || "");
-      const parsed = JSON.parse(jsonStr);
-      return parsed?.referal ?? 0;
-    } catch {
-      return 0;
-    }
-  })();
-
+  // пример payload
+  const user = window.Telegram.WebApp.initDataUnsafe?.user;
   const payload = {
     user_id: user?.id,
-    referral:
-      typeof referal === "object"
-        ? JSON.stringify(referal)
-        : String(referal ?? ""),
     lang: user?.language_code,
     username: user?.username,
     photo_url: user?.photo_url,
     name: user?.first_name,
   };
 
-  function requestAccessLoop() {
-    Telegram.WebApp.requestWriteAccess((isGranted) => {
-      if (isGranted) return;
-
-      Telegram.WebApp.showAlert(
-        "Разрешение необходимо, чтобы бот мог отправлять вам сообщения."
-      );
-      setTimeout(requestAccessLoop, 500);
-    });
-  }
-
-  requestAccessLoop();
   sendToBackend("/update_user_info", payload);
-}
-
-initApp();
+})();
