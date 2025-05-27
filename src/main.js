@@ -1,66 +1,56 @@
-// main.ts
-// НЕ импортируем Telegram SDK здесь — он должен быть использован ТОЛЬКО после проверки среды
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import App from "./App.vue";
+import router from "./router";
+import WebApp from "@twa-dev/sdk";
+import { sendToBackend } from "./modules/fetch";
+import "./style.css";
 
-async function precheckRedirect() {
-  const tg = window.Telegram?.WebApp;
-  const initData = tg?.initData;
-  const unsafe = tg?.initDataUnsafe;
+async function handleRedirect(router) {
+  const unsafe = window.Telegram?.WebApp?.initDataUnsafe;
+  if (!unsafe || !unsafe.start_param) return;
 
-  if (!initData || !unsafe) {
-    // Не в Telegram, безопасно завершить — можно позволить dev запуск если нужно
-    if (import.meta.env.DEV) return null;
-    // В проде — уходим
-    window.location.href = "https://t.me/your_bot";
-    return "abort";
-  }
-
-  // Проверка на повторный редирект
-  const alreadyRedirected = sessionStorage.getItem("start_param_processed");
-  if (alreadyRedirected) return null;
-
-  const rawStart = unsafe?.start_param;
-  if (!rawStart) return null;
+  const alreadyProcessed = sessionStorage.getItem("start_param_processed");
+  if (alreadyProcessed) return;
 
   try {
-    const parsed = JSON.parse(atob(rawStart));
+    const parsed = JSON.parse(atob(unsafe.start_param));
     if (parsed?.path && parsed.path !== window.location.pathname) {
       sessionStorage.setItem("start_param_processed", "1");
-      window.location.replace(parsed.path);
-      return "redirected";
+      console.log("[Router Redirect]", parsed.path);
+      await router.push(parsed.path); // без сброса JS-контекста
     }
   } catch (err) {
-    console.warn("[StartParam] Ошибка парсинга:", err);
+    console.warn("[StartParam] Ошибка парсинга start_param:", err);
   }
-
-  return null;
 }
 
-(async () => {
-  const result = await precheckRedirect();
-  if (result === "redirected" || result === "abort") return;
-
-  // Только теперь импортируем Telegram SDK и Vue
-  const { default: WebApp } = await import("@twa-dev/sdk");
-  import("./style.css");
-
-  const { createApp } = await import("vue");
-  const { createPinia } = await import("pinia");
-  const App = (await import("./App.vue")).default;
-  const router = (await import("./router")).default;
-  const { sendToBackend } = await import("./modules/fetch");
-
-  WebApp.ready();
-
+async function bootstrap() {
   const app = createApp(App);
   app.use(createPinia());
   app.use(router);
+
+  // Выполняем возможный редирект до mount()
+  await handleRedirect(router);
   await router.isReady();
+
   app.mount("#app");
 
-  // пример payload
-  const user = window.Telegram.WebApp.initDataUnsafe?.user;
+  // Теперь безопасно: Telegram SDK готов
+  WebApp.ready();
+
+  const user = WebApp.initDataUnsafe?.user;
+  const parsed = (() => {
+    try {
+      return JSON.parse(atob(WebApp.initDataUnsafe?.start_param || ""));
+    } catch {
+      return {};
+    }
+  })();
+
   const payload = {
     user_id: user?.id,
+    referral: parsed?.referal ? JSON.stringify(parsed.referal) : "0",
     lang: user?.language_code,
     username: user?.username,
     photo_url: user?.photo_url,
@@ -68,4 +58,12 @@ async function precheckRedirect() {
   };
 
   sendToBackend("/update_user_info", payload);
-})();
+
+  WebApp.requestWriteAccess((granted) => {
+    if (!granted) {
+      WebApp.showAlert("Пожалуйста, разрешите доступ к сообщениям.");
+    }
+  });
+}
+
+bootstrap();
