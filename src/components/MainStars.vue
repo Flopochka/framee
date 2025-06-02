@@ -45,7 +45,7 @@ const holdTimer = ref(null);
 const currentAmount = ref(0);
 const minCount = ref(50);
 const hasTouch = ref(false);
-
+const isRussianUser = ref(false)
 const MAX_LENGTH = 45;
 
 watch(targetUserName, (newVal, oldVal) => {
@@ -409,17 +409,14 @@ const updatePremiumBoxHeight = () => {
   }
 };
 
-onMounted(async () => {
-  await nextTick();
-  updatePremiumBoxHeight();
-});
-
 watch(currentType, async () => {
   await nextTick();
   updatePremiumBoxHeight();
 });
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick();
+  updatePremiumBoxHeight();
   if (premiumBox.value) {
     const resizeObserver = new ResizeObserver(() => {
       updatePremiumBoxHeight();
@@ -428,6 +425,17 @@ onMounted(() => {
     return () => {
       resizeObserver.disconnect();
     };
+  }
+  console.log('[Location] try check...')
+  try {
+    const res = fetch('https://ipapi.co/json/')
+    const data = res.json()
+    if (data.country === 'RU') {
+      isRussianUser.value = true
+    }
+    console.log('[Location]',data)
+  } catch (e) {
+    console.warn('[Location] Не удалось определить страну:', e)
   }
 });
 </script>
@@ -571,7 +579,7 @@ onMounted(() => {
           :key="index"
         >
           <div
-            v-if="index == 0"
+            v-if="index == 0 && !isRussianUser"
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"

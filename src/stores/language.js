@@ -15,8 +15,8 @@ export const useLanguageStore = defineStore("language", () => {
     ru: "Русский",
     es: "Español",
     de: "Deutsch",
-    ar: "فارسی",
-    fa: "العربية",
+    ar: "العربية", // ← Арабский
+    fa: "فارسی", // ← Фарси (персидский)
   });
 
   // Вспомогательная функция для парсинга данных из localStorage
