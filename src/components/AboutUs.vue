@@ -6,37 +6,30 @@ import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
 
 const { getTranslation } = useLanguageStore();
-const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
 const { toggleModal } = useModalStore();
+const {
+  connectWallet,
+  disconnectWallet,
+  fetchWalletInfo,
+  getWalletState
+} = useWalletStore();
 
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
 const boughtAlltime = ref(0);
 const boughtMonthPremium = ref(0);
 const cards = ref([
-  {
-    value: boughtToday,
-    translation: "boughttoday",
-  },
-  {
-    value: boughtYesterday,
-    translation: "boughtyesterday",
-  },
-  {
-    value: boughtAlltime,
-    translation: "boughtalltime",
-  },
-  {
-    value: boughtMonthPremium,
-    translation: "boughtmonthpremium",
-  },
+  { value: boughtToday, translation: "boughttoday" },
+  { value: boughtYesterday, translation: "boughtyesterday" },
+  { value: boughtAlltime, translation: "boughtalltime" },
+  { value: boughtMonthPremium, translation: "boughtmonthpremium" }
 ]);
 const disconWarn = ref(false);
 const lottieContainer = ref(null);
 
 const toggleWarn = () => {
   disconWarn.value = !disconWarn.value;
-  const xze = setTimeout(() => {
+  setTimeout(() => {
     disconWarn.value = !disconWarn.value;
   }, 3000);
 };
@@ -45,7 +38,6 @@ const currentAccordion = ref(0);
 const switchAccordion = (type) => (currentAccordion.value = type);
 const isAccordionActive = (index) => currentAccordion.value === index;
 
-// Функция форматирования чисел
 function formatNumber(num) {
   if (typeof num !== "number" || isNaN(num)) return "0";
   const absNum = Math.abs(num);
@@ -54,28 +46,25 @@ function formatNumber(num) {
     return `${sign}${Math.floor(absNum / 1_000_000_000)}B`;
   if (absNum >= 1_000_000) return `${sign}${Math.floor(absNum / 1_000_000)}M`;
   if (absNum >= 1_000)
-    return `${sign}${Math.floor(absNum)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
+    return `${sign}${Math.floor(absNum).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
   return `${sign}${Math.floor(absNum)}`;
 }
 
 const fetchTotalInfo = async () => {
-  sendToBackend("/get_stat_stars", {})
-    .then((result) => {
-      const data = result.data;
-      boughtToday.value =
-        data.stats[0] != 0
-          ? formatNumber(data.stats[0])
-          : formatNumber(Math.round(Math.random() * 25) * 50);
-      boughtYesterday.value =
-        data.stats[1] != 0
-          ? formatNumber(data.stats[1])
-          : formatNumber(Math.round(Math.random() * 25) * 50);
-      boughtAlltime.value = formatNumber(data.stats[2]);
-      boughtMonthPremium.value = formatNumber(data.stats[3]);
-    })
-    .catch(() => {});
+  try {
+    const result = await sendToBackend("/get_stat_stars", {});
+    const data = result.data;
+    boughtToday.value = data.stats[0] !== 0
+      ? formatNumber(data.stats[0])
+      : formatNumber(Math.round(Math.random() * 25) * 50);
+    boughtYesterday.value = data.stats[1] !== 0
+      ? formatNumber(data.stats[1])
+      : formatNumber(Math.round(Math.random() * 25) * 50);
+    boughtAlltime.value = formatNumber(data.stats[2]);
+    boughtMonthPremium.value = formatNumber(data.stats[3]);
+  } catch (e) {
+    console.error("Ошибка при получении статистики:", e);
+  }
 };
 
 onMounted(async () => {
@@ -84,7 +73,6 @@ onMounted(async () => {
 
   const lottie = await import("lottie-web");
   const container = lottieContainer.value;
-  console.log(lottieContainer)
   lottie.default.loadAnimation({
     container,
     renderer: "svg",
@@ -93,6 +81,14 @@ onMounted(async () => {
     path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
   });
 });
+
+const handleWalletButton = async () => {
+  try {
+    await connectWallet();
+  } catch (err) {
+    console.error("Ошибка подключения TON Wallet:", err);
+  }
+};
 </script>
 
 <template>
@@ -100,7 +96,7 @@ onMounted(async () => {
     <div class="aboutus-cover flex-col gap-40">
       <div
         v-if="!getWalletState()"
-        @click="toggleModal('connect')"
+        @click="handleWalletButton"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}
@@ -108,11 +104,7 @@ onMounted(async () => {
       </div>
       <div
         v-else
-        @click="
-          () => {
-            disconWarn ? disconnectWallet() : toggleWarn();
-          }
-        "
+        @click="() => { disconWarn ? disconnectWallet() : toggleWarn(); }"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
         :class="disconWarn ? 'warn' : ''"
       >

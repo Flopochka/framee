@@ -1,118 +1,30 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user";
+import { defineStore } from 'pinia';
+import { TonConnect, toUserFriendlyAddress } from '@tonconnect/sdk';
 
-export const useWalletStore = defineStore("wallet", () => {
-  const IsWalletConected = ref(false);
-  function linkTo(url, options = { tryInstantView: false, target: "_blank" }) {
-    // Проверяем валидность URL
-    try {
-      new URL(url);
-    } catch (error) {
-      console.error("Invalid URL:", url, error);
-      if (Telegram?.WebApp?.showAlert) {
-        Telegram.WebApp.showAlert("Invalid link. Please try another.");
-      } else {
-        alert("Invalid link. Please try another.");
-      }
-      return;
-    }
+const tonConnect = new TonConnect({
+  manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json'
+});
 
-    // 1. Telegram Web App: используем openLink или openTelegramLink
-    if (Telegram?.WebApp) {
-      try {
-        if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
-          // Для Telegram-ссылок (например, каналы, чаты)
-          Telegram.WebApp.openTelegramLink(url);
-        } else {
-          // Для внешних ссылок с возможностью Instant View
-          Telegram.WebApp.openLink(url, {
-            try_instant_view: options.tryInstantView,
-          });
-        }
-        return;
-      } catch (error) {
-        console.error("Telegram Web App link error:", error);
-        Telegram.WebApp.showAlert("Failed to open link. Trying alternative...");
+export const useWalletStore = defineStore('wallet', {
+  state: () => ({
+    wallet: null,
+  }),
+  actions: {
+    async connectWallet() {
+      await tonConnect.connectWallet();
+      this.wallet = tonConnect.wallet?.account?.address || null;
+    },
+    disconnectWallet() {
+      tonConnect.disconnect();
+      this.wallet = null;
+    },
+    fetchWalletInfo() {
+      if (tonConnect.connected) {
+        this.wallet = tonConnect.wallet?.account?.address;
       }
-    }
-
-    // 2. Fallback: открытие ссылки в браузере
-    try {
-      window.open(url, options.target, "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to open link:", error);
-      // Последний fallback: показываем URL для ручного копирования
-      if (Telegram?.WebApp?.showAlert) {
-        Telegram.WebApp.showAlert(`Please open this link manually: ${url}`);
-      } else {
-        prompt("Please open this link manually:", url);
-      }
+    },
+    getWalletState() {
+      return !!this.wallet;
     }
   }
-  const connectWallet = async (e) => {
-    const payload = {
-      user_id: useUserStore().getUserId(),
-      wallet: e,
-    };
-    sendToBackend("/generate_url", payload)
-      .then((result) => {
-        const data = result.data;
-        linkTo(data.url);
-        fetchWalletInfo();
-      })
-      .catch(() => {});
-  };
-  const disconnectWallet = async () => {
-    const payload = {
-      user_id: useUserStore().getUserId(),
-    };
-    sendToBackend("/disconnect_wallet", payload)
-      .then((result) => {
-        fetchWalletInfo();
-      })
-      .catch(() => {});
-  };
-  const fetchWalletInfo = async () => {
-    const retryDelays = [1000, 2000, 4000, 8000, 10000]; // 1, 2, 4, 8, 10 seconds
-
-    const tryFetch = async () => {
-      const payload = {
-        user_id: useUserStore().getUserId(),
-      };
-      const result = await sendToBackend("/check_connect_wallet", payload);
-      return result.data.connection;
-    };
-
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    try {
-      const connection = await tryFetch();
-      IsWalletConected.value = connection;
-      console.log("Initial wallet check:", connection);
-      return;
-    } catch (error) {
-      console.error("Initial wallet check failed:", error);
-    }
-
-    // Retry logic if initial attempt fails or returns disconnected
-    for (const delay of retryDelays) {
-      await sleep(delay);
-      try {
-        const connection = await tryFetch();
-        IsWalletConected.value = connection;
-        console.log(`Retry after ${delay}ms:`, connection);
-        if (connection) return; // Exit if connected
-      } catch (error) {
-        console.error(`Retry after ${delay}ms failed:`, error);
-      }
-    }
-
-    // Final state after all retries
-    IsWalletConected.value = false;
-    console.log("All wallet connection attempts failed");
-  };
-  const getWalletState = () => IsWalletConected.value;
-  return { connectWallet, disconnectWallet, fetchWalletInfo, getWalletState };
 });

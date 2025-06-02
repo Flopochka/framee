@@ -55,23 +55,17 @@ watch(targetUserName, (newVal, oldVal) => {
       cleanedVal = cleanedVal.slice(0, MAX_LENGTH);
     }
     targetUserName.value = cleanedVal;
-    console.log('Очищенное имя пользователя:', cleanedVal); // Для отладки
+    console.log('Очищенное имя пользователя:', cleanedVal);
   }
 });
 
-// Максимальное допустимое значение
-const MAX_NUMBER = 1000000; // замените на нужное значение
+const MAX_NUMBER = 1000000;
 
-// Watcher — ограничивает ввод чисел по max
 watch(stars, (newVal, oldVal) => {
   if (newVal === "") return;
-
-  // Разрешаем числа с точкой на конце (например, "1.")
   if (/^\d+\.$/.test(newVal)) return;
-
   const parsed = parseFloat(newVal);
   if (!isNaN(parsed) && parsed > MAX_NUMBER) {
-    // Если на единицу больше max и это целое — удаляем последнюю цифру
     if (Number.isInteger(parsed) && parsed === MAX_NUMBER + 1) {
       stars.value = newVal.slice(0, -1);
     } else {
@@ -85,7 +79,7 @@ const startIncrement = (amount, event) => {
     hasTouch.value = true;
   }
   if (event.type === "mousedown" && hasTouch.value) {
-    return; // Игнорировать mousedown, если уже был touchstart
+    return;
   }
   if (stars.value > 1000000 - amount) return;
   currentAmount.value = amount;
@@ -137,15 +131,14 @@ const isPremiumActive = (index) => currentPremium.value === index;
 const isPaymentActive = (index) => currentPayment.value === index;
 const isSubmethodActive = (index) => currentPaymentSub.value === index;
 
-const premiumBox = ref(null); // Ref для premiumBox
-const premiumBoxHeight = ref(0); // Реактивная высота premiumBox
-
-const starBox = ref(null); // Ref
-const starBoxHeight = ref(0); //
+const premiumBox = ref(null);
+const premiumBoxHeight = ref(0);
+const starBox = ref(null);
+const starBoxHeight = ref(0);
 
 const searchRecipient = async (username) => {
   if (username && username != "") {
-    console.log("Searching for:", username); // Заглушка
+    console.log("Searching for:", username);
     const payload = { username: username };
     sendToBackend("/search_recipient", payload)
       .then((result) => {
@@ -173,6 +166,27 @@ const searchRecipient = async (username) => {
   }
 };
 
+const sendTONTransaction = async (transactionData) => {
+  try {
+    const tonConnect = useWalletStore().$tonConnect; // Access TonConnect instance from wallet store
+    const transaction = {
+      validUntil: Math.floor(Date.now() / 1000) + 60, // 1 minute validity
+      messages: [
+        {
+          address: transactionData.address,
+          amount: transactionData.amount, // Amount in nanoTON
+          payload: transactionData.payload || undefined, // Optional payload
+        },
+      ],
+    };
+    const result = await tonConnect.sendTransaction(transaction);
+    return result; // Return transaction result (e.g., boc)
+  } catch (error) {
+    console.error("TON transaction failed:", error);
+    throw error;
+  }
+};
+
 const createorder = async () => {
   valueIncorrects.value = [];
   recipientIncorrects.value = [];
@@ -193,9 +207,12 @@ const createorder = async () => {
   if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
-  currentPayment.value == 0 ? fetchWalletInfo() : "";
-  if (!getWalletState() && currentPayment.value == 0) {
-    toggleModal("popupwalletnc");
+  if (currentPayment.value == 0) {
+    fetchWalletInfo();
+    if (!getWalletState()) {
+      toggleModal("popupwalletnc");
+      return;
+    }
   }
   starBoxHeight.value = starBox.value.offsetHeight;
   if (
@@ -224,17 +241,33 @@ const createorder = async () => {
 
     try {
       toggleModal("filler");
-      sendToBackend("/create_order", payload).then((result) => {
-        if (result == null) {
-          toggleModal("error");
-          return;
-        }
-        const data = result.data;
+      const result = await sendToBackend("/create_order", payload);
+      if (result == null) {
+        toggleModal("error");
+        return;
+      }
+      const data = result.data;
+      if (currentPayment.value === 0) {
+        // Handle TON payment
+        const transactionData = {
+          address: data.recipient_address, // Server provides TON address
+          amount: data.amount, // Server provides amount in nanoTON
+          payload: data.payload || undefined, // Optional payload from server
+        };
+        const transactionResult = await sendTONTransaction(transactionData);
+        // Send transaction result to server for verification
+        const verificationPayload = {
+          order_id: data.order_id,
+          transaction_boc: transactionResult.boc, // Send Base64-encoded Cell
+        };
+        await sendToBackend("/verify_ton_transaction", verificationPayload);
+        setupTabReturnListener(data.order_id);
+      } else {
+        // Non-TON payment (existing behavior)
         setPaymentLink(data.payment_link || data.redirectLink);
-        const orderId = data.order_id;
         Telegram.WebApp.openLink(data.payment_link || data.redirectLink);
-        setupTabReturnListener(orderId);
-      });
+        setupTabReturnListener(data.order_id);
+      }
     } catch (error) {
       console.error("Failed:", error);
       toggleModal("error");
@@ -242,7 +275,6 @@ const createorder = async () => {
   }
 };
 
-// Функция для получения статуса заказа
 const getorderinfo = async (order_id) => {
   console.log("Searching for:", order_id);
   const payload = { order_id: order_id };
@@ -268,13 +300,13 @@ const idkhin = async (order_id) => {
     if (orderStatus === "Wait payment") return null;
     if (orderStatus === "Accepted") return true;
     if (orderStatus === "Expired") return false;
-    return false; // fallback
+    return false;
   };
 
   try {
     const data = await getorderinfo(order_id);
     console.log(data);
-    const orderStatus = data.order_status || data.status; // <-- зависит от API
+    const orderStatus = data.order_status || data.status;
     status.value = extractStatus(orderStatus);
     console.log("Initial payment check:", status.value, orderStatus);
     if (status.value != null) return status.value;
@@ -296,7 +328,8 @@ const idkhin = async (order_id) => {
   }
 
   status.value = false;
-  console.log("All wallet connection attempts failed");
+  console.log("All payment status checks failed");
+  return status.value;
 };
 
 const fetchResult = async (order_id) => {
@@ -336,23 +369,18 @@ const buyformyself = async () => {
   targetUserName.value = getUser();
 };
 
-// Вычисляемая длина для имени получателя с округлением
 const formattedRecipientName = computed(() => {
-  // Получаем ширину инпута и текста
   const inputWidth = getTextWidth(targetUserName.value, "16px");
   const recipientNameWidth = getTextWidth(recipientName.value, "16px");
-
-  // Если ширина инпута + имя больше доступной ширины, обрезаем имя
   const availableWidth =
-    document.querySelector(".select-top-item-input-text")?.offsetWidth - 84; // Примерное пространство для имени
+    document.querySelector(".select-top-item-input-text")?.offsetWidth - 84;
   console.log(inputWidth, recipientNameWidth, availableWidth);
   if (recipientNameWidth + inputWidth > availableWidth) {
-    return `${recipientName.value.slice(0, 8)}...`; // Обрезаем имя с многоточием
+    return `${recipientName.value.slice(0, 8)}...`;
   }
   return recipientName.value;
 });
 
-// Функция для вычисления ширины текста
 const getTextWidth = (text, fontSize) => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
@@ -360,23 +388,18 @@ const getTextWidth = (text, fontSize) => {
   return context.measureText(text).width;
 };
 
-// Логика для отслеживания ввода имени пользователя
 watch(targetUserName, (newValue, oldValue) => {
   if (newValue !== oldValue) {
-    targetUserNameChanged.value = Date.now(); // Записываем время изменения
-
-    // Debounce: ждём 300 мс перед запросом
-    clearTimeout(window.searchTimeout); // Очищаем предыдущий таймер
+    targetUserNameChanged.value = Date.now();
+    clearTimeout(window.searchTimeout);
     window.searchTimeout = setTimeout(async () => {
       if (newValue) {
-        // Проверяем, что значение не пустое
         await searchRecipient(newValue);
       }
     }, 300);
   }
 });
 
-// Функция для получения высоты premiumBox
 const updatePremiumBoxHeight = () => {
   if (premiumBox.value) {
     premiumBoxHeight.value = premiumBox.value.offsetHeight;
@@ -386,29 +409,22 @@ const updatePremiumBoxHeight = () => {
   }
 };
 
-// Вызываем при монтировании
 onMounted(async () => {
-  // Ждём, пока DOM обновится
   await nextTick();
   updatePremiumBoxHeight();
 });
 
-// Отслеживаем изменения currentType
 watch(currentType, async () => {
-  // Ждём, пока DOM обновится после изменения currentType
   await nextTick();
   updatePremiumBoxHeight();
 });
 
-// Отслеживаем изменения размеров premiumBox (например, при изменении содержимого)
 onMounted(() => {
   if (premiumBox.value) {
     const resizeObserver = new ResizeObserver(() => {
       updatePremiumBoxHeight();
     });
     resizeObserver.observe(premiumBox.value);
-
-    // Очищаем наблюдатель при размонтировании
     return () => {
       resizeObserver.disconnect();
     };
@@ -549,7 +565,6 @@ onMounted(() => {
     </div>
     <div class="select-bottomm flex-col gap-4">
       <p class="pl-12 text-white-70">{{ getTranslation("payment") }}</p>
-
       <div class="select-botoom-cards grid-row gap-8">
         <template
           v-for="(payment, index) in getTranslation('paymentmetdods')"
