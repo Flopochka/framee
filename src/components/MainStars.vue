@@ -11,7 +11,7 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick, computed } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
-import { getImageSrc } from '../modules/base64img.js';
+import { getImageSrc } from "../modules/base64img.js";
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -45,17 +45,17 @@ const holdTimer = ref(null);
 const currentAmount = ref(0);
 const minCount = ref(50);
 const hasTouch = ref(false);
-const isRussianUser = ref(false)
+const isRussianUser = ref(false);
 const MAX_LENGTH = 45;
 
 watch(targetUserName, (newVal, oldVal) => {
   if (newVal) {
-    let cleanedVal = newVal.startsWith('@') ? newVal.slice(1) : newVal;
+    let cleanedVal = newVal.startsWith("@") ? newVal.slice(1) : newVal;
     if (cleanedVal.length > MAX_LENGTH) {
       cleanedVal = cleanedVal.slice(0, MAX_LENGTH);
     }
     targetUserName.value = cleanedVal;
-    console.log('Очищенное имя пользователя:', cleanedVal);
+    console.log("Очищенное имя пользователя:", cleanedVal);
   }
 });
 
@@ -409,14 +409,17 @@ const updatePremiumBoxHeight = () => {
   }
 };
 
+onMounted(async () => {
+  await nextTick();
+  updatePremiumBoxHeight();
+});
+
 watch(currentType, async () => {
   await nextTick();
   updatePremiumBoxHeight();
 });
 
-onMounted(async () => {
-  await nextTick();
-  updatePremiumBoxHeight();
+onMounted(() => {
   if (premiumBox.value) {
     const resizeObserver = new ResizeObserver(() => {
       updatePremiumBoxHeight();
@@ -426,16 +429,20 @@ onMounted(async () => {
       resizeObserver.disconnect();
     };
   }
-  console.log('[Location] try check...')
+});
+
+onMounted(() => {
+  console.log("[Location] try check...");
   try {
-    const res = fetch('https://ipapi.co/json/')
-    const data = res.json()
-    if (data.country === 'RU') {
-      isRussianUser.value = true
+    const res = fetch("https://ipapi.co/json/");
+    console.log(res)
+    const data = res.json();
+    if (data.country === "RU") {
+      isRussianUser.value = true;
     }
-    console.log('[Location]',data)
+    console.log("[Location]", data);
   } catch (e) {
-    console.warn('[Location] Не удалось определить страну:', e)
+    console.warn("[Location] Не удалось определить страну:", e);
   }
 });
 </script>
