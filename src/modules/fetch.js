@@ -8,14 +8,14 @@ export async function sendToBackend(target, payload) {
   if (import.meta.env.PROD) {
     if (!initData) {
       const msg =
-        "No Telegram initData — WebApp probably opened outside Telegram.";
+        "[fetch] No Telegram initData — WebApp probably opened outside Telegram.";
       console.warn(msg);
       throw new Error(msg);
     }
   }
 
   try {
-    console.log("Sending request to ", target, ": ", payload);
+    console.log("[fetch] Sending request to ", target, ": ", payload);
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -33,11 +33,11 @@ export async function sendToBackend(target, payload) {
     }
 
     const data = await response.json();
-    console.log("Response from ", target, ": ", data);
+    console.log("[fetch] Response from ", target, ": ", data);
     return data;
   } catch (error) {
     const finalError = new Error(
-      `❌ Backend call failed for "${target}": ${error.message || error}`
+      `[fetch] ❌ Backend call failed for "${target}": ${error.message || error}`
     );
     console.error(finalError);
     throw finalError;

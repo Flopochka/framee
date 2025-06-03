@@ -89,7 +89,6 @@ function shareContent() {
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  console.log("Platform:", WebApp.platform);
   WebApp.ready();
   fetchUserInfo();
 });
