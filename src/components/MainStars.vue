@@ -432,17 +432,39 @@ onMounted(() => {
 });
 
 onMounted(() => {
-  console.log("[Location] try check...");
-  try {
-    const res = fetch("https://ipapi.co/json/");
-    console.log(res)
-    const data = res.json();
-    if (data.country === "RU") {
-      isRussianUser.value = true;
-    }
-    console.log("[Location]", data);
-  } catch (e) {
-    console.warn("[Location] Не удалось определить страну:", e);
+  const RUSSIAN_TIMEZONES = [
+    "Asia/Anadyr",
+    "Asia/Barnaul",
+    "Asia/Chita",
+    "Asia/Irkutsk",
+    "Asia/Kamchatka",
+    "Asia/Khandyga",
+    "Asia/Krasnoyarsk",
+    "Asia/Magadan",
+    "Asia/Novokuznetsk",
+    "Asia/Novosibirsk",
+    "Asia/Omsk",
+    "Asia/Sakhalin",
+    "Asia/Srednekolymsk",
+    "Asia/Tomsk",
+    "Asia/Ust",
+    "Asia/Vladivostok",
+    "Asia/Yakutsk",
+    "Asia/Yekaterinburg",
+    "Europe/Astrakhan",
+    "Europe/Kaliningrad",
+    "Europe/Kirov",
+    "Europe/Moscow",
+    "Europe/Samara",
+    "Europe/Saratov",
+    "Europe/Ulyanovsk",
+    "Europe/Volgograd",
+  ];
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  console.log('[timezone] current timezone: ',currentTimezone)
+  if (RUSSIAN_TIMEZONES.includes(currentTimezone)) {
+    isRussianUser.value = true
+    console.log('[timezone] russian timezone')
   }
 });
 </script>
@@ -586,7 +608,7 @@ onMounted(() => {
           :key="index"
         >
           <div
-            v-if="index == 0 && !isRussianUser"
+            v-if="index == 0 || isRussianUser"
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
