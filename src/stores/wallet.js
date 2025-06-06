@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { TonConnectUI } from "@tonconnect/ui";
+import { TonConnectUI } from '@tonconnect/ui';
 
 // Инициализация TonConnect UI
 
@@ -57,7 +57,7 @@ export const useWalletStore = defineStore("wallet", {
 
     // Получение состояния кошелька
     getWalletState() {
-      console.log("[wallet] ", tonConnectUI.connected);
+      console.log("[wallet] ",tonConnectUI.connected);
       return tonConnectUI.connected;
     },
 
@@ -75,19 +75,19 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            ...(extraCurrency && { extraCurrency }), // Conditionally include extraCurrency
+            ...(extraCurrency && { extraCurrency }) // Conditionally include extraCurrency
           },
         ],
       };
 
       try {
         const result = await tonConnectUI.sendTransaction(transaction, {
-          modals: ["before", "success", "error"],
-          notifications: ["before", "success", "error"],
-          skipRedirectToWallet: "ios", // Ensure iOS compatibility
-          returnStrategy: "back", // Default return strategy
+          modals: ['before', 'success', 'error'],
+          notifications: ['before', 'success', 'error'],
+          skipRedirectToWallet: 'ios', // Ensure iOS compatibility
+          returnStrategy: 'back' // Default return strategy
         });
-
+        
         console.log("[wallet] Платеж отправлен, boc:", result.boc);
         return result.boc;
       } catch (error) {
