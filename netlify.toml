@@ -15,21 +15,12 @@
   from = "/tonconnect-manifest.json"
   to = "/tonconnect-manifest.json"
   status = 200
-  headers = { 
-    "Content-Type" = "application/json",
-    "Access-Control-Allow-Origin" = "*",
-    "Cache-Control" = "no-cache"
-  }
 
 # Правило для других статических файлов (например, assets)
 [[redirects]]
   from = "/assets/*"
   to = "/assets/:splat"
   status = 200
-  headers = { 
-    "Access-Control-Allow-Origin" = "*",
-    "Cache-Control" = "no-cache"
-  }
 
 # Редирект для SPA (все остальные маршруты)
 [[redirects]]
