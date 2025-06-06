@@ -103,7 +103,7 @@ export const useWalletStore = defineStore("wallet", {
 
     // Получение состояния кошелька
     getWalletState() {
-      console.log("[wallet] ", tonConnectUI.connected);
+      console.log("[wallet] wallet state", tonConnectUI.connected);
       return tonConnectUI.connected;
     },
 
