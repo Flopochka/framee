@@ -42,21 +42,6 @@ export const useWalletStore = defineStore("wallet", {
         this.wallet = tonConnectUI.wallet?.account?.address || null;
         this.connectionError = null;
         console.log("[wallet] Кошелек подключен:", this.wallet);
-        
-        // Monitor connection restoration
-        tonConnectUI.connectionRestored.then(restored => {
-          if (restored) {
-            console.log(
-              "[wallet] Connection restored. Wallet:",
-              JSON.stringify({
-                ...tonConnectUI.wallet,
-                ...tonConnectUI.walletInfo
-              })
-            );
-          } else {
-            console.log("[wallet] Connection was not restored.");
-          }
-        });
       } catch (error) {
         console.error("[wallet] Ошибка при подключении кошелька:", error);
         this.connectionError = error.message;
