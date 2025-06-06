@@ -4,8 +4,6 @@ import { useModalStore } from "../stores/modal";
 import { useWalletStore } from "../stores/wallet"; // Исправлен импорт
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
-import { WebApp } from "@twa-dev/sdk";
-import { TonConnectUI } from '@tonconnect/ui';
 
 const { getTranslation } = useLanguageStore();
 const { toggleModal } = useModalStore();
@@ -76,18 +74,6 @@ onMounted(async () => {
     autoplay: true,
     path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
   });
-
-  let tonConnectUI;
-  try {
-    tonConnectUI = new TonConnectUI({
-      manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json'
-    });
-    newConnect(tonConnectUI)
-    console.log('TonConnectUI инициализирован');
-  } catch (error) {
-    console.error('Ошибка инициализации TonConnectUI:', error);
-    throw new Error('Не удалось инициализировать TonConnectUI');
-  }
 });
 </script>
 
