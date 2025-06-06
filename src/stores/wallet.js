@@ -9,10 +9,10 @@ try {
   tonConnectUI = new TonConnectUI({
     manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
   });
-  console.log("TonConnectUI инициализирован");
+  console.log("[wallet] TonConnectUI инициализирован");
 } catch (error) {
-  console.error("Ошибка инициализации TonConnectUI:", error);
-  throw new Error("Не удалось инициализировать TonConnectUI");
+  console.error("[wallet] Ошибка инициализации TonConnectUI:", error);
+  throw new Error("[wallet] Не удалось инициализировать TonConnectUI");
 }
 
 export const useWalletStore = defineStore("wallet", {
@@ -28,14 +28,14 @@ export const useWalletStore = defineStore("wallet", {
     async connectWallet() {
       try {
         if (!tonConnectUI) {
-          throw new Error("TonConnectUI не инициализирован");
+          throw new Error("[wallet] TonConnectUI не инициализирован");
         }
         await tonConnectUI.openModal();
         this.wallet = tonConnectUI.wallet?.account?.address || null;
         this.connectionError = null;
-        console.log("Кошелек подключен:", this.wallet);
+        console.log("[wallet] Кошелек подключен:", this.wallet);
       } catch (error) {
-        console.error("Ошибка при подключении кошелька:", error);
+        console.error("[wallet] Ошибка при подключении кошелька:", error);
         this.connectionError = error.message;
         throw error;
       }
@@ -45,14 +45,14 @@ export const useWalletStore = defineStore("wallet", {
     disconnectWallet() {
       try {
         if (!tonConnectUI) {
-          throw new Error("TonConnectUI не инициализирован");
+          throw new Error("[wallet] TonConnectUI не инициализирован");
         }
         tonConnectUI.disconnect();
         this.wallet = null;
         this.connectionError = null;
-        console.log("Кошелек отключен");
+        console.log("[wallet] Кошелек отключен");
       } catch (error) {
-        console.error("Ошибка при отключении кошелька:", error);
+        console.error("[wallet] Ошибка при отключении кошелька:", error);
         this.connectionError = error.message;
         throw error;
       }
@@ -62,16 +62,16 @@ export const useWalletStore = defineStore("wallet", {
     fetchWalletInfo() {
       if (tonConnectUI.isConnected) {
         this.wallet = tonConnectUI.wallet?.account?.address || null;
-        console.log("Информация о кошельке обновлена:", this.wallet);
+        console.log("[wallet] Информация о кошельке обновлена:", this.wallet);
       } else {
         this.wallet = null;
-        console.log("Кошелек не подключен");
+        console.log("[wallet] Кошелек не подключен");
       }
     },
 
     // Получение состояния кошелька
     getWalletState() {
-      console.log(tonConnectUI.connected);
+      console.log("[wallet] ",tonConnectUI.connected);
       return tonConnectUI.connected;
     },
 
@@ -79,7 +79,7 @@ export const useWalletStore = defineStore("wallet", {
     async sendPayment(recipient, amount) {
       if (!this.wallet) {
         throw new Error(
-          "Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
+          "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
         );
       }
 
@@ -95,10 +95,10 @@ export const useWalletStore = defineStore("wallet", {
 
       try {
         const result = await tonConnectUI.sendTransaction(transaction);
-        console.log("Платеж отправлен, boc:", result.boc);
+        console.log("[wallet] Платеж отправлен, boc:", result.boc);
         return result.boc;
       } catch (error) {
-        console.error("Ошибка при отправке платежа:", error);
+        console.error("[wallet] Ошибка при отправке платежа:", error);
         throw error;
       }
     },
@@ -113,10 +113,10 @@ export const useWalletStore = defineStore("wallet", {
           boc: boc,
           api_key: apiKey,
         });
-        console.log("Статус платежа:", response.data.status);
+        console.log("[wallet] Статус платежа:", response.data.status);
         return response.data.status;
       } catch (error) {
-        console.error("Ошибка при проверке статуса платежа:", error);
+        console.error("[wallet] Ошибка при проверке статуса платежа:", error);
         throw error;
       }
     },
