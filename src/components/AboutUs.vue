@@ -5,10 +5,11 @@ import { useWalletStore } from "../stores/wallet"; // Исправлен имп�
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
 import { WebApp } from "@twa-dev/sdk";
+import { TonConnectUI } from '@tonconnect/ui';
 
 const { getTranslation } = useLanguageStore();
 const { toggleModal } = useModalStore();
-const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
+const { disconnectWallet, fetchWalletInfo, getWalletState, newConnect} = useWalletStore();
 
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
@@ -77,6 +78,19 @@ onMounted(async () => {
     autoplay: true,
     path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
   });
+
+  let tonConnectUI;
+  try {
+    tonConnectUI = new TonConnectUI({
+      manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json',
+      buttonRootId: 'ton-connect-button' // ID элемента для рендеринга кнопки
+    });
+    newConnect(tonConnectUI)
+    console.log('TonConnectUI инициализирован');
+  } catch (error) {
+    console.error('Ошибка инициализации TonConnectUI:', error);
+    throw new Error('Не удалось инициализировать TonConnectUI');
+  }
 });
 </script>
 

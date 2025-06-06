@@ -1,26 +1,18 @@
 import { defineStore } from 'pinia';
-import { TonConnectUI } from '@tonconnect/ui';
 import axios from 'axios';
 
 // Инициализация TonConnect UI
-let tonConnectUI;
-try {
-  tonConnectUI = new TonConnectUI({
-    manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json',
-    buttonRootId: 'ton-connect-button' // ID элемента для рендеринга кнопки
-  });
-  console.log('TonConnectUI инициализирован');
-} catch (error) {
-  console.error('Ошибка инициализации TonConnectUI:', error);
-  throw new Error('Не удалось инициализировать TonConnectUI');
-}
 
+let tonConnectUI;
 export const useWalletStore = defineStore('wallet', {
   state: () => ({
     wallet: null,
     connectionError: null,
   }),
   actions: {
+    async newConnect(e){
+      tonConnectUI = e
+    },
     // Подключение кошелька
     async connectWallet() {
       try {
