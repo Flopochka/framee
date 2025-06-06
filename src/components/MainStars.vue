@@ -18,7 +18,7 @@ const { setPaymentLink } = usePaymentStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
-const { fetchWalletInfo, getWalletState } = useWalletStore();
+const { getWalletState, sendPayment } = useWalletStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -166,27 +166,6 @@ const searchRecipient = async (username) => {
   }
 };
 
-const sendTONTransaction = async (transactionData) => {
-  try {
-    const tonConnect = useWalletStore().$tonConnect; // Access TonConnect instance from wallet store
-    const transaction = {
-      validUntil: Math.floor(Date.now() / 1000) + 60, // 1 minute validity
-      messages: [
-        {
-          address: transactionData.address,
-          amount: transactionData.amount, // Amount in nanoTON
-          payload: transactionData.payload || undefined, // Optional payload
-        },
-      ],
-    };
-    const result = await tonConnect.sendTransaction(transaction);
-    return result; // Return transaction result (e.g., boc)
-  } catch (error) {
-    console.error("TON transaction failed:", error);
-    throw error;
-  }
-};
-
 const createorder = async () => {
   valueIncorrects.value = [];
   recipientIncorrects.value = [];
@@ -208,7 +187,6 @@ const createorder = async () => {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
   if (currentPayment.value == 0) {
-    fetchWalletInfo();
     if (!getWalletState()) {
       toggleModal("popupwalletnc");
       return;
@@ -249,12 +227,7 @@ const createorder = async () => {
       const data = result.data;
       if (currentPayment.value === 0) {
         // Handle TON payment
-        const transactionData = {
-          address: data.recipient_address, // Server provides TON address
-          amount: data.amount, // Server provides amount in nanoTON
-          payload: data.payload || undefined, // Optional payload from server
-        };
-        const transactionResult = await sendTONTransaction(transactionData);
+        const transactionResult = await sendPayment("frame-stars.ton",data.amount)
         // Send transaction result to server for verification
         const verificationPayload = {
           order_id: data.order_id,
