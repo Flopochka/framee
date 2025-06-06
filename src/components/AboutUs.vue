@@ -80,8 +80,7 @@ onMounted(async () => {
   let tonConnectUI;
   try {
     tonConnectUI = new TonConnectUI({
-      manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json',
-      buttonRootId: 'ton-connect-button' // ID элемента для рендеринга кнопки
+      manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json'
     });
     newConnect(tonConnectUI)
     console.log('TonConnectUI инициализирован');
@@ -95,8 +94,7 @@ onMounted(async () => {
 <template>
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
-      <div id="ton-connect-button"></div>
-      <!-- <div
+      <div
         v-if="!getWalletState()"
         @click="handleWalletButton"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
@@ -112,7 +110,7 @@ onMounted(async () => {
       >
         {{ getTranslation(disconWarn ? "Areyoushure" : "disconectWallet") }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20 lazy-img" />
-      </div> -->
+      </div>
       <p
         class="aboutus-cover-header letter-spacing-01 font-600 text-32 lh-110 tac twb"
       >

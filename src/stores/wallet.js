@@ -60,8 +60,7 @@ export const useWalletStore = defineStore('wallet', {
 
     // Получение состояния кошелька
     getWalletState() {
-      const isConnected = !!this.wallet;
-      console.log('Состояние кошелька:', isConnected);
+      console.log(tonConnectUI.connected)
       return tonConnectUI.connected;
     },
 
