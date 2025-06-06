@@ -3,12 +3,23 @@ import axios from "axios";
 import { TonConnectUI } from '@tonconnect/ui';
 
 // Инициализация TonConnect UI
-
 let tonConnectUI;
 try {
   tonConnectUI = new TonConnectUI({
     manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
   });
+  
+  // Set global UI options for consistent behavior
+  tonConnectUI.uiOptions = {
+    actionsConfiguration: {
+      modals: ['before', 'success', 'error'],
+      notifications: ['before', 'success', 'error'],
+      skipRedirectToWallet: 'ios', // Default for iOS compatibility
+      returnStrategy: 'back', // Default return strategy
+      twaReturnUrl: 'https://t.me/your_tma_bot' // Replace with your actual TMA URL
+    }
+  };
+  
   console.log("[wallet] TonConnectUI инициализирован");
 } catch (error) {
   console.error("[wallet] Ошибка инициализации TonConnectUI:", error);
@@ -17,21 +28,54 @@ try {
 
 export const useWalletStore = defineStore("wallet", {
   state: () => ({
-    wallet: null,
+    wallet: localStorage.getItem('walletAddress') || null,
     connectionError: null,
   }),
   actions: {
+    // Инициализация состояния кошелька при загрузке
+    async initializeWallet() {
+      try {
+        if (!tonConnectUI) {
+          throw new Error("[wallet] TonConnectUI не инициализирован");
+        }
+        
+        // Wait for connection restoration
+        const restored = await tonConnectUI.connectionRestored;
+        if (restored && tonConnectUI.connected) {
+          this.wallet = tonConnectUI.wallet?.account?.address || null;
+          if (this.wallet) {
+            localStorage.setItem('walletAddress', this.wallet);
+            console.log("[wallet] Connection restored. Wallet:", this.wallet);
+          } else {
+            localStorage.removeItem('walletAddress');
+            console.log("[wallet] Connection restored but no wallet found.");
+          }
+        } else {
+          this.wallet = null;
+          localStorage.removeItem('walletAddress');
+          console.log("[wallet] Connection was not restored.");
+        }
+        this.connectionError = null;
+      } catch (error) {
+        console.error("[wallet] Ошибка при инициализации состояния кошелька:", error);
+        this.connectionError = error.message;
+        throw error;
+      }
+    },
+
     // Подключение кошелька
     async connectWallet() {
-      console.log("[wallet] попытка подключить кошелёк");
       try {
         if (!tonConnectUI) {
           throw new Error("[wallet] TonConnectUI не инициализирован");
         }
         await tonConnectUI.openModal();
         this.wallet = tonConnectUI.wallet?.account?.address || null;
+        if (this.wallet) {
+          localStorage.setItem('walletAddress', this.wallet);
+          console.log("[wallet] Кошелек подключен:", this.wallet);
+        }
         this.connectionError = null;
-        console.log("[wallet] Кошелек подключен:", this.wallet);
       } catch (error) {
         console.error("[wallet] Ошибка при подключении кошелька:", error);
         this.connectionError = error.message;
@@ -47,6 +91,7 @@ export const useWalletStore = defineStore("wallet", {
         }
         tonConnectUI.disconnect();
         this.wallet = null;
+        localStorage.removeItem('walletAddress');
         this.connectionError = null;
         console.log("[wallet] Кошелек отключен");
       } catch (error) {
@@ -58,7 +103,7 @@ export const useWalletStore = defineStore("wallet", {
 
     // Получение состояния кошелька
     getWalletState() {
-      console.log("[wallet] ",tonConnectUI.connected);
+      console.log("[wallet] ", tonConnectUI.connected);
       return tonConnectUI.connected;
     },
 
