@@ -9,7 +9,6 @@ try {
   tonConnectUI = new TonConnectUI({
     manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
   });
-  newConnect(tonConnectUI);
   console.log("TonConnectUI инициализирован");
 } catch (error) {
   console.error("Ошибка инициализации TonConnectUI:", error);
