@@ -27,8 +27,6 @@ try{
   
 }
 
-WebApp.ready();
-
 console.log("[load-app] загрузка приложения...");
 
 const app = createApp(App);

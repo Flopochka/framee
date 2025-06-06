@@ -65,7 +65,6 @@ const fetchTotalInfo = async () => {
 };
 
 onMounted(async () => {
-  WebApp.ready(); // Инициализация Telegram Web App
   fetchTotalInfo();
   fetchWalletInfo();
 
