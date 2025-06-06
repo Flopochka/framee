@@ -1,25 +1,14 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { TonConnectUI } from '@tonconnect/ui';
+import { TonConnectUI } from "@tonconnect/ui";
 
 // Инициализация TonConnect UI
+
 let tonConnectUI;
 try {
   tonConnectUI = new TonConnectUI({
     manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
   });
-  
-  // Set global UI options for consistent behavior
-  tonConnectUI.uiOptions = {
-    actionsConfiguration: {
-      modals: ['before', 'success', 'error'],
-      notifications: ['before', 'success', 'error'],
-      skipRedirectToWallet: 'ios', // Default for iOS compatibility
-      returnStrategy: 'back', // Default return strategy
-      twaReturnUrl: 'https://t.me/your_tma_bot' // Replace with your actual TMA URL
-    }
-  };
-  
   console.log("[wallet] TonConnectUI инициализирован");
 } catch (error) {
   console.error("[wallet] Ошибка инициализации TonConnectUI:", error);
@@ -32,6 +21,9 @@ export const useWalletStore = defineStore("wallet", {
     connectionError: null,
   }),
   actions: {
+    async newConnect(e) {
+      tonConnectUI = e;
+    },
     // Подключение кошелька
     async connectWallet() {
       try {
@@ -86,19 +78,19 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            ...(extraCurrency && { extraCurrency }) // Conditionally include extraCurrency
+            ...(extraCurrency && { extraCurrency }), // Conditionally include extraCurrency
           },
         ],
       };
 
       try {
         const result = await tonConnectUI.sendTransaction(transaction, {
-          modals: ['before', 'success', 'error'],
-          notifications: ['before', 'success', 'error'],
-          skipRedirectToWallet: 'ios', // Ensure iOS compatibility
-          returnStrategy: 'back' // Default return strategy
+          modals: ["before", "success", "error"],
+          notifications: ["before", "success", "error"],
+          skipRedirectToWallet: "ios", // Ensure iOS compatibility
+          returnStrategy: "back", // Default return strategy
         });
-        
+
         console.log("[wallet] Платеж отправлен, boc:", result.boc);
         return result.boc;
       } catch (error) {
