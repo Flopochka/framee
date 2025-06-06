@@ -1,26 +1,18 @@
 import { defineStore } from 'pinia';
-import { TonConnect } from '@tonconnect/sdk';
+import { TonConnectUI } from '@tonconnect/ui';
 import axios from 'axios';
-import { WebApp } from '@twa-dev/sdk'; // Импортируем Telegram Web Apps SDK для совместимости
 
-// Инициализация Telegram Web Apps SDK
+// Инициализация TonConnect UI
+let tonConnectUI;
 try {
-  WebApp.ready(); // Сообщаем Telegram, что приложение готово
-  console.log('Telegram Web App инициализирован');
-} catch (error) {
-  console.error('Ошибка инициализации Telegram Web App:', error);
-}
-
-// Проверяем версию и инициализируем TonConnect
-let tonConnect;
-try {
-  tonConnect = new TonConnect({
-    manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json'
+  tonConnectUI = new TonConnectUI({
+    manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json',
+    buttonRootId: 'ton-connect-button' // ID элемента для рендеринга кнопки
   });
-  console.log('TonConnect инициализирован, версия SDK:', TonConnect.version);
+  console.log('TonConnectUI инициализирован');
 } catch (error) {
-  console.error('Ошибка инициализации TonConnect:', error);
-  throw new Error('Не удалось инициализировать TonConnect');
+  console.error('Ошибка инициализации TonConnectUI:', error);
+  throw new Error('Не удалось инициализировать TonConnectUI');
 }
 
 export const useWalletStore = defineStore('wallet', {
@@ -32,11 +24,11 @@ export const useWalletStore = defineStore('wallet', {
     // Подключение кошелька
     async connectWallet() {
       try {
-        if (!tonConnect || typeof tonConnect.connectWallet !== 'function') {
-          throw new Error('Метод connectWallet не найден в TonConnect. Проверьте версию @tonconnect/sdk.');
+        if (!tonConnectUI) {
+          throw new Error('TonConnectUI не инициализирован');
         }
-        await tonConnect.connectWallet();
-        this.wallet = tonConnect.wallet?.account?.address || null;
+        await tonConnectUI.openModal();
+        this.wallet = tonConnectUI.wallet?.account?.address || null;
         this.connectionError = null;
         console.log('Кошелек подключен:', this.wallet);
       } catch (error) {
@@ -49,10 +41,10 @@ export const useWalletStore = defineStore('wallet', {
     // Отключение кошелька
     disconnectWallet() {
       try {
-        if (!tonConnect || typeof tonConnect.disconnect !== 'function') {
-          throw new Error('Метод disconnect не найден в TonConnect');
+        if (!tonConnectUI) {
+          throw new Error('TonConnectUI не инициализирован');
         }
-        tonConnect.disconnect();
+        tonConnectUI.disconnect();
         this.wallet = null;
         this.connectionError = null;
         console.log('Кошелек отключен');
@@ -65,8 +57,8 @@ export const useWalletStore = defineStore('wallet', {
 
     // Получение информации о кошельке
     fetchWalletInfo() {
-      if (tonConnect.connected) {
-        this.wallet = tonConnect.wallet?.account?.address || null;
+      if (tonConnectUI.connected) {
+        this.wallet = tonConnectUI.wallet?.account?.address || null;
         console.log('Информация о кошельке обновлена:', this.wallet);
       } else {
         this.wallet = null;
@@ -98,10 +90,7 @@ export const useWalletStore = defineStore('wallet', {
       };
 
       try {
-        if (!tonConnect || typeof tonConnect.sendTransaction !== 'function') {
-          throw new Error('Метод sendTransaction не найден в TonConnect');
-        }
-        const result = await tonConnect.sendTransaction(transaction);
+        const result = await tonConnectUI.sendTransaction(transaction);
         console.log('Платеж отправлен, boc:', result.boc);
         return result.boc;
       } catch (error) {

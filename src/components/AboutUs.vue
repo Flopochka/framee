@@ -1,18 +1,14 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
-import { useWalletStore } from "../stores/wallet";
+import { useWalletStore } from "../stores/wallet"; // Исправлен импорт
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted } from "vue";
+import { WebApp } from "@twa-dev/sdk";
 
 const { getTranslation } = useLanguageStore();
 const { toggleModal } = useModalStore();
-const {
-  connectWallet,
-  disconnectWallet,
-  fetchWalletInfo,
-  getWalletState
-} = useWalletStore();
+const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
 
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
@@ -22,7 +18,7 @@ const cards = ref([
   { value: boughtToday, translation: "boughttoday" },
   { value: boughtYesterday, translation: "boughtyesterday" },
   { value: boughtAlltime, translation: "boughtalltime" },
-  { value: boughtMonthPremium, translation: "boughtmonthpremium" }
+  { value: boughtMonthPremium, translation: "boughtmonthpremium" },
 ]);
 const disconWarn = ref(false);
 const lottieContainer = ref(null);
@@ -68,6 +64,7 @@ const fetchTotalInfo = async () => {
 };
 
 onMounted(async () => {
+  WebApp.ready(); // Инициализация Telegram Web App
   fetchTotalInfo();
   fetchWalletInfo();
 
@@ -81,20 +78,13 @@ onMounted(async () => {
     path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
   });
 });
-
-const handleWalletButton = async () => {
-  try {
-    await connectWallet();
-  } catch (err) {
-    console.error("Ошибка подключения TON Wallet:", err);
-  }
-};
 </script>
 
 <template>
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
-      <div
+      <div id="ton-connect-button"></div>
+      <!-- <div
         v-if="!getWalletState()"
         @click="handleWalletButton"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
@@ -110,7 +100,7 @@ const handleWalletButton = async () => {
       >
         {{ getTranslation(disconWarn ? "Areyoushure" : "disconectWallet") }}
         <img src="../assets/img/Wallet.svg" alt="" class="img-20 lazy-img" />
-      </div>
+      </div> -->
       <p
         class="aboutus-cover-header letter-spacing-01 font-600 text-32 lh-110 tac twb"
       >
