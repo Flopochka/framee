@@ -3,12 +3,23 @@ import axios from "axios";
 import { TonConnectUI } from '@tonconnect/ui';
 
 // Инициализация TonConnect UI
-
 let tonConnectUI;
 try {
   tonConnectUI = new TonConnectUI({
     manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
   });
+  
+  // Set global UI options for consistent behavior
+  tonConnectUI.uiOptions = {
+    actionsConfiguration: {
+      modals: ['before', 'success', 'error'],
+      notifications: ['before', 'success', 'error'],
+      skipRedirectToWallet: 'ios', // Default for iOS compatibility
+      returnStrategy: 'back', // Default return strategy
+      twaReturnUrl: 'https://t.me/your_tma_bot' // Replace with your actual TMA URL
+    }
+  };
+  
   console.log("[wallet] TonConnectUI инициализирован");
 } catch (error) {
   console.error("[wallet] Ошибка инициализации TonConnectUI:", error);
@@ -21,9 +32,6 @@ export const useWalletStore = defineStore("wallet", {
     connectionError: null,
   }),
   actions: {
-    async newConnect(e) {
-      tonConnectUI = e;
-    },
     // Подключение кошелька
     async connectWallet() {
       try {
@@ -34,6 +42,21 @@ export const useWalletStore = defineStore("wallet", {
         this.wallet = tonConnectUI.wallet?.account?.address || null;
         this.connectionError = null;
         console.log("[wallet] Кошелек подключен:", this.wallet);
+        
+        // Monitor connection restoration
+        tonConnectUI.connectionRestored.then(restored => {
+          if (restored) {
+            console.log(
+              "[wallet] Connection restored. Wallet:",
+              JSON.stringify({
+                ...tonConnectUI.wallet,
+                ...tonConnectUI.walletInfo
+              })
+            );
+          } else {
+            console.log("[wallet] Connection was not restored.");
+          }
+        });
       } catch (error) {
         console.error("[wallet] Ошибка при подключении кошелька:", error);
         this.connectionError = error.message;
@@ -58,25 +81,14 @@ export const useWalletStore = defineStore("wallet", {
       }
     },
 
-    // Получение информации о кошельке
-    fetchWalletInfo() {
-      if (tonConnectUI.isConnected) {
-        this.wallet = tonConnectUI.wallet?.account?.address || null;
-        console.log("[wallet] Информация о кошельке обновлена:", this.wallet);
-      } else {
-        this.wallet = null;
-        console.log("[wallet] Кошелек не подключен");
-      }
-    },
-
     // Получение состояния кошелька
     getWalletState() {
-      console.log("[wallet] ",tonConnectUI.connected);
+      console.log("[wallet] ", tonConnectUI.connected);
       return tonConnectUI.connected;
     },
 
     // Отправка платежа
-    async sendPayment(recipient, amount) {
+    async sendPayment(recipient, amount, extraCurrency = null) {
       if (!this.wallet) {
         throw new Error(
           "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
@@ -89,12 +101,19 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
+            ...(extraCurrency && { extraCurrency }) // Conditionally include extraCurrency
           },
         ],
       };
 
       try {
-        const result = await tonConnectUI.sendTransaction(transaction);
+        const result = await tonConnectUI.sendTransaction(transaction, {
+          modals: ['before', 'success', 'error'],
+          notifications: ['before', 'success', 'error'],
+          skipRedirectToWallet: 'ios', // Ensure iOS compatibility
+          returnStrategy: 'back' // Default return strategy
+        });
+        
         console.log("[wallet] Платеж отправлен, boc:", result.boc);
         return result.boc;
       } catch (error) {
