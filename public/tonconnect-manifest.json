@@ -1,9 +1,5 @@
 {
-  "manifest_version": "1",
   "name": "Frame Stars",
-  "description": "Покупка звёзд через TON Connect",
   "url": "https://frame-stars.com",
-  "icon_url": "https://frame-stars.com/assets/icon.webp", 
-  "terms_of_use_url": "https://frame-stars.com/terms.txt",
-  "privacy_policy_url": "https://frame-stars.com/privacy.txt"
+  "icon_url": "https://frame-stars.com/assets/icon.png"
 }
