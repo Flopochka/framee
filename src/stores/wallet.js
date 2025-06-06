@@ -23,6 +23,7 @@ export const useWalletStore = defineStore("wallet", {
   actions: {
     // Подключение кошелька
     async connectWallet() {
+      console.log("[wallet] попытка подключить кошелёк");
       try {
         if (!tonConnectUI) {
           throw new Error("[wallet] TonConnectUI не инициализирован");
