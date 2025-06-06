@@ -7,7 +7,7 @@ import { ref, onMounted } from "vue";
 
 const { getTranslation } = useLanguageStore();
 const { toggleModal } = useModalStore();
-const { disconnectWallet, fetchWalletInfo, getWalletState, newConnect} = useWalletStore();
+const { disconnectWallet, getWalletState, connectWallet} = useWalletStore();
 
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
@@ -82,7 +82,7 @@ onMounted(async () => {
     <div class="aboutus-cover flex-col gap-40">
       <div
         v-if="!getWalletState()"
-        @click="handleWalletButton"
+        @click="connectWallet()"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}
