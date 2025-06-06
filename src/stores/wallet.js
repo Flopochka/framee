@@ -21,9 +21,6 @@ export const useWalletStore = defineStore("wallet", {
     connectionError: null,
   }),
   actions: {
-    async newConnect(e) {
-      tonConnectUI = e;
-    },
     // Подключение кошелька
     async connectWallet() {
       try {
