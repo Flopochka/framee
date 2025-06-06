@@ -49,7 +49,7 @@ export const useWalletStore = defineStore('wallet', {
 
     // Получение информации о кошельке
     fetchWalletInfo() {
-      if (tonConnectUI.connected) {
+      if (tonConnectUI.isConnected) {
         this.wallet = tonConnectUI.wallet?.account?.address || null;
         console.log('Информация о кошельке обновлена:', this.wallet);
       } else {
