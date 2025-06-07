@@ -18,7 +18,7 @@ const { setPaymentLink } = usePaymentStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
-const { getWalletState, sendPayment } = useWalletStore();
+const { getWalletState, sendPayment, connectWallet } = useWalletStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -188,7 +188,7 @@ const createorder = async () => {
   }
   if (currentPayment.value == 0) {
     if (!getWalletState()) {
-      toggleModal("popupwalletnc");
+      connectWallet();
       return;
     }
   }
@@ -226,6 +226,7 @@ const createorder = async () => {
       }
       const data = result.data;
       if (currentPayment.value === 0) {
+        console.log(data)
         // Handle TON payment
         const transactionResult = await sendPayment("frame-stars.ton",data.amount)
         // Send transaction result to server for verification
@@ -233,7 +234,7 @@ const createorder = async () => {
           order_id: data.order_id,
           transaction_boc: transactionResult.boc, // Send Base64-encoded Cell
         };
-        await sendToBackend("/verify_ton_transaction", verificationPayload);
+        // await sendToBackend("/verify_ton_transaction", verificationPayload);
         setupTabReturnListener(data.order_id);
       } else {
         // Non-TON payment (existing behavior)
