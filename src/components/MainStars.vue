@@ -230,6 +230,7 @@ const createorder = async () => {
         // Handle TON payment
         const transactionResult = await sendPayment("frame-stars.ton",data.amount)
         // Send transaction result to server for verification
+        console.log(transactionResult)
         const verificationPayload = {
           order_id: data.order_id,
           transaction_boc: transactionResult.boc, // Send Base64-encoded Cell
