@@ -21,9 +21,11 @@ function loadTraffyScript() {
     }
 
     const script = document.createElement("script");
-    script.src = "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js";
-    script.setAttribute("resource-id", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
-    script.setAttribute("mode", "mock");
+    // script.src = "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js";
+    script.src = "https://dvq1zz1g273yl.cloudfront.net/index_v1.1.0.min.js";
+    // script.setAttribute("resource-id", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
+    // script.setAttribute("mode", "mock");
+    script.setAttribute("test", "true");
     script.async = true;
 
     script.onload = () => {
@@ -32,7 +34,10 @@ function loadTraffyScript() {
     };
 
     script.onerror = (error) => {
-      console.error("Ошибка при загрузке скрипта traffy-wrapper.min.js:", error);
+      console.error(
+        "Ошибка при загрузке скрипта traffy-wrapper.min.js:",
+        error
+      );
       reject(error);
     };
 
@@ -42,97 +47,97 @@ function loadTraffyScript() {
 
 // Функция обработки base64-строк (для image_url)
 function getImageSrc(base64) {
-  if (!base64 || typeof base64 !== 'string') {
-    console.error('Base64 строка не передана или не является строкой');
-    return '';
+  if (!base64 || typeof base64 !== "string") {
+    console.error("Base64 строка не передана или не является строкой");
+    return "";
   }
 
-  let cleaned = base64.replace(/^data:image\/(png|svg\+xml);base64,/, '').trim();
+  let cleaned = base64
+    .replace(/^data:image\/(png|svg\+xml);base64,/, "")
+    .trim();
   try {
     cleaned = decodeURIComponent(cleaned);
   } catch (e) {
-    console.warn('Не удалось декодировать URL-кодированную строку:', e);
+    console.warn("Не удалось декодировать URL-кодированную строку:", e);
   }
 
-  cleaned = cleaned.replace(/\s+/g, '').replace(/=+$/, '');
+  cleaned = cleaned.replace(/\s+/g, "").replace(/=+$/, "");
   if (!/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
-    console.error('Строка содержит недопустимые символы для base64:', cleaned);
-    return '';
+    console.error("Строка содержит недопустимые символы для base64:", cleaned);
+    return "";
   }
 
   if (cleaned.length % 4 !== 0) {
-    console.warn('Некорректная длина base64-строки, добавляем padding');
-    cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), '=');
+    console.warn("Некорректная длина base64-строки, добавляем padding");
+    cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), "=");
   }
 
   try {
     atob(cleaned);
   } catch (e) {
-    console.error('Некорректная base64 строка:', e);
-    return '';
+    console.error("Некорректная base64 строка:", e);
+    return "";
   }
 
-  const mime = cleaned.startsWith('PHN2') ? 'image/svg+xml' : 'image/png';
+  const mime = cleaned.startsWith("PHN2") ? "image/svg+xml" : "image/png";
   return `data:${mime};base64,${cleaned}`;
 }
 
 // Функции для Traffy
-function onTaskLoad(tasksData) {
-  console.log('Задания загружены:', tasksData);
-  tasks.value = tasksData; // Сохраняем задания в реактивную переменную
+function onTaskLoad(tasks) {
+  console.log(tasks, "loaded");
+  traffyTasks.value = tasks;
 }
 
-function onTaskRender(changeReward, changeCardTitle, changeDescription, changeButtonCheckText) {
-  changeReward(getTranslation('rewardText', '200K')); // Локализованная награда
-  changeCardTitle(getTranslation('subscribeOn', 'Subscribe on: '));
-  changeDescription(getTranslation('taskDescription', 'Follow in Telegram'));
-  changeButtonCheckText(getTranslation('checkButton', 'Check'));
+function onTaskRender(
+  changeReward,
+  changeCardTitle,
+  changeDescription,
+  changeButtonCheckText
+) {
+  changeReward(); // Локализованная награда
+  changeCardTitle();
+  changeDescription();
+  changeButtonCheckText();
 }
 
 function onTaskReward(task, signedToken) {
-  console.log('Задание выполнено:', task, 'Токен:', signedToken);
-  // Пример отправки токена на сервер (в production)
-  /*
-  fetch('YOUR_SERVER_ENDPOINT', {
-    method: 'POST',
-    body: JSON.stringify({ hash: signedToken }),
+  console.log("Задание выполнено:", task, "Токен:", signedToken);
+  const url = new URL("Your Endpoint");
+  url.searchParams.set("auth", "Yout Auth");
+  fetch(url.toString(), {
+    method: "POST",
+    body: JSON.stringify({
+      task_id: task.company_id,
+      hash: signedToken,
+    }),
   })
     .then((res) => {
       if (res.status === 200) {
-        console.log('Награда начислена для задания:', task.title);
+        setBalance(state.traffy_reward, "add");
       }
     })
-    .catch((error) => {
-      console.error('Ошибка при начислении награды:', error);
-    });
-  */
+    .catch(() => {});
 }
 
 function onTaskReject(task) {
-  console.log('Задание не прошло проверку:', task.title);
-  // Можно показать уведомление
-  alert(getTranslation('taskRejected', `Задание не прошло проверку: ${task.title}`));
+  console.log("Задание не прошло проверку:", task);
 }
 
 // Инициализация Traffy после монтирования компонента
 onMounted(() => {
-  loadTraffyScript()
-    .then(() => {
-      if (traffyTasks.value) {
-        window.Traffy.renderTasks(traffyTasks.value, {
-          max_tasks: 3,
-          onTaskLoad,
-          onTaskRender,
-          onTaskReward,
-          onTaskReject,
-        });
-      } else {
-        console.error('Контейнер traffyTasks или window.Traffy не найдены');
-      }
-    })
-    .catch((error) => {
-      console.error('Не удалось загрузить Traffy:', error);
+  loadTraffyScript();
+  if (traffyTasks.value) {
+    window.Traffy.renderTasks(traffyTasks.value, {
+      max_tasks: 3,
+      onTaskLoad,
+      onTaskRender,
+      onTaskReward,
+      onTaskReject,
     });
+  } else {
+    console.error("Контейнер traffyTasks или window.Traffy не найдены");
+  }
 });
 </script>
 
