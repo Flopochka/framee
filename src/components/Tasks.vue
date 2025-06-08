@@ -42,6 +42,18 @@ function loadTraffyScript() {
     };
 
     document.head.appendChild(script);
+
+    if (traffyTasks.value) {
+      window.Traffy.renderTasks(traffyTasks.value, {
+        max_tasks: 3,
+        onTaskLoad,
+        onTaskRender,
+        onTaskReward,
+        onTaskReject,
+      });
+    } else {
+      console.error("Контейнер traffyTasks или window.Traffy не найдены");
+    }
   });
 }
 
@@ -127,17 +139,6 @@ function onTaskReject(task) {
 // Инициализация Traffy после монтирования компонента
 onMounted(() => {
   loadTraffyScript();
-  if (traffyTasks.value) {
-    window.Traffy.renderTasks(traffyTasks.value, {
-      max_tasks: 3,
-      onTaskLoad,
-      onTaskRender,
-      onTaskReward,
-      onTaskReject,
-    });
-  } else {
-    console.error("Контейнер traffyTasks или window.Traffy не найдены");
-  }
 });
 </script>
 
