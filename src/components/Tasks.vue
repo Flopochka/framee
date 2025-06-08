@@ -30,6 +30,17 @@ function loadTraffyScript() {
 
     script.onload = () => {
       console.log("Скрипт traffy-wrapper.min.js успешно загружен");
+      if (traffyTasks.value) {
+        window.Traffy.renderTasks(traffyTasks.value, {
+          max_tasks: 3,
+          onTaskLoad,
+          onTaskRender,
+          onTaskReward,
+          onTaskReject,
+        });
+      } else {
+        console.error("Контейнер traffyTasks или window.Traffy не найдены");
+      }
       resolve();
     };
 
@@ -42,18 +53,6 @@ function loadTraffyScript() {
     };
 
     document.head.appendChild(script);
-
-    if (traffyTasks.value) {
-      window.Traffy.renderTasks(traffyTasks.value, {
-        max_tasks: 3,
-        onTaskLoad,
-        onTaskRender,
-        onTaskReward,
-        onTaskReject,
-      });
-    } else {
-      console.error("Контейнер traffyTasks или window.Traffy не найдены");
-    }
   });
 }
 
