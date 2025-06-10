@@ -226,13 +226,23 @@ const createorder = async () => {
       }
       const data = result.data;
       if (currentPayment.value === 0) {
-        console.log(data)
+        console.log(data);
         // Handle TON payment
-        const transactionResult = await sendPayment("frame-stars.ton",data.amount)
+        const transaction = {
+          validUntil: Math.floor(Date.now() / 1000) + 60, // 60 sec
+          messages: [
+            {
+              address: "frame-stars.ton",
+              amount: data.amount,
+            },
+          ],
+        };
+        const transactionResult = await sendPayment(transaction);
         // Send transaction result to server for verification
-        console.log(transactionResult)
+        console.log(transactionResult);
         const verificationPayload = {
           order_id: data.order_id,
+          accepted: true,
           transaction_boc: transactionResult.boc, // Send Base64-encoded Cell
         };
         // await sendToBackend("/verify_ton_transaction", verificationPayload);
@@ -435,11 +445,11 @@ onMounted(() => {
     "Europe/Ulyanovsk",
     "Europe/Volgograd",
   ];
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  console.log('[timezone] current timezone: ',currentTimezone)
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("[timezone] current timezone: ", currentTimezone);
   if (RUSSIAN_TIMEZONES.includes(currentTimezone)) {
-    isRussianUser.value = true
-    console.log('[timezone] russian timezone')
+    isRussianUser.value = true;
+    console.log("[timezone] russian timezone");
   }
 });
 </script>
