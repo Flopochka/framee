@@ -115,7 +115,7 @@ export const useWalletStore = defineStore("wallet", {
 
     // Отправка платежа
     async sendPayment(recipient, amount, extraCurrency = null) {
-      if (!this.wallet) {
+      if (!getWalletState()) {
         throw new Error(
           "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
         );

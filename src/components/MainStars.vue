@@ -231,11 +231,6 @@ const createorder = async () => {
         const transactionResult = await sendPayment("frame-stars.ton",data.amount)
         // Send transaction result to server for verification
         console.log(transactionResult)
-        const verificationPayload = {
-          order_id: data.order_id,
-          accepted: true,
-          transaction_boc: transactionResult.boc, // Send Base64-encoded Cell
-        };
         // await sendToBackend("/verify_ton_transaction", verificationPayload);
         setupTabReturnListener(data.order_id);
       } else {
