@@ -115,7 +115,7 @@ export const useWalletStore = defineStore("wallet", {
 
     // Отправка платежа
     async sendPayment(recipient, amount, extraCurrency = null) {
-      if (!getWalletState()) {
+      if (!this.getWalletState()) {
         throw new Error(
           "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
         );
@@ -146,24 +146,6 @@ export const useWalletStore = defineStore("wallet", {
         console.error("[wallet] Ошибка при отправке платежа:", error);
         throw error;
       }
-    },
-
-    // Проверка статуса платежа через TONX API
-    async checkPaymentStatus(boc) {
-      const apiKey = "your_tonx_api_key"; // Замените на ваш реальный API-ключ (лучше хранить на бэкенде)
-      const url = "https://api.tonxapi.com/v1/tonx/transaction/GetBoCStatus";
-
-      try {
-        const response = await axios.post(url, {
-          boc: boc,
-          api_key: apiKey,
-        });
-        console.log("[wallet] Статус платежа:", response.data.status);
-        return response.data.status;
-      } catch (error) {
-        console.error("[wallet] Ошибка при проверке статуса платежа:", error);
-        throw error;
-      }
-    },
+    }
   },
 });
