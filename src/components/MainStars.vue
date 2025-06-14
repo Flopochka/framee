@@ -241,6 +241,9 @@ const createorder = async () => {
       }
     } catch (error) {
       console.error("Failed:", error);
+      if (error = "[wallet] Ошибка при отправке платежа: Hl: [TON_CONNECT_SDK_ERROR] Hl: User rejects the action in the wallet.") {
+        console.log("meow")
+      }
       toggleModal("error");
     }
   }

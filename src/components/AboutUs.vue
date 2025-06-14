@@ -62,6 +62,20 @@ const fetchTotalInfo = async () => {
   }
 };
 
+const walcon = ref(getWalletState())
+
+const handleBut = async () => {
+  if (walcon.value) {
+    if (disconWarn.value) {
+      disconnectWallet()
+    } else {
+      toggleWarn()
+    }
+  }else{
+    connectWallet().then(walcon.value = getWalletState())
+  }
+}
+
 onMounted(async () => {
   fetchTotalInfo();
 
@@ -81,8 +95,8 @@ onMounted(async () => {
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
       <div
-        v-if="!getWalletState()"
-        @click="connectWallet()"
+        v-if="!walcon"
+        @click="handleBut()"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}
@@ -90,7 +104,7 @@ onMounted(async () => {
       </div>
       <div
         v-else
-        @click="() => { disconWarn ? disconnectWallet() : toggleWarn(); }"
+        @click="handleBut()"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
         :class="disconWarn ? 'warn' : ''"
       >
