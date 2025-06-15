@@ -7,13 +7,6 @@ const traffyTasks = ref(null);
 const tasks = ref([]);
 const loadingError = ref(false);
 
-// Конфигурация Traffy
-const TRAFFY_CONFIG = {
-  resourceId: "6e1c73ca-e60f-4359-920f-e1d98f2a3d32", // Замените на ваш ключ
-  scriptUrl: "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js",
-  mode: "mock", // или "production" для реального режима
-};
-
 // Обработчики заданий
 const onTaskLoad = (loadedTasks) => {
   console.log("Задания загружены:", loadedTasks);
@@ -26,7 +19,7 @@ const onTaskRender = (
   changeDescription,
   changeButtonCheckText
 ) => {
-  changeReward("10 ★");
+  changeReward("10");
   changeCardTitle(getTranslation("subscribe:"));
   changeButtonCheckText(getTranslation("check"));
 };
@@ -63,7 +56,7 @@ const loadFallbackTasks = () => {
       id: "fallback-1",
       title: getTranslation("demoTaskTitle"),
       description: getTranslation("demoTaskDescription"),
-      reward: "10 ★",
+      reward: "10",
     },
   ];
 };
@@ -91,18 +84,31 @@ onMounted(async () => {
 
     <!-- Контейнер для Traffy -->
     <div class="traffy-custom" ref="traffyTasks"></div>
-    <template v-if="!tasks || tasks.length === 0">
+    <div
+      v-if="tasks"
+      v-for="i in tasks"
+      :key="i.id"
+      class="task-card bg-blue-900 rounded-12 items-center"
+    >
+      <p class="text-16 text-white">
+        {{ i.title }}
+      </p>
+      <div
+        class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+      >
+        {{ getTranslation("start") }}
+      </div>
+      <p class="text-14 text-white flex-row gap-2">
+        <img src="../assets/img/Star.svg" alt="" class="img-16" />
+        {{ i.reward }}
+      </p>
+    </div>
+    <template v-else>
       <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
       <p class="text-16 lh-120">
         {{ getTranslation("Takeabreakorcheckbacklaterfornewassignments") }}
       </p>
     </template>
-
-    <div v-for="task in tasks" :key="task.id" class="task-card">
-      <h3>{{ task.title }}</h3>
-      <p>{{ task.description }}</p>
-      <div class="reward">{{ task.reward }}</div>
-    </div>
   </main>
 </template>
 
