@@ -9,7 +9,7 @@ const loadingError = ref(false);
 
 // Конфигурация Traffy
 const TRAFFY_CONFIG = {
-  resourceId: "YOUR_TRAFFY_KEY", // Замените на ваш ключ
+  resourceId: "6e1c73ca-e60f-4359-920f-e1d98f2a3d32", // Замените на ваш ключ
   scriptUrl: "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js",
   mode: "mock" // или "production" для реального режима
 };
