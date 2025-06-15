@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import { useLanguageStore } from "../stores/language";
+import WebApp from "@twa-dev/sdk";
 
 const { getTranslation } = useLanguageStore();
 const traffyTasks = ref(null);
@@ -26,26 +27,60 @@ const onTaskRender = (
 
 const onTaskReward = (task, signedToken) => {
   console.log("[Tasks] Задание выполнено:", task);
-  alert("Таска выполнена")
+  WebApp.showPopup(
+    {
+      title: "Задание выполнено",
+      message: "Задание выполнено, красава машина вау",
+      buttons: [
+        {
+          id: "default",
+          type: "default", // или 'default', 'cancel', 'destructive'
+        },
+      ],
+    },
+    function (buttonId) {
+      console.log("Нажата кнопка:", buttonId); // 'ok'
+    }
+  );
   // Здесь отправка токена на ваш сервер для верификации
 };
 
 const onTaskReject = (task) => {
   console.warn("[Tasks] Задание отклонено:", task);
-  alert("Таска отклонена")
+  WebApp.showPopup(
+    {
+      title: "Задание отклонено",
+      message: "Выполнение задания отклонено, попробуйте снова",
+      buttons: [
+        {
+          id: "cancel",
+          type: "cancel", // или 'default', 'cancel', 'destructive'
+        },
+      ],
+    },
+    function (buttonId) {
+      console.log("Нажата кнопка:", buttonId); // 'ok'
+    }
+  );
 };
 
 // Функция для клика на оригинальную кнопку Traffy по индексу
 const clickOriginalButton = (taskIndex) => {
   nextTick(() => {
     // Находим все оригинальные кнопки Traffy
-    const originalButtons = document.querySelectorAll('.traffy-custom .traffy-taskElementButtonContOuter');
-    
+    const originalButtons = document.querySelectorAll(
+      ".traffy-custom .traffy-taskElementButtonContOuter"
+    );
+
     if (originalButtons && originalButtons.length > taskIndex) {
       originalButtons[taskIndex].click();
-      console.log(`[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`);
+      console.log(
+        `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
+      );
     } else {
-      console.warn(`[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`);
+      console.warn(
+        `[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`
+      );
     }
   });
 };
@@ -88,7 +123,8 @@ onMounted(async () => {
       class="task-card bg-blue-900 rounded-12 items-center"
     >
       <p class="text-16 text-white">
-        {{ task.title || "Task title" }}{{ task.description ? (", "+task.description) : "" }}
+        {{ task.title || "Task title"
+        }}{{ task.description ? ", " + task.description : "" }}
       </p>
       <div
         class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
