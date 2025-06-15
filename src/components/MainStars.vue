@@ -204,7 +204,10 @@ const createorder = async () => {
       (_, idx) =>
         idx === filteredPaymentMethods.value[filteredIndex].originalIndex
     );
-    const paymentMethodName = paymentlist[originalIndex];
+    const paymentMethodName =
+      currentPayment.value === 0
+        ? paymentlistanother[currentPaymentSub.value]
+        : paymentlist[originalIndex];
     const payload = {
       sender_id: useUserStore().getUserId(),
       count:
