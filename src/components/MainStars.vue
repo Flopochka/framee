@@ -228,7 +228,7 @@ const createorder = async () => {
       if (currentPayment.value === 0) {
         console.log(data)
         // Handle TON payment
-        const transactionResult = await sendPayment("frame-stars.ton",data.amount)
+        const transactionResult = await sendPayment("UQBmVB2crOEoXeXZpunhvUoZB5olgu4_Iw1ThIJzHjH6_Fk6",data.amount)
         // Send transaction result to server for verification
         console.log(transactionResult)
         // await sendToBackend("/verify_ton_transaction", verificationPayload);
