@@ -166,6 +166,22 @@ const searchRecipient = async (username) => {
   }
 };
 
+const availablePaymentIndices = computed(() => {
+  // Всегда доступен TON (индекс 0)
+  const indices = [0];
+
+  // Для российских пользователей добавляем USDT (1) и СБП (2)
+  if (isRussianUser.value) {
+    indices.push(1, 2);
+  }
+  // Для не российских добавляем USDT (1) и VISA/MC (3)
+  else {
+    indices.push(1, 3);
+  }
+
+  return indices;
+});
+
 const createorder = async () => {
   valueIncorrects.value = [];
   recipientIncorrects.value = [];
@@ -198,16 +214,25 @@ const createorder = async () => {
     valueCorrect.value &&
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
-    const allPaymentMethods = getTranslation("paymentmetdods");
-    const filteredIndex = currentPayment.value;
-    const originalIndex = allPaymentMethods.findIndex(
-      (_, idx) =>
-        idx === filteredPaymentMethods.value[filteredIndex].originalIndex
-    );
+    // Получаем реальный индекс из массива доступных индексов
+    const originalIndex = availablePaymentIndices.value[currentPayment.value];
+
+    console.log("Payment indices:", availablePaymentIndices.value);
+    console.log("Current payment index:", currentPayment.value);
+    console.log("Original index:", originalIndex);
+
+    // Для TON используем подметоды, для других - основной список
     const paymentMethodName =
-      currentPayment.value === 0
+      originalIndex === 0
         ? paymentlistanother[currentPaymentSub.value]
         : paymentlist[originalIndex];
+    console.log(
+      originalIndex,
+      paymentlist[originalIndex],
+      paymentlistanother[currentPaymentSub.value],
+      currentPaymentSub.value,
+      currentPayment.value
+    );
     const payload = {
       sender_id: useUserStore().getUserId(),
       count:
@@ -217,11 +242,13 @@ const createorder = async () => {
       to_user: targetUserName.value,
       payment_method: paymentMethodName,
       payment_network:
-        currentPayment.value > 0
-          ? currentPayment.value == 1
-            ? "USDT"
-            : "CARD"
-          : paymentlistanother[currentPaymentSub.value],
+        originalIndex === 0
+          ? paymentlistanother[currentPaymentSub.value]
+          : originalIndex === 1
+          ? "USDT"
+          : originalIndex === 2
+          ? "SBP"
+          : "CARD",
     };
 
     try {
