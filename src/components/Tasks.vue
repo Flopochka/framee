@@ -9,7 +9,7 @@ const loadingError = ref(false);
 
 // Обработчики заданий
 const onTaskLoad = (loadedTasks) => {
-  console.log("Задания загружены:", loadedTasks);
+  console.log("[Tasks] Задания загружены:", loadedTasks);
   tasks.value = loadedTasks || [];
 };
 
@@ -25,12 +25,12 @@ const onTaskRender = (
 };
 
 const onTaskReward = (task, signedToken) => {
-  console.log("Задание выполнено:", task);
+  console.log("[Tasks] Задание выполнено:", task);
   // Здесь отправка токена на ваш сервер для верификации
 };
 
 const onTaskReject = (task) => {
-  console.warn("Задание отклонено:", task);
+  console.warn("[Tasks] Задание отклонено:", task);
 };
 
 // Инициализация Traffy
@@ -44,7 +44,7 @@ const initTraffy = () => {
       onTaskReject,
     });
   } catch (error) {
-    console.error("Ошибка инициализации Traffy:", error);
+    console.error("[Tasks] Ошибка инициализации Traffy:", error);
     loadingError.value = true;
   }
 };
@@ -72,7 +72,7 @@ onMounted(async () => {
       }
     }, 3000);
   } catch (error) {
-    console.error("Не удалось загрузить Traffy:", error);
+    console.error("[Tasks] Не удалось загрузить Traffy:", error);
     loadFallbackTasks();
   }
 });
