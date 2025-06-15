@@ -65,34 +65,6 @@ async function initializeApp() {
     }
   }
 
-  // Синхронизация с текущим URL после загрузки
-  const syncWithCurrentRoute = () => {
-    const currentPath = router.currentRoute.value.path;
-    const modalName = router.currentRoute.value.query.modal;
-    
-    useScreenStore.syncWithRoute(currentPath);
-    
-    if (modalName) {
-      useModalStore.toggleModal(modalName);
-    } else if (useModalStore.activeModal) {
-      useModalStore.toggleModal(useModalStore.activeModal); // Закрыть если нет в URL
-    }
-  };
-
-  // Первоначальная синхронизация
-  syncWithCurrentRoute();
-  
-  // Следим за изменениями маршрута
-  router.afterEach((to) => {
-    useScreenStore.syncWithRoute(to.path);
-    
-    if (to.query.modal) {
-      useModalStore.toggleModal(to.query.modal);
-    } else if (useModalStore.activeModal) {
-      useModalStore.toggleModal(useModalStore.activeModal); // Закрыть если нет в URL
-    }
-  });
-
   // Отправка информации о пользователе
   const user = unsafe?.user;
   let start = {};
