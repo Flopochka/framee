@@ -53,7 +53,8 @@ export const useWalletStore = defineStore("wallet", {
 
         const restored = await tonConnectUI.connectionRestored;
         this.isConnected = tonConnectUI.connected;
-        
+        console.log("[wallet] Connection status: ",this.isConnected)
+
         if (restored && tonConnectUI.connected) {
           this.wallet = tonConnectUI.wallet?.account?.address || null;
           if (this.wallet) {
