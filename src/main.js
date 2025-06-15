@@ -12,28 +12,36 @@ console.log("[main.js] инициализация приложения...");
 
 // Функция для проверки мобильного устройства
 function isMobileDevice() {
-  return /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+  return /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(
+    navigator.userAgent
+  );
 }
 
 // Инициализация приложения
 async function initializeApp() {
   const app = createApp(App);
   const pinia = createPinia();
-  
+
   app.use(pinia);
   app.use(router);
-  
+
   app.mount("#app");
   WebApp.ready();
 
+  const isInsideTelegram = WebApp.platform !== "unknown";
+
   // Выход из полноэкранного режима для десктопов
-  try {
-    if (!isMobileDevice()) {
-      console.log("[main.js] не мобильное устройство");
-      WebApp.exitFullscreen();
+  if (isInsideTelegram) {
+    try {
+      if (!isMobileDevice()) {
+        console.log("[main.js] не мобильное устройство");
+        WebApp.exitFullscreen();
+      } else {
+        WebApp.requestFullscreen();
+      }
+    } catch (e) {
+      console.error("[main.js] ошибка при выходе из полноэкранного режима", e);
     }
-  } catch (e) {
-    console.warn("[main.js] ошибка при выходе из полноэкранного режима", e);
   }
 
   // Обработка start_param
@@ -43,18 +51,18 @@ async function initializeApp() {
   if (!startParamProcessed && unsafe?.start_param) {
     try {
       const parsed = JSON.parse(atob(unsafe.start_param));
-      
+
       if (parsed?.path) {
         sessionStorage.setItem("start_param_processed", "1");
-        
+
         // Разбираем путь и параметры
-        const [path, queryString] = parsed.path.split('?');
+        const [path, queryString] = parsed.path.split("?");
         const queryParams = new URLSearchParams(queryString);
-        const modalName = queryParams.get('modal');
-        
+        const modalName = queryParams.get("modal");
+
         // Навигация к нужному экрану
-        useScreenStore.syncWithRoute(path)
-        
+        useScreenStore.syncWithRoute(path);
+
         // Открытие модального окна, если указано
         if (modalName) {
           useModalStore.toggleModal(modalName);
@@ -72,14 +80,16 @@ async function initializeApp() {
     start = JSON.parse(atob(unsafe?.start_param || ""));
   } catch {}
 
-  sendToBackend("/update_user_info", {
-    user_id: user?.id,
-    referral: start.referal ? JSON.stringify(start.referal) : "0",
-    lang: user?.language_code,
-    username: user?.username,
-    photo_url: user?.photo_url,
-    name: user?.first_name,
-  });
+  if (isInsideTelegram) {
+    sendToBackend("/update_user_info", {
+      user_id: user?.id,
+      referral: start.referal ? JSON.stringify(start.referal) : "0",
+      lang: user?.language_code,
+      username: user?.username,
+      photo_url: user?.photo_url,
+      name: user?.first_name,
+    });
+  }
 
   // Запрос прав на запись
   function requestAccessLoop() {
@@ -93,7 +103,9 @@ async function initializeApp() {
     });
   }
 
-  requestAccessLoop();
+  if (isInsideTelegram) {
+    requestAccessLoop();
+  }
 }
 
 initializeApp().catch((e) => {

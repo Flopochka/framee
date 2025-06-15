@@ -11,6 +11,7 @@ import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import lozad from "lozad";
+import WebApp from "@twa-dev/sdk";
 
 const { getCurrentScreen, syncWithRoute } = useScreenStore();
 const route = useRoute();
@@ -45,20 +46,21 @@ const onBlur = () => {
   }, 100); // 100мс — хватает для переключения между инпутами
 };
 
+const isInsideTelegram = WebApp.platform !== "unknown";
+
 onMounted(() => {
   // Инициализация аналитики (раскомментируй и укажи токен)
-  telegramAnalytics.init({
-    token:
-      "eyJhcHBfbmFtZSI6IkZSQU1FIiwiYXBwX3VybCI6Imh0dHBzOi8vdC5tZS9GcmFtZXN0YXJzX2JvdCIsImFwcF9kb21haW4iOiJodHRwczovL2ZyYW1lLXN0YXJzLmNvbSJ9!I+r7Qr8f0c2CpNQMdsvYo4B7ukow0dpw3pFoavLDtB0=",
-    appName: "FRAME",
-  });
+  if (isInsideTelegram) {
+    telegramAnalytics.init({
+      token:
+        "eyJhcHBfbmFtZSI6IkZSQU1FIiwiYXBwX3VybCI6Imh0dHBzOi8vdC5tZS9GcmFtZXN0YXJzX2JvdCIsImFwcF9kb21haW4iOiJodHRwczovL2ZyYW1lLXN0YXJzLmNvbSJ9!I+r7Qr8f0c2CpNQMdsvYo4B7ukow0dpw3pFoavLDtB0=",
+      appName: "FRAME",
+    });
+  }
 
   // Инициализация lazy-loading
   try {
     observer = lozad(".lazy-img, .lazy-bg", {
-      loaded: (el) => {
-        console.log("Lazy loaded:", el);
-      },
       error: (el) => {
         console.error("Lazy load failed:", el);
       },
@@ -110,31 +112,46 @@ onBeforeUnmount(() => {
   >
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? '84px':'' }"
+      :style="{
+        height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)',
+        paddingTop: isMobileDevice() ? '84px' : '',
+      }"
     >
       <MainStars />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? '84px':'' }"
+      :style="{
+        height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)',
+        paddingTop: isMobileDevice() ? '84px' : '',
+      }"
     >
       <Tasks />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? '84px':'' }"
+      :style="{
+        height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)',
+        paddingTop: isMobileDevice() ? '84px' : '',
+      }"
     >
       <AboutUs />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? '84px':'' }"
+      :style="{
+        height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)',
+        paddingTop: isMobileDevice() ? '84px' : '',
+      }"
     >
       <Profile />
     </div>
     <div
       class="screen-item"
-      :style="{ height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)', paddingTop: isMobileDevice() ? '84px':'' }"
+      :style="{
+        height: isKeyboardOpen ? '100vh' : 'calc(100vh - 84px)',
+        paddingTop: isMobileDevice() ? '84px' : '',
+      }"
     >
       <WithdrawScreen />
     </div>

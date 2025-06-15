@@ -29,7 +29,7 @@ function loadTraffyScript() {
     script.async = true;
 
     script.onload = () => {
-      console.log("Скрипт traffy-wrapper.min.js успешно загружен");
+      console.log("[tasks] Скрипт traffy-wrapper.min.js успешно загружен");
       if (traffyTasks.value) {
         window.Traffy.renderTasks(traffyTasks.value, {
           max_tasks: 3,
@@ -39,14 +39,14 @@ function loadTraffyScript() {
           onTaskReject,
         });
       } else {
-        console.error("Контейнер traffyTasks или window.Traffy не найдены");
+        console.error("[tasks] Контейнер traffyTasks или window.Traffy не найдены");
       }
       resolve();
     };
 
     script.onerror = (error) => {
       console.error(
-        "Ошибка при загрузке скрипта traffy-wrapper.min.js:",
+        "[tasks] Ошибка при загрузке скрипта traffy-wrapper.min.js:",
         error
       );
       reject(error);
