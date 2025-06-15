@@ -6,7 +6,7 @@ import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted, computed } from "vue";
 
 const { getTranslation } = useLanguageStore();
-const { disconnectWallet} = useWalletStore();
+const { disconnectWallet, connectWallet} = useWalletStore();
 const isWalletConnected = computed(() => useWalletStore().getWalletState());
 const { toggleModal } = useModalStore();
 
@@ -100,7 +100,7 @@ onMounted(async () => {
     <div class="aboutus-cover flex-col gap-40">
       <div
         v-if="!isWalletConnected"
-        @click="toggleModal('connect')"
+        @click="connectWallet()"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}
