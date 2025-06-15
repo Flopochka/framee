@@ -92,33 +92,32 @@ onMounted(async () => {
     <!-- Контейнер для Traffy -->
     <div class="traffy-custom" ref="traffyTasks"></div>
 
-    <!-- Фолбэк если Traffy не загрузился -->
-    <template v-if="loadingError || tasks.length">
-      <div v-for="task in tasks" :key="task.id" class="task-card">
-        <h3>{{ task.title }}</h3>
-        <p>{{ task.description }}</p>
-        <div class="reward">{{ task.reward }}</div>
-      </div>
-    </template>
+    <div v-for="task in tasks" :key="task.id" class="task-card">
+      <h3>{{ task.title }}</h3>
+      <p>{{ task.description }}</p>
+      <div class="reward">{{ task.reward }}</div>
+    </div>
   </main>
 </template>
 
 <style scoped>
 .traffy-custom {
-  display: grid;
-  gap: 12px;
-  
-  --traffy-buttonRewardImage-background-image: url("https://d36t0rmxsg07e0.cloudfront.net/coin.webp");
-  --traffy-buttonRewardImage-background-size: 16px;
-
-  --traffy-buttonCheckRewardImage-background-image: none;
-  --traffy-buttonCheckRewardImage-background-size: 0;
-
-  --traffy-taskElementButtonText-padding-left: 4px;
-
-  --traffy-taskElementImageCont-display: block;
-  --traffy-taskElementInfoCont-gap: 10px;
-
-  --traffy-taskElementInstructionCont-width: 150px;
+  display: none;
 }
+.traffy-taskElementCont {
+  padding: 14px 12px;
+}
+/* .task-card {
+  padding: 14px 12px;
+  display: grid;
+  grid-template-areas: "A B" "C B";
+  gap: 6px;
+}
+.task-btn {
+  background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
+  padding: 3px 11px;
+  grid-area: B;
+  width: fit-content;
+  justify-self: end;
+} */
 </style>
