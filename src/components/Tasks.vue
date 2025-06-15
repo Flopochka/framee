@@ -65,7 +65,7 @@ onMounted(async () => {
     <!-- Контейнер для Traffy -->
     <div class="traffy-custom" ref="traffyTasks"></div>
     <div
-      v-if="tasks"
+      v-if="tasks && tasks.length > 0"
       v-for="i in tasks"
       :key="i.id"
       class="task-card bg-blue-900 rounded-12 items-center"
