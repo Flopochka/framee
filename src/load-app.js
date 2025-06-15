@@ -22,9 +22,10 @@ try{
   WebApp.exitFullscreen()
 } else {
   console.log("[load-app] мобильное устройство");
+  WebApp.requestFullscreen()
 }
-}catch{
-  
+}catch(error){
+  console.log("[load-app]", error)
 }
 
 WebApp.ready();
