@@ -91,6 +91,12 @@ onMounted(async () => {
 
     <!-- Контейнер для Traffy -->
     <div class="traffy-custom" ref="traffyTasks"></div>
+    <template v-if="!tasks || tasks.length === 0">
+      <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
+      <p class="text-16 lh-120">
+        {{ getTranslation("Takeabreakorcheckbacklaterfornewassignments") }}
+      </p>
+    </template>
 
     <div v-for="task in tasks" :key="task.id" class="task-card">
       <h3>{{ task.title }}</h3>
