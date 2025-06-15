@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useLanguageStore } from "../stores/language";
 
 const { getTranslation } = useLanguageStore();
@@ -26,11 +26,28 @@ const onTaskRender = (
 
 const onTaskReward = (task, signedToken) => {
   console.log("[Tasks] Задание выполнено:", task);
+  alert("Таска выполнена")
   // Здесь отправка токена на ваш сервер для верификации
 };
 
 const onTaskReject = (task) => {
   console.warn("[Tasks] Задание отклонено:", task);
+  alert("Таска отклонена")
+};
+
+// Функция для клика на оригинальную кнопку Traffy по индексу
+const clickOriginalButton = (taskIndex) => {
+  nextTick(() => {
+    // Находим все оригинальные кнопки Traffy
+    const originalButtons = document.querySelectorAll('.traffy-custom .traffy-taskElementButtonContOuter');
+    
+    if (originalButtons && originalButtons.length > taskIndex) {
+      originalButtons[taskIndex].click();
+      console.log(`[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`);
+    } else {
+      console.warn(`[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`);
+    }
+  });
 };
 
 // Инициализация Traffy
@@ -66,21 +83,22 @@ onMounted(async () => {
     <div class="traffy-custom" ref="traffyTasks"></div>
     <div
       v-if="tasks && tasks.length > 0"
-      v-for="i in tasks"
-      :key="i.id"
+      v-for="(task, index) in tasks"
+      :key="task.id"
       class="task-card bg-blue-900 rounded-12 items-center"
     >
       <p class="text-16 text-white">
-        {{ i.title }}, {{ i.description }}
+        {{ task.title || "Task title" }}{{ task.description ? (", "+task.description) : "" }}
       </p>
       <div
         class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+        @click="clickOriginalButton(index)"
       >
         {{ getTranslation("start") }}
       </div>
       <p class="text-14 text-white flex-row gap-2">
         <img src="../assets/img/Star.svg" alt="" class="img-16" />
-        {{ i.reward }}
+        {{ task.reward || 0 }}
       </p>
     </div>
     <template v-else>
