@@ -53,16 +53,7 @@ async function initializeApp() {
         const modalName = queryParams.get('modal');
         
         // Навигация к нужному экрану
-        const screenMap = {
-          "/": 0,
-          "/tasks": 1,
-          "/about": 2,
-          "/profile": 3,
-          "/withdraw": 4,
-        };
-        
-        const screenIndex = screenMap[path] ?? 0;
-        await useScreenStore.switchScreen(screenIndex);
+        useScreenStore.syncWithRoute(path)
         
         // Открытие модального окна, если указано
         if (modalName) {
