@@ -80,7 +80,7 @@ const fetchTotalInfo = async () => {
 };
 
 onMounted(async () => {
-  fetchWalletInfo();
+  fetchTotalInfo();
 
   const lottie = await import("lottie-web");
   const container = lottieContainer.value;
