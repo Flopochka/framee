@@ -17,6 +17,7 @@ import CopiedPopup from "./CopiedPopup.vue";
 import FillerModal from "./FillerModal.vue";
 import ConnectModal from "./ConnectModal.vue";
 import TermsModal from "./TermsModal.vue";
+import PrivacyModal from "./PrivacyModal.vue";
 
 const modalStore = useModalStore();
 const { toggleModal, getActiveModal } = modalStore;
@@ -44,6 +45,13 @@ const modals = [
     type: "modal",
     class: "user-terms madal-screen",
     title: "Termsofservice",
+  },
+  {
+    id: "privacy",
+    component: PrivacyModal,
+    type: "modal",
+    class: "user-privacy madal-screen",
+    title: "privacytitle",
   },
   {
     id: "connect",

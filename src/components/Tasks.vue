@@ -1,159 +1,155 @@
 <script setup>
+import { ref, onMounted, nextTick } from "vue";
 import { useLanguageStore } from "../stores/language";
-import { ref, onMounted } from "vue";
+import WebApp from "@twa-dev/sdk";
 
 const { getTranslation } = useLanguageStore();
-
-// Реактивная переменная для заданий
-const tasks = ref(null);
 const traffyTasks = ref(null);
+const tasks = ref([]);
+const loadingError = ref(false);
 
-// Функция загрузки скрипта Traffy
-function loadTraffyScript() {
-  return new Promise((resolve, reject) => {
-    const existingScript = document.querySelector(
-      'script[src="https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js"]'
-    );
-    if (existingScript) {
-      console.log("Скрипт traffy-wrapper.min.js уже загружен");
-      resolve();
-      return;
+// Обработчики заданий
+const onTaskLoad = (loadedTasks) => {
+  console.log("[Tasks] Задания загружены:", loadedTasks);
+  tasks.value = loadedTasks || [];
+};
+
+const onTaskRender = (
+  changeReward,
+  changeCardTitle,
+  changeDescription,
+  changeButtonCheckText
+) => {
+  changeReward("10");
+  changeCardTitle(getTranslation("subscribe:"));
+  changeButtonCheckText(getTranslation("check"));
+};
+
+const onTaskReward = (task, signedToken) => {
+  console.log("[Tasks] Задание выполнено:", task);
+  WebApp.showPopup(
+    {
+      title: "Задание выполнено",
+      message: "Задание выполнено, красава машина вау",
+      buttons: [
+        {
+          id: "default",
+          type: "default", // или 'default', 'cancel', 'destructive'
+        },
+      ],
+    },
+    function (buttonId) {
+      console.log("Нажата кнопка:", buttonId); // 'ok'
     }
+  );
+  // Здесь отправка токена на ваш сервер для верификации
+};
 
-    const script = document.createElement("script");
-    script.src = "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js";
-    script.setAttribute("resource-id", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
-    script.setAttribute("mode", "mock");
-    script.async = true;
+const onTaskReject = (task) => {
+  console.warn("[Tasks] Задание отклонено:", task);
+  WebApp.showPopup(
+    {
+      title: "Задание отклонено",
+      message: "Выполнение задания отклонено, попробуйте снова",
+      buttons: [
+        {
+          id: "cancel",
+          type: "cancel", // или 'default', 'cancel', 'destructive'
+        },
+      ],
+    },
+    function (buttonId) {
+      console.log("Нажата кнопка:", buttonId); // 'ok'
+    }
+  );
+};
 
-    script.onload = () => {
-      console.log("Скрипт traffy-wrapper.min.js успешно загружен");
-      resolve();
-    };
+// Функция для клика на оригинальную кнопку Traffy по индексу
+const clickOriginalButton = (taskIndex) => {
+  nextTick(() => {
+    // Находим все оригинальные кнопки Traffy
+    const originalButtons = document.querySelectorAll(
+      ".traffy-custom .traffy-taskElementButtonContOuter"
+    );
 
-    script.onerror = (error) => {
-      console.error("Ошибка при загрузке скрипта traffy-wrapper.min.js:", error);
-      reject(error);
-    };
-
-    document.head.appendChild(script);
+    if (originalButtons && originalButtons.length > taskIndex) {
+      originalButtons[taskIndex].click();
+      console.log(
+        `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
+      );
+    } else {
+      console.warn(
+        `[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`
+      );
+    }
   });
-}
+};
 
-// Функция обработки base64-строк (для image_url)
-function getImageSrc(base64) {
-  if (!base64 || typeof base64 !== 'string') {
-    console.error('Base64 строка не передана или не является строкой');
-    return '';
-  }
-
-  let cleaned = base64.replace(/^data:image\/(png|svg\+xml);base64,/, '').trim();
+// Инициализация Traffy
+const initTraffy = () => {
   try {
-    cleaned = decodeURIComponent(cleaned);
-  } catch (e) {
-    console.warn('Не удалось декодировать URL-кодированную строку:', e);
+    window.Traffy.renderTasks(traffyTasks.value, {
+      max_tasks: 10, // Максимальное количество заданий
+      onTaskLoad,
+      onTaskRender,
+      onTaskReward,
+      onTaskReject,
+    });
+  } catch (error) {
+    console.error("[Tasks] Ошибка инициализации Traffy:", error);
+    loadingError.value = true;
   }
+};
 
-  cleaned = cleaned.replace(/\s+/g, '').replace(/=+$/, '');
-  if (!/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
-    console.error('Строка содержит недопустимые символы для base64:', cleaned);
-    return '';
-  }
-
-  if (cleaned.length % 4 !== 0) {
-    console.warn('Некорректная длина base64-строки, добавляем padding');
-    cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), '=');
-  }
-
+onMounted(async () => {
   try {
-    atob(cleaned);
-  } catch (e) {
-    console.error('Некорректная base64 строка:', e);
-    return '';
+    initTraffy();
+  } catch (error) {
+    console.error("[Tasks] Не удалось загрузить Traffy:", error);
   }
-
-  const mime = cleaned.startsWith('PHN2') ? 'image/svg+xml' : 'image/png';
-  return `data:${mime};base64,${cleaned}`;
-}
-
-// Функции для Traffy
-function onTaskLoad(tasksData) {
-  console.log('Задания загружены:', tasksData);
-  tasks.value = tasksData; // Сохраняем задания в реактивную переменную
-}
-
-function onTaskRender(changeReward, changeCardTitle, changeDescription, changeButtonCheckText) {
-  changeReward(getTranslation('rewardText', '200K')); // Локализованная награда
-  changeCardTitle(getTranslation('subscribeOn', 'Subscribe on: '));
-  changeDescription(getTranslation('taskDescription', 'Follow in Telegram'));
-  changeButtonCheckText(getTranslation('checkButton', 'Check'));
-}
-
-function onTaskReward(task, signedToken) {
-  console.log('Задание выполнено:', task, 'Токен:', signedToken);
-  // Пример отправки токена на сервер (в production)
-  /*
-  fetch('YOUR_SERVER_ENDPOINT', {
-    method: 'POST',
-    body: JSON.stringify({ hash: signedToken }),
-  })
-    .then((res) => {
-      if (res.status === 200) {
-        console.log('Награда начислена для задания:', task.title);
-      }
-    })
-    .catch((error) => {
-      console.error('Ошибка при начислении награды:', error);
-    });
-  */
-}
-
-function onTaskReject(task) {
-  console.log('Задание не прошло проверку:', task.title);
-  // Можно показать уведомление
-  alert(getTranslation('taskRejected', `Задание не прошло проверку: ${task.title}`));
-}
-
-// Инициализация Traffy после монтирования компонента
-onMounted(() => {
-  loadTraffyScript()
-    .then(() => {
-      if (traffyTasks.value) {
-        window.Traffy.renderTasks(traffyTasks.value, {
-          max_tasks: 3,
-          onTaskLoad,
-          onTaskRender,
-          onTaskReward,
-          onTaskReject,
-        });
-      } else {
-        console.error('Контейнер traffyTasks или window.Traffy не найдены');
-      }
-    })
-    .catch((error) => {
-      console.error('Не удалось загрузить Traffy:', error);
-    });
 });
 </script>
 
 <template>
   <main class="gap-12 p-24">
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
-    <div class="tasks-cards flex-col gap-8">
-      <!-- Контейнер для заданий Traffy -->
-      <div class="traffyTasks traffy-custom" ref="traffyTasks"></div>
-      <!-- Fallback, если заданий нет -->
-      <template v-if="!tasks || tasks.length === 0">
-        <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
-        <p class="text-16 lh-120">
-          {{ getTranslation("Takeabreakorcheckbacklaterfornewassignments") }}
-        </p>
-      </template>
+
+    <!-- Контейнер для Traffy -->
+    <div class="traffy-custom" ref="traffyTasks"></div>
+    <div
+      v-if="tasks && tasks.length > 0"
+      v-for="(task, index) in tasks"
+      :key="task.id"
+      class="task-card bg-blue-900 rounded-12 items-center"
+    >
+      <p class="text-16 text-white">
+        {{ task.title || "Task title"
+        }}{{ task.description ? ", " + task.description : "" }}
+      </p>
+      <div
+        class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+        @click="clickOriginalButton(index)"
+      >
+        {{ getTranslation("start") }}
+      </div>
+      <p class="text-14 text-white flex-row gap-2">
+        <img src="../assets/img/Star.svg" alt="" class="img-16" />
+        {{ task.reward || 0 }}
+      </p>
     </div>
+    <template v-else>
+      <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
+      <p class="text-16 lh-120">
+        {{ getTranslation("Takeabreakorcheckbacklaterfornewassignments") }}
+      </p>
+    </template>
   </main>
 </template>
 
 <style scoped>
+.traffy-custom {
+  display: none;
+}
 /* Стили для вашего компонента */
 .task-card {
   padding: 14px 12px;
@@ -167,17 +163,5 @@ onMounted(() => {
   grid-area: B;
   width: fit-content;
   justify-self: end;
-}
-
-/* Стили для Traffy */
-.traffy-custom {
-  --traffy-buttonRewardImage-background-image: url("../assets/img/Star.svg");
-  --traffy-buttonRewardImage-background-size: 16px;
-  --traffy-buttonCheckRewardImage-background-image: none;
-  --traffy-buttonCheckRewardImage-background-size: 0;
-  --traffy-taskElementButtonText-padding-left: 4px;
-  --traffy-taskElementImageCont-display: block;
-  --traffy-taskElementInfoCont-gap: 10px;
-  --traffy-taskElementInstructionCont-width: 150px;
 }
 </style>

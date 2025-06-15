@@ -1,13 +1,12 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const { getTranslation } = useLanguageStore();
-const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
-const { toggleModal } = useModalStore();
+const { disconnectWallet, connectWallet, initializeWallet} = useWalletStore();
+const isWalletConnected = computed(() => useWalletStore().getWalletState());
 
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
@@ -79,8 +78,8 @@ const fetchTotalInfo = async () => {
 };
 
 onMounted(async () => {
+  initializeWallet()
   fetchTotalInfo();
-  fetchWalletInfo();
 
   const lottie = await import("lottie-web");
   const container = lottieContainer.value;
@@ -99,8 +98,8 @@ onMounted(async () => {
   <main class="gap-28 p-24">
     <div class="aboutus-cover flex-col gap-40">
       <div
-        v-if="!getWalletState()"
-        @click="toggleModal('connect')"
+        v-if="!isWalletConnected"
+        @click="connectWallet()"
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}

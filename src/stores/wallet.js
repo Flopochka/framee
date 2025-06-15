@@ -1,118 +1,165 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
-import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user";
+import axios from "axios";
+import { TonConnectUI } from "@tonconnect/ui";
 
-export const useWalletStore = defineStore("wallet", () => {
-  const IsWalletConected = ref(false);
-  function linkTo(url, options = { tryInstantView: false, target: "_blank" }) {
-    // Проверяем валидность URL
-    try {
-      new URL(url);
-    } catch (error) {
-      console.error("Invalid URL:", url, error);
-      if (Telegram?.WebApp?.showAlert) {
-        Telegram.WebApp.showAlert("Invalid link. Please try another.");
-      } else {
-        alert("Invalid link. Please try another.");
-      }
-      return;
-    }
+// Инициализация TonConnect UI
+let tonConnectUI;
+try {
+  tonConnectUI = new TonConnectUI({
+    manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
+  });
 
-    // 1. Telegram Web App: используем openLink или openTelegramLink
-    if (Telegram?.WebApp) {
+  // Set global UI options for consistent behavior
+  tonConnectUI.uiOptions = {
+    actionsConfiguration: {
+      modals: ["before", "success", "error"],
+      notifications: ["before", "success", "error"],
+      skipRedirectToWallet: "ios", // Default for iOS compatibility
+      returnStrategy: "back", // Default return strategy
+      twaReturnUrl: "https://t.me/your_tma_bot", // Replace with your actual TMA URL
+    },
+  };
+
+  console.log("[wallet] TonConnectUI инициализирован");
+} catch (error) {
+  console.error("[wallet] Ошибка инициализации TonConnectUI:", error);
+  throw new Error("[wallet] Не удалось инициализировать TonConnectUI");
+}
+
+export const useWalletStore = defineStore("wallet", {
+  state: () => ({
+    wallet: localStorage.getItem("walletAddress") || null,
+    connectionError: null,
+    isConnected: false // Добавляем реактивное состояние подключения
+  }),
+  actions: {
+    // Инициализация состояния кошелька при загрузке
+    async initializeWallet() {
       try {
-        if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
-          // Для Telegram-ссылок (например, каналы, чаты)
-          Telegram.WebApp.openTelegramLink(url);
-        } else {
-          // Для внешних ссылок с возможностью Instant View
-          Telegram.WebApp.openLink(url, {
-            try_instant_view: options.tryInstantView,
-          });
+        if (!tonConnectUI) {
+          throw new Error("[wallet] TonConnectUI не инициализирован");
         }
-        return;
+
+        // Подписываемся на изменения состояния кошелька
+        tonConnectUI.onStatusChange((wallet) => {
+          this.isConnected = wallet !== null;
+          this.wallet = wallet?.account?.address || null;
+          if (this.wallet) {
+            localStorage.setItem("walletAddress", this.wallet);
+          } else {
+            localStorage.removeItem("walletAddress");
+          }
+        });
+
+        const restored = await tonConnectUI.connectionRestored;
+        this.isConnected = tonConnectUI.connected;
+        console.log("[wallet] Connection status: ",this.isConnected)
+
+        if (restored && tonConnectUI.connected) {
+          this.wallet = tonConnectUI.wallet?.account?.address || null;
+          if (this.wallet) {
+            localStorage.setItem("walletAddress", this.wallet);
+            console.log("[wallet] Connection restored. Wallet:", this.wallet);
+          } else {
+            localStorage.removeItem("walletAddress");
+            console.log("[wallet] Connection restored but no wallet found.");
+          }
+        } else {
+          this.wallet = null;
+          localStorage.removeItem("walletAddress");
+          console.log("[wallet] Connection was not restored.");
+        }
+        this.connectionError = null;
+        tonConnectUI.uiOptions = {
+          twaReturnUrl: "https://frame-stars.com",
+        };
       } catch (error) {
-        console.error("Telegram Web App link error:", error);
-        Telegram.WebApp.showAlert("Failed to open link. Trying alternative...");
+        console.error(
+          "[wallet] Ошибка при инициализации состояния кошелька:",
+          error
+        );
+        this.connectionError = error.message;
+        throw error;
       }
-    }
+    },
 
-    // 2. Fallback: открытие ссылки в браузере
-    try {
-      window.open(url, options.target, "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to open link:", error);
-      // Последний fallback: показываем URL для ручного копирования
-      if (Telegram?.WebApp?.showAlert) {
-        Telegram.WebApp.showAlert(`Please open this link manually: ${url}`);
-      } else {
-        prompt("Please open this link manually:", url);
-      }
-    }
-  }
-  const connectWallet = async (e) => {
-    const payload = {
-      user_id: useUserStore().getUserId(),
-      wallet: e,
-    };
-    sendToBackend("/generate_url", payload)
-      .then((result) => {
-        const data = result.data;
-        linkTo(data.url);
-        fetchWalletInfo();
-      })
-      .catch(() => {});
-  };
-  const disconnectWallet = async () => {
-    const payload = {
-      user_id: useUserStore().getUserId(),
-    };
-    sendToBackend("/disconnect_wallet", payload)
-      .then((result) => {
-        fetchWalletInfo();
-      })
-      .catch(() => {});
-  };
-  const fetchWalletInfo = async () => {
-    const retryDelays = [1000, 2000, 4000, 8000, 10000]; // 1, 2, 4, 8, 10 seconds
-
-    const tryFetch = async () => {
-      const payload = {
-        user_id: useUserStore().getUserId(),
-      };
-      const result = await sendToBackend("/check_connect_wallet", payload);
-      return result.data.connection;
-    };
-
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    try {
-      const connection = await tryFetch();
-      IsWalletConected.value = connection;
-      console.log("Initial wallet check:", connection);
-      return;
-    } catch (error) {
-      console.error("Initial wallet check failed:", error);
-    }
-
-    // Retry logic if initial attempt fails or returns disconnected
-    for (const delay of retryDelays) {
-      await sleep(delay);
+    // Подключение кошелька
+    async connectWallet() {
       try {
-        const connection = await tryFetch();
-        IsWalletConected.value = connection;
-        console.log(`Retry after ${delay}ms:`, connection);
-        if (connection) return; // Exit if connected
+        if (!tonConnectUI) {
+          throw new Error("[wallet] TonConnectUI не инициализирован");
+        }
+        await tonConnectUI.openModal();
+        this.wallet = tonConnectUI.wallet?.account?.address || null;
+        if (this.wallet) {
+          localStorage.setItem("walletAddress", this.wallet);
+          console.log("[wallet] Кошелек подключен:", this.wallet);
+        }
+        this.connectionError = null;
       } catch (error) {
-        console.error(`Retry after ${delay}ms failed:`, error);
+        console.error("[wallet] Ошибка при подключении кошелька:", error);
+        this.connectionError = error.message;
+        throw error;
+      }
+    },
+
+    // Отключение кошелька
+    disconnectWallet() {
+      try {
+        if (!tonConnectUI) {
+          throw new Error("[wallet] TonConnectUI не инициализирован");
+        }
+        tonConnectUI.disconnect();
+        this.wallet = null;
+        localStorage.removeItem("walletAddress");
+        this.connectionError = null;
+        console.log("[wallet] Кошелек отключен");
+      } catch (error) {
+        console.error("[wallet] Ошибка при отключении кошелька:", error);
+        this.connectionError = error.message;
+        throw error;
+      }
+    },
+
+    // Получение состояния кошелька
+    getWalletState() {
+      console.log("[wallet] wallet state", this.isConnected);
+      return this.isConnected;
+    },
+
+    // Отправка платежа
+    async sendPayment(recipient, amount, extraCurrency = null) {
+      if (!this.getWalletState()) {
+        throw new Error(
+          "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
+        );
+      }
+
+      const transaction = {
+        validUntil: Math.floor(Date.now() / 1000) + 60,
+        messages: [
+          {
+            address: recipient,
+            amount: amount.toString(),
+            ...(extraCurrency && { extraCurrency }), // Conditionally include extraCurrency
+          },
+        ],
+      };
+
+      try {
+        const result = await tonConnectUI.sendTransaction(transaction, {
+          modals: ["before", "success", "error"],
+          notifications: ["before", "success", "error"],
+          skipRedirectToWallet: "ios", // Ensure iOS compatibility
+          returnStrategy: "back", // Default return strategy
+        });
+
+        console.log("[wallet] Платеж отправлен, boc:", result.boc);
+        return result.boc;
+      } catch (error) {
+        console.error("[wallet] Ошибка при отправке платежа:", error);
+        throw error;
       }
     }
-
-    // Final state after all retries
-    IsWalletConected.value = false;
-    console.log("All wallet connection attempts failed");
-  };
-  const getWalletState = () => IsWalletConected.value;
-  return { connectWallet, disconnectWallet, fetchWalletInfo, getWalletState };
+  },
 });

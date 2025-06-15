@@ -11,14 +11,14 @@ import { usePaymentStore } from "../stores/payment";
 import { ref, onMounted, watch, nextTick, computed } from "vue";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
-import { getImageSrc } from '../modules/base64img.js';
+import { getImageSrc } from "../modules/base64img.js";
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
 const { getTranslation } = useLanguageStore();
 const { getUser } = useUserStore();
 const { fetchUserHistory } = useHistoryStore();
-const { fetchWalletInfo, getWalletState } = useWalletStore();
+const { getWalletState, sendPayment, connectWallet } = useWalletStore();
 
 const targetUserName = ref(null);
 const targetUserNameChanged = ref(0);
@@ -45,33 +45,27 @@ const holdTimer = ref(null);
 const currentAmount = ref(0);
 const minCount = ref(50);
 const hasTouch = ref(false);
-
+const isRussianUser = ref(false);
 const MAX_LENGTH = 45;
 
 watch(targetUserName, (newVal, oldVal) => {
   if (newVal) {
-    let cleanedVal = newVal.startsWith('@') ? newVal.slice(1) : newVal;
+    let cleanedVal = newVal.startsWith("@") ? newVal.slice(1) : newVal;
     if (cleanedVal.length > MAX_LENGTH) {
       cleanedVal = cleanedVal.slice(0, MAX_LENGTH);
     }
     targetUserName.value = cleanedVal;
-    console.log('Очищенное имя пользователя:', cleanedVal); // Для отладки
+    console.log("Очищенное имя пользователя:", cleanedVal);
   }
 });
 
-// Максимальное допустимое значение
-const MAX_NUMBER = 1000000; // замените на нужное значение
+const MAX_NUMBER = 1000000;
 
-// Watcher — ограничивает ввод чисел по max
 watch(stars, (newVal, oldVal) => {
   if (newVal === "") return;
-
-  // Разрешаем числа с точкой на конце (например, "1.")
   if (/^\d+\.$/.test(newVal)) return;
-
   const parsed = parseFloat(newVal);
   if (!isNaN(parsed) && parsed > MAX_NUMBER) {
-    // Если на единицу больше max и это целое — удаляем последнюю цифру
     if (Number.isInteger(parsed) && parsed === MAX_NUMBER + 1) {
       stars.value = newVal.slice(0, -1);
     } else {
@@ -85,7 +79,7 @@ const startIncrement = (amount, event) => {
     hasTouch.value = true;
   }
   if (event.type === "mousedown" && hasTouch.value) {
-    return; // Игнорировать mousedown, если уже был touchstart
+    return;
   }
   if (stars.value > 1000000 - amount) return;
   currentAmount.value = amount;
@@ -137,15 +131,14 @@ const isPremiumActive = (index) => currentPremium.value === index;
 const isPaymentActive = (index) => currentPayment.value === index;
 const isSubmethodActive = (index) => currentPaymentSub.value === index;
 
-const premiumBox = ref(null); // Ref для premiumBox
-const premiumBoxHeight = ref(0); // Реактивная высота premiumBox
-
-const starBox = ref(null); // Ref
-const starBoxHeight = ref(0); //
+const premiumBox = ref(null);
+const premiumBoxHeight = ref(0);
+const starBox = ref(null);
+const starBoxHeight = ref(0);
 
 const searchRecipient = async (username) => {
   if (username && username != "") {
-    console.log("Searching for:", username); // Заглушка
+    console.log("Searching for:", username);
     const payload = { username: username };
     sendToBackend("/search_recipient", payload)
       .then((result) => {
@@ -173,6 +166,22 @@ const searchRecipient = async (username) => {
   }
 };
 
+const availablePaymentIndices = computed(() => {
+  // Всегда доступен TON (индекс 0)
+  const indices = [0];
+
+  // Для российских пользователей добавляем USDT (1) и СБП (2)
+  if (isRussianUser.value) {
+    indices.push(1, 2);
+  }
+  // Для не российских добавляем USDT (1) и VISA/MC (3)
+  else {
+    indices.push(1, 3);
+  }
+
+  return indices;
+});
+
 const createorder = async () => {
   valueIncorrects.value = [];
   recipientIncorrects.value = [];
@@ -193,9 +202,11 @@ const createorder = async () => {
   if (!recipientCorrect.value) {
     recipientIncorrects.value.push("Recipientnotavalible");
   }
-  currentPayment.value == 0 ? fetchWalletInfo() : "";
-  if (!getWalletState() && currentPayment.value == 0) {
-    toggleModal("popupwalletnc");
+  if (currentPayment.value == 0) {
+    if (!getWalletState()) {
+      connectWallet();
+      return;
+    }
   }
   starBoxHeight.value = starBox.value.offsetHeight;
   if (
@@ -203,6 +214,25 @@ const createorder = async () => {
     valueCorrect.value &&
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
+    // Получаем реальный индекс из массива доступных индексов
+    const originalIndex = availablePaymentIndices.value[currentPayment.value];
+
+    console.log("Payment indices:", availablePaymentIndices.value);
+    console.log("Current payment index:", currentPayment.value);
+    console.log("Original index:", originalIndex);
+
+    // Для TON используем подметоды, для других - основной список
+    const paymentMethodName =
+      originalIndex === 0
+        ? paymentlistanother[currentPaymentSub.value]
+        : paymentlist[originalIndex];
+    console.log(
+      originalIndex,
+      paymentlist[originalIndex],
+      paymentlistanother[currentPaymentSub.value],
+      currentPaymentSub.value,
+      currentPayment.value
+    );
     const payload = {
       sender_id: useUserStore().getUserId(),
       count:
@@ -210,39 +240,55 @@ const createorder = async () => {
           ? stars.value
           : 3 * Math.pow(2, currentPremium.value),
       to_user: targetUserName.value,
-      payment_method:
-        currentPayment.value > 0
-          ? paymentlist[currentPayment.value]
-          : paymentlistanother[currentPaymentSub.value],
+      payment_method: paymentMethodName,
       payment_network:
-        currentPayment.value > 0
-          ? currentPayment.value == 1
-            ? "USDT"
-            : "CARD"
-          : paymentlistanother[currentPaymentSub.value],
+        originalIndex === 0
+          ? paymentlistanother[currentPaymentSub.value]
+          : originalIndex === 1
+          ? "USDT"
+          : originalIndex === 2
+          ? "SBP"
+          : "CARD",
     };
 
     try {
       toggleModal("filler");
-      sendToBackend("/create_order", payload).then((result) => {
-        if (result == null) {
-          toggleModal("error");
-          return;
-        }
-        const data = result.data;
+      const result = await sendToBackend("/create_order", payload);
+      if (result == null) {
+        toggleModal("error");
+        return;
+      }
+      const data = result.data;
+      if (currentPayment.value === 0) {
+        console.log(data);
+        // Handle TON payment
+        const transactionResult = await sendPayment(
+          "UQBmVB2crOEoXeXZpunhvUoZB5olgu4_Iw1ThIJzHjH6_Fk6",
+          data.amount
+        );
+        // Send transaction result to server for verification
+        console.log(transactionResult);
+        // await sendToBackend("/verify_ton_transaction", verificationPayload);
+        setupTabReturnListener(data.order_id);
+      } else {
+        // Non-TON payment (existing behavior)
         setPaymentLink(data.payment_link || data.redirectLink);
-        const orderId = data.order_id;
         Telegram.WebApp.openLink(data.payment_link || data.redirectLink);
-        setupTabReturnListener(orderId);
-      });
+        setupTabReturnListener(data.order_id);
+      }
     } catch (error) {
       console.error("Failed:", error);
+      if (
+        (error =
+          "[wallet] Ошибка при отправке платежа: Hl: [TON_CONNECT_SDK_ERROR] Hl: User rejects the action in the wallet.")
+      ) {
+        console.log("meow");
+      }
       toggleModal("error");
     }
   }
 };
 
-// Функция для получения статуса заказа
 const getorderinfo = async (order_id) => {
   console.log("Searching for:", order_id);
   const payload = { order_id: order_id };
@@ -268,13 +314,13 @@ const idkhin = async (order_id) => {
     if (orderStatus === "Wait payment") return null;
     if (orderStatus === "Accepted") return true;
     if (orderStatus === "Expired") return false;
-    return false; // fallback
+    return false;
   };
 
   try {
     const data = await getorderinfo(order_id);
     console.log(data);
-    const orderStatus = data.order_status || data.status; // <-- зависит от API
+    const orderStatus = data.order_status || data.status;
     status.value = extractStatus(orderStatus);
     console.log("Initial payment check:", status.value, orderStatus);
     if (status.value != null) return status.value;
@@ -296,7 +342,8 @@ const idkhin = async (order_id) => {
   }
 
   status.value = false;
-  console.log("All wallet connection attempts failed");
+  console.log("All payment status checks failed");
+  return status.value;
 };
 
 const fetchResult = async (order_id) => {
@@ -336,23 +383,36 @@ const buyformyself = async () => {
   targetUserName.value = getUser();
 };
 
-// Вычисляемая длина для имени получателя с округлением
+// Добавляем вычисляемое свойство для фильтрации методов оплаты
+const filteredPaymentMethods = computed(() => {
+  const allMethods = getTranslation("paymentmetdods");
+  return allMethods.filter((_, index) => {
+    // Всегда показываем TON (index 0)
+    if (index === 0) return true;
+
+    // Для российских пользователей показываем USDT (1) и СБП (2), скрываем VM (3)
+    if (isRussianUser.value) {
+      return index === 1 || index === 2;
+    }
+    // Для не российских пользователей показываем USDT (1) и VM (3), скрываем СБП (2)
+    else {
+      return index === 1 || index === 3;
+    }
+  });
+});
+
 const formattedRecipientName = computed(() => {
-  // Получаем ширину инпута и текста
   const inputWidth = getTextWidth(targetUserName.value, "16px");
   const recipientNameWidth = getTextWidth(recipientName.value, "16px");
-
-  // Если ширина инпута + имя больше доступной ширины, обрезаем имя
   const availableWidth =
-    document.querySelector(".select-top-item-input-text")?.offsetWidth - 84; // Примерное пространство для имени
+    document.querySelector(".select-top-item-input-text")?.offsetWidth - 84;
   console.log(inputWidth, recipientNameWidth, availableWidth);
   if (recipientNameWidth + inputWidth > availableWidth) {
-    return `${recipientName.value.slice(0, 8)}...`; // Обрезаем имя с многоточием
+    return `${recipientName.value.slice(0, 8)}...`;
   }
   return recipientName.value;
 });
 
-// Функция для вычисления ширины текста
 const getTextWidth = (text, fontSize) => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
@@ -360,23 +420,18 @@ const getTextWidth = (text, fontSize) => {
   return context.measureText(text).width;
 };
 
-// Логика для отслеживания ввода имени пользователя
 watch(targetUserName, (newValue, oldValue) => {
   if (newValue !== oldValue) {
-    targetUserNameChanged.value = Date.now(); // Записываем время изменения
-
-    // Debounce: ждём 300 мс перед запросом
-    clearTimeout(window.searchTimeout); // Очищаем предыдущий таймер
+    targetUserNameChanged.value = Date.now();
+    clearTimeout(window.searchTimeout);
     window.searchTimeout = setTimeout(async () => {
       if (newValue) {
-        // Проверяем, что значение не пустое
         await searchRecipient(newValue);
       }
     }, 300);
   }
 });
 
-// Функция для получения высоты premiumBox
 const updatePremiumBoxHeight = () => {
   if (premiumBox.value) {
     premiumBoxHeight.value = premiumBox.value.offsetHeight;
@@ -386,32 +441,62 @@ const updatePremiumBoxHeight = () => {
   }
 };
 
-// Вызываем при монтировании
 onMounted(async () => {
-  // Ждём, пока DOM обновится
   await nextTick();
   updatePremiumBoxHeight();
 });
 
-// Отслеживаем изменения currentType
 watch(currentType, async () => {
-  // Ждём, пока DOM обновится после изменения currentType
   await nextTick();
   updatePremiumBoxHeight();
 });
 
-// Отслеживаем изменения размеров premiumBox (например, при изменении содержимого)
 onMounted(() => {
   if (premiumBox.value) {
     const resizeObserver = new ResizeObserver(() => {
       updatePremiumBoxHeight();
     });
     resizeObserver.observe(premiumBox.value);
-
-    // Очищаем наблюдатель при размонтировании
     return () => {
       resizeObserver.disconnect();
     };
+  }
+});
+
+onMounted(() => {
+  const RUSSIAN_TIMEZONES = [
+    "Asia/Anadyr",
+    "Asia/Barnaul",
+    "Asia/Chita",
+    "Asia/Irkutsk",
+    "Asia/Kamchatka",
+    "Asia/Khandyga",
+    "Asia/Krasnoyarsk",
+    "Asia/Magadan",
+    "Asia/Novokuznetsk",
+    "Asia/Novosibirsk",
+    "Asia/Omsk",
+    "Asia/Sakhalin",
+    "Asia/Srednekolymsk",
+    "Asia/Tomsk",
+    "Asia/Ust",
+    "Asia/Vladivostok",
+    "Asia/Yakutsk",
+    "Asia/Yekaterinburg",
+    "Europe/Astrakhan",
+    "Europe/Kaliningrad",
+    "Europe/Kirov",
+    "Europe/Moscow",
+    "Europe/Samara",
+    "Europe/Saratov",
+    "Europe/Ulyanovsk",
+    "Europe/Volgograd",
+  ];
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("[timezone] current timezone: ", currentTimezone);
+  if (RUSSIAN_TIMEZONES.includes(currentTimezone)) {
+    isRussianUser.value = true;
+    console.log("[timezone] russian timezone");
   }
 });
 </script>
@@ -549,14 +634,17 @@ onMounted(() => {
     </div>
     <div class="select-bottomm flex-col gap-4">
       <p class="pl-12 text-white-70">{{ getTranslation("payment") }}</p>
-
-      <div class="select-botoom-cards grid-row gap-8">
+      <div
+        class="select-botoom-cards grid-row gap-8"
+        :style="{
+          'grid-template-rows': `repeat(${filteredPaymentMethods.length}, 1fr)`,
+        }"
+      >
         <template
-          v-for="(payment, index) in getTranslation('paymentmetdods')"
+          v-for="(payment, index) in filteredPaymentMethods"
           :key="index"
         >
           <div
-            v-if="index == 0"
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
@@ -569,23 +657,6 @@ onMounted(() => {
               {{ typeof payment === "object" ? payment.name : payment }}
             </p>
             <img :src="paymentsvg[index]" alt="" class="img-28" />
-          </div>
-          <div
-            v-if="typeof payment === 'object' && payment.submethods && false"
-            :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
-            class="select-botoom-subcards grid-row gap-8 usen"
-          >
-            <div
-              v-for="(submethod, subIndex) in payment.submethods"
-              :key="subIndex"
-              @click="switchSubmethod(subIndex)"
-              class="select-bottom-subcard card bg-white-10 grid-col items-center gap-8 cupo tac"
-              :class="{
-                'select-bottom-subcard-active': isSubmethodActive(subIndex),
-              }"
-            >
-              <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
-            </div>
           </div>
         </template>
       </div>
@@ -737,9 +808,6 @@ main {
 }
 .select-top-premium-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
-}
-.select-botoom-cards {
-  grid-template-rows: repeat(4, 1fr);
 }
 .select-botoom-subcards {
   grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));

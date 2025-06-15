@@ -1,6 +1,6 @@
 export function getImageSrc(base64) {
   if (!base64 || typeof base64 !== 'string') {
-    console.error('Base64 строка не передана или не является строкой');
+    console.error('[base64img] Base64 строка не передана или не является строкой');
     return '';
   }
 
@@ -11,7 +11,7 @@ export function getImageSrc(base64) {
   try {
     cleaned = decodeURIComponent(cleaned);
   } catch (e) {
-    console.warn('Не удалось декодировать URL-кодированную строку:', e);
+    console.warn('[base64img] Не удалось декодировать URL-кодированную строку:', e);
   }
 
   // Удалить пробелы и лишние = в конце
@@ -19,13 +19,13 @@ export function getImageSrc(base64) {
 
   // Проверка на валидные base64-символы
   if (!/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
-    console.error('Строка содержит недопустимые символы для base64:', cleaned);
+    console.error('[base64img] Строка содержит недопустимые символы для base64:', cleaned);
     return '';
   }
 
   // Проверка длины (должна быть кратна 4)
   if (cleaned.length % 4 !== 0) {
-    console.warn('Некорректная длина base64-строки, добавляем padding');
+    console.log('[base64img] Некорректная длина base64-строки, добавляем padding');
     cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), '=');
   }
 
@@ -33,7 +33,7 @@ export function getImageSrc(base64) {
   try {
     atob(cleaned);
   } catch (e) {
-    console.error('Некорректная base64 строка:', e);
+    console.error('[base64img] Некорректная base64 строка:', e);
     return '';
   }
 

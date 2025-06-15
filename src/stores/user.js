@@ -25,9 +25,9 @@ export const useUserStore = defineStore("user", () => {
         userLogin.value = parsed.userLogin ?? null;
         userPhoto.value = parsed.userPhoto ?? null;
         userBalance.value = parsed.userBalance ?? 0;
-        console.log("Loaded cached user data:", parsed);
+        console.log("[user store] Loaded cached user data:", parsed);
       } catch (error) {
-        console.error("Failed to parse cached user data:", error);
+        console.error("[user store] Failed to parse cached user data:", error);
       }
     }
   };
@@ -51,9 +51,9 @@ export const useUserStore = defineStore("user", () => {
         userId: userId.value,
       };
       localStorage.setItem("userStore", JSON.stringify(dataToCache));
-      console.log("Updated and cached user data:", dataToCache);
+      console.log("[user store] Updated and cached user data:", dataToCache);
     } catch (error) {
-      console.error("Error updating user data:", error);
+      console.error("[user store] Error updating user data:", error);
     } finally {
       isLoading.value = false;
     }

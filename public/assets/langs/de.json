@@ -134,5 +134,7 @@
   "Termsofservice": "Nutzungsbedingungen",
   "By buying Telegram Stars or Telegram Premium, you affirm compliance with and agree to": "Durch den Kauf von Telegram Stars oder Telegram Premium bestätigen Sie die Einhaltung und stimmen zu",
   "our Terms": "unseren Bedingungen",
-  ", and confirm that you are not U.S. resident": ", und bestätigen, dass Sie kein US-Bürger sind"
+  ", and confirm that you are not U.S. resident": ", und bestätigen, dass Sie kein US-Bürger sind",
+  "privacytitle": "Datenschutzrichtlinie",
+  "privacytext": "FRAME respektiert Ihre Privatsphäre. Wir erfassen nur die minimal erforderlichen Daten, wie Ihre TON-Wallet-Adresse und grundlegende Nutzungsinformationen für technische und analytische Zwecke.<br><br>Wir verkaufen Ihre Daten nicht und geben sie nicht an Dritte weiter, außer wenn dies für die Zahlungsabwicklung oder zur Einhaltung gesetzlicher Vorschriften erforderlich ist.<br><br>Durch die Nutzung von FRAME stimmen Sie dieser Datenschutzrichtlinie zu. Bei Fragen kontaktieren Sie uns bitte unter https://t.me/framestars_support."
 }
