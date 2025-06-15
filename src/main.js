@@ -4,6 +4,8 @@ import App from "./App.vue";
 import router from "./router/index.js";
 import WebApp from "@twa-dev/sdk";
 import { sendToBackend } from "./modules/fetch.js";
+import { useScreenStore } from "./stores/screen";
+import { useModalStore } from "./stores/modal";
 import "./style.css";
 
 console.log("[main.js] инициализация приложения...");
@@ -23,10 +25,6 @@ async function initializeApp() {
   
   app.mount("#app");
   WebApp.ready();
-
-  // Инициализация хранилищ
-  const screenStore = pinia.state.value.screen;
-  const modalStore = pinia.state.value.modal;
 
   // Выход из полноэкранного режима для десктопов
   try {
@@ -64,11 +62,11 @@ async function initializeApp() {
         };
         
         const screenIndex = screenMap[path] ?? 0;
-        await screenStore.switchScreen(screenIndex);
+        await useScreenStore.switchScreen(screenIndex);
         
         // Открытие модального окна, если указано
         if (modalName) {
-          modalStore.toggleModal(modalName);
+          useModalStore.toggleModal(modalName);
         }
       }
     } catch (e) {
@@ -81,12 +79,12 @@ async function initializeApp() {
     const currentPath = router.currentRoute.value.path;
     const modalName = router.currentRoute.value.query.modal;
     
-    screenStore.syncWithRoute(currentPath);
+    useScreenStore.syncWithRoute(currentPath);
     
     if (modalName) {
-      modalStore.toggleModal(modalName);
-    } else if (modalStore.activeModal) {
-      modalStore.toggleModal(modalStore.activeModal); // Закрыть если нет в URL
+      useModalStore.toggleModal(modalName);
+    } else if (useModalStore.activeModal) {
+      useModalStore.toggleModal(useModalStore.activeModal); // Закрыть если нет в URL
     }
   };
 
@@ -95,12 +93,12 @@ async function initializeApp() {
   
   // Следим за изменениями маршрута
   router.afterEach((to) => {
-    screenStore.syncWithRoute(to.path);
+    useScreenStore.syncWithRoute(to.path);
     
     if (to.query.modal) {
-      modalStore.toggleModal(to.query.modal);
-    } else if (modalStore.activeModal) {
-      modalStore.toggleModal(modalStore.activeModal); // Закрыть если нет в URL
+      useModalStore.toggleModal(to.query.modal);
+    } else if (useModalStore.activeModal) {
+      useModalStore.toggleModal(useModalStore.activeModal); // Закрыть если нет в URL
     }
   });
 
