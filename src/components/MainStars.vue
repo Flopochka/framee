@@ -198,11 +198,13 @@ const createorder = async () => {
     valueCorrect.value &&
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
-    const paymentMethods = getTranslation("paymentmetdods");
-    const paymentMethodName =
-      currentPayment.value > 0
-        ? paymentMethods[currentPayment.value]
-        : paymentlistanother[currentPaymentSub.value];
+    const allPaymentMethods = getTranslation("paymentmetdods");
+    const filteredIndex = currentPayment.value;
+    const originalIndex = allPaymentMethods.findIndex(
+      (_, idx) =>
+        idx === filteredPaymentMethods.value[filteredIndex].originalIndex
+    );
+    const paymentMethodName = paymentlist[originalIndex];
     const payload = {
       sender_id: useUserStore().getUserId(),
       count:
