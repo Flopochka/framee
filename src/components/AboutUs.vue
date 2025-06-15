@@ -1,6 +1,5 @@
 <script setup>
 import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted, computed } from "vue";
@@ -8,7 +7,6 @@ import { ref, onMounted, computed } from "vue";
 const { getTranslation } = useLanguageStore();
 const { disconnectWallet, connectWallet, initializeWallet} = useWalletStore();
 const isWalletConnected = computed(() => useWalletStore().getWalletState());
-const { toggleModal } = useModalStore();
 
 const boughtToday = ref(0);
 const boughtYesterday = ref(0);
