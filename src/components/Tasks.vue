@@ -1,122 +1,82 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
-const { getTranslation } = useLanguageStore();
+const traffyContainer = ref(null);
+const tasks = ref([]);
+const loadingError = ref(false);
 
-const tasks = ref(null);
-const traffyTasks = ref(null);
+// Список альтернативных источников
+const TRAFFY_SOURCES = [
+  'https://dvq1zz1g273yl.cloudfront.net/index_v1.1.0.min.js',
+  'https://cdn.traffy.site/v1.1.0/index.min.js',
+  'https://unpkg.com/traffy-js-sdk@latest/dist/index.min.js'
+];
 
-// Функция загрузки скрипта Traffy с расширенной отладкой
-async function loadTraffyScript() {
-  console.log("[Traffy] Начало загрузки скрипта");
-
-  try {
-    // Проверяем, возможно скрипт уже загружен
-    if (window.Traffy) {
-      console.log("[Traffy] Скрипт уже загружен в window.Traffy");
-      initTraffy();
-      return;
+// Загрузка скрипта
+const loadTraffy = async () => {
+  for (const url of TRAFFY_SOURCES) {
+    try {
+      await loadScript(url);
+      if (window.Traffy) {
+        initTraffy();
+        return;
+      }
+    } catch (error) {
+      console.warn(`Ошибка загрузки ${url}:`, error);
     }
+  }
+  throw new Error('Не удалось загрузить Traffy');
+};
 
-    const script = document.createElement("script");
-    script.src = "https://cdn.traffy.site/v1.1.0/index.min.js";
-    script.setAttribute("traffy-key", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
-    script.setAttribute("test", "true");
+// Вспомогательная функция загрузки скрипта
+const loadScript = (url) => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = url;
     script.async = true;
-
-    script.onload = () => {
-      console.log("[Traffy] Скрипт успешно загружен");
-      console.log("window.Traffy:", window.Traffy);
-      initTraffy();
-    };
-
-    script.onerror = (error) => {
-      console.error("[Traffy] Ошибка загрузки скрипта:", error);
-    };
-
+    script.onload = resolve;
+    script.onerror = reject;
     document.head.appendChild(script);
-    console.log("[Traffy] Скрипт добавлен в head");
-  } catch (error) {
-    console.error("[Traffy] Ошибка в loadTraffyScript:", error);
-  }
-}
+  });
+};
 
-// Инициализация Traffy после загрузки скрипта
-function initTraffy() {
-  console.log("[Traffy] Инициализация Traffy");
-  console.log("traffyTasks ref:", traffyTasks.value);
+// Инициализация Traffy
+const initTraffy = () => {
+  window.Traffy.renderTasks(traffyContainer.value, {
+    max_tasks: 1,
+    onTaskLoad: (loadedTasks) => {
+      tasks.value = loadedTasks || [];
+    },
+    onTaskRender: (changeReward) => {
+      changeReward('10 ★');
+    }
+  });
+};
 
-  if (!traffyTasks.value) {
-    console.error("[Traffy] Контейнер не найден");
-    return;
-  }
-
-  if (!window.Traffy) {
-    console.error("[Traffy] window.Traffy не доступен");
-    return;
-  }
-
+// Фолбэк задания
+const loadFallbackTasks = async () => {
   try {
-    window.Traffy.renderTasks(traffyTasks.value, {
-      max_tasks: 10,
-      onTaskLoad,
-      onTaskRender,
-      onTaskReward,
-      onTaskReject,
-    });
-    console.log("[Traffy] renderTasks вызван");
+    const response = await axios.get('https://your-api-fallback/tasks');
+    tasks.value = response.data;
   } catch (error) {
-    console.error("[Traffy] Ошибка при вызове renderTasks:", error);
+    tasks.value = [{
+      id: 'fallback-1',
+      title: 'Demo Task',
+      description: 'Subscribe to our channel',
+      reward: '10 ★'
+    }];
   }
-}
+};
 
-// Обработчики заданий с подробным логгированием
-function onTaskLoad(loadedTasks) {
-  console.log("[Traffy] Задания загружены:", loadedTasks);
-  tasks.value = loadedTasks;
-}
-
-function onTaskRender(
-  changeReward,
-  changeCardTitle,
-  changeDescription,
-  changeButtonCheckText
-) {
-  console.log("[Traffy] Рендеринг задания");
-
+onMounted(async () => {
   try {
-    // Модифицируем отображение задания
-    const reward = "10 ★"; // Тестовая награда
-    changeReward(reward);
-    changeCardTitle("Тестовое задание");
-    changeDescription("Подпишитесь на канал");
-    changeButtonCheckText("Проверить");
-
-    console.log("[Traffy] Параметры задания изменены");
+    await loadTraffy();
   } catch (error) {
-    console.error("[Traffy] Ошибка в onTaskRender:", error);
+    console.error('Ошибка инициализации Traffy:', error);
+    loadingError.value = true;
+    await loadFallbackTasks();
   }
-}
-
-function onTaskReward(task, signedToken) {
-  console.log("[Traffy] Задание выполнено:", { task, signedToken });
-
-  // Эмуляция отправки на сервер
-  setTimeout(() => {
-    console.log("[Traffy] Награда успешно обработана");
-    // Здесь должна быть реальная логика начисления награды
-  }, 1000);
-}
-
-function onTaskReject(task) {
-  console.log("[Traffy] Задание отклонено:", task);
-}
-
-// Загрузка при монтировании компонента
-onMounted(() => {
-  console.log("[Traffy] Компонент смонтирован");
-  loadTraffyScript();
 });
 </script>
 
