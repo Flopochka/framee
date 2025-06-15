@@ -30,6 +30,7 @@ export const useWalletStore = defineStore("wallet", {
   state: () => ({
     wallet: localStorage.getItem("walletAddress") || null,
     connectionError: null,
+    isConnected: false // Добавляем реактивное состояние подключения
   }),
   actions: {
     // Инициализация состояния кошелька при загрузке
@@ -39,8 +40,20 @@ export const useWalletStore = defineStore("wallet", {
           throw new Error("[wallet] TonConnectUI не инициализирован");
         }
 
-        // Wait for connection restoration
+        // Подписываемся на изменения состояния кошелька
+        tonConnectUI.onStatusChange((wallet) => {
+          this.isConnected = wallet !== null;
+          this.wallet = wallet?.account?.address || null;
+          if (this.wallet) {
+            localStorage.setItem("walletAddress", this.wallet);
+          } else {
+            localStorage.removeItem("walletAddress");
+          }
+        });
+
         const restored = await tonConnectUI.connectionRestored;
+        this.isConnected = tonConnectUI.connected;
+        
         if (restored && tonConnectUI.connected) {
           this.wallet = tonConnectUI.wallet?.account?.address || null;
           if (this.wallet) {
@@ -109,8 +122,8 @@ export const useWalletStore = defineStore("wallet", {
 
     // Получение состояния кошелька
     getWalletState() {
-      console.log("[wallet] wallet state", tonConnectUI.connected);
-      return tonConnectUI.connected;
+      console.log("[wallet] wallet state", this.isConnected);
+      return this.isConnected;
     },
 
     // Отправка платежа
