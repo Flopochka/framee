@@ -602,7 +602,12 @@ onMounted(() => {
     </div>
     <div class="select-bottomm flex-col gap-4">
       <p class="pl-12 text-white-70">{{ getTranslation("payment") }}</p>
-      <div class="select-botoom-cards grid-row gap-8">
+      <div
+        class="select-botoom-cards grid-row gap-8"
+        :style="{
+          'grid-template-rows': `repeat(${filteredPaymentMethods.length}, 1fr)`,
+        }"
+      >
         <template
           v-for="(payment, index) in filteredPaymentMethods"
           :key="index"
@@ -771,9 +776,6 @@ main {
 }
 .select-top-premium-card-active {
   border: 2px solid var(--System-azure-700-80, #007affcc);
-}
-.select-botoom-cards {
-  grid-template-rows: repeat(4, 1fr);
 }
 .select-botoom-subcards {
   grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
