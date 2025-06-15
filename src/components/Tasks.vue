@@ -49,31 +49,11 @@ const initTraffy = () => {
   }
 };
 
-// Загрузка фолбэк заданий
-const loadFallbackTasks = () => {
-  tasks.value = [
-    {
-      id: "fallback-1",
-      title: getTranslation("demoTaskTitle"),
-      description: getTranslation("demoTaskDescription"),
-      reward: "10",
-    },
-  ];
-};
-
 onMounted(async () => {
   try {
     initTraffy();
-
-    // Фолбэк если задания не загрузились
-    setTimeout(() => {
-      if (!tasks.value.length) {
-        loadFallbackTasks();
-      }
-    }, 3000);
   } catch (error) {
     console.error("[Tasks] Не удалось загрузить Traffy:", error);
-    loadFallbackTasks();
   }
 });
 </script>
