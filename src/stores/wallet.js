@@ -16,7 +16,9 @@ try {
       notifications: ["before", "success", "error"],
       skipRedirectToWallet: "ios", // Default for iOS compatibility
       returnStrategy: "back", // Default return strategy
-      twaReturnUrl: "https://t.me/framestars_bot?startapp", // Replace with your actual TMA URL
+      twaReturnUrl: window.Telegram.WebApp.initDataUnsafe.start_param
+        ? `https://t.me/${window.Telegram.WebApp.initDataUnsafe.user.username}?startapp=${window.Telegram.WebApp.initDataUnsafe.start_param}`
+        : "https://t.me/framestars_bot?startapp", // Replace with your actual TMA URL
     },
   };
 
@@ -30,7 +32,7 @@ export const useWalletStore = defineStore("wallet", {
   state: () => ({
     wallet: localStorage.getItem("walletAddress") || null,
     connectionError: null,
-    isConnected: false // Добавляем реактивное состояние подключения
+    isConnected: false, // Добавляем реактивное состояние подключения
   }),
   actions: {
     // Инициализация состояния кошелька при загрузке
@@ -53,7 +55,7 @@ export const useWalletStore = defineStore("wallet", {
 
         const restored = await tonConnectUI.connectionRestored;
         this.isConnected = tonConnectUI.connected;
-        console.log("[wallet] Connection status: ",this.isConnected)
+        console.log("[wallet] Connection status: ", this.isConnected);
 
         if (restored && tonConnectUI.connected) {
           this.wallet = tonConnectUI.wallet?.account?.address || null;
@@ -160,6 +162,6 @@ export const useWalletStore = defineStore("wallet", {
         console.error("[wallet] Ошибка при отправке платежа:", error);
         throw error;
       }
-    }
+    },
   },
 });
