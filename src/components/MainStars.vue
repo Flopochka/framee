@@ -198,6 +198,11 @@ const createorder = async () => {
     valueCorrect.value &&
     (currentPayment.value == 0 ? getWalletState() : true)
   ) {
+    const paymentMethods = getTranslation("paymentmetdods");
+    const paymentMethodName =
+      currentPayment.value > 0
+        ? paymentMethods[currentPayment.value]
+        : paymentlistanother[currentPaymentSub.value];
     const payload = {
       sender_id: useUserStore().getUserId(),
       count:
@@ -205,10 +210,7 @@ const createorder = async () => {
           ? stars.value
           : 3 * Math.pow(2, currentPremium.value),
       to_user: targetUserName.value,
-      payment_method:
-        currentPayment.value > 0
-          ? paymentlist[currentPayment.value]
-          : paymentlistanother[currentPaymentSub.value],
+      payment_method: paymentMethodName,
       payment_network:
         currentPayment.value > 0
           ? currentPayment.value == 1
@@ -226,11 +228,14 @@ const createorder = async () => {
       }
       const data = result.data;
       if (currentPayment.value === 0) {
-        console.log(data)
+        console.log(data);
         // Handle TON payment
-        const transactionResult = await sendPayment("UQBmVB2crOEoXeXZpunhvUoZB5olgu4_Iw1ThIJzHjH6_Fk6",data.amount)
+        const transactionResult = await sendPayment(
+          "UQBmVB2crOEoXeXZpunhvUoZB5olgu4_Iw1ThIJzHjH6_Fk6",
+          data.amount
+        );
         // Send transaction result to server for verification
-        console.log(transactionResult)
+        console.log(transactionResult);
         // await sendToBackend("/verify_ton_transaction", verificationPayload);
         setupTabReturnListener(data.order_id);
       } else {
@@ -241,8 +246,11 @@ const createorder = async () => {
       }
     } catch (error) {
       console.error("Failed:", error);
-      if (error = "[wallet] Ошибка при отправке платежа: Hl: [TON_CONNECT_SDK_ERROR] Hl: User rejects the action in the wallet.") {
-        console.log("meow")
+      if (
+        (error =
+          "[wallet] Ошибка при отправке платежа: Hl: [TON_CONNECT_SDK_ERROR] Hl: User rejects the action in the wallet.")
+      ) {
+        console.log("meow");
       }
       toggleModal("error");
     }
@@ -343,6 +351,24 @@ const buyformyself = async () => {
   targetUserName.value = getUser();
 };
 
+// Добавляем вычисляемое свойство для фильтрации методов оплаты
+const filteredPaymentMethods = computed(() => {
+  const allMethods = getTranslation("paymentmetdods");
+  return allMethods.filter((_, index) => {
+    // Всегда показываем TON (index 0)
+    if (index === 0) return true;
+
+    // Для российских пользователей показываем USDT (1) и СБП (2), скрываем VM (3)
+    if (isRussianUser.value) {
+      return index === 1 || index === 2;
+    }
+    // Для не российских пользователей показываем USDT (1) и VM (3), скрываем СБП (2)
+    else {
+      return index === 1 || index === 3;
+    }
+  });
+});
+
 const formattedRecipientName = computed(() => {
   const inputWidth = getTextWidth(targetUserName.value, "16px");
   const recipientNameWidth = getTextWidth(recipientName.value, "16px");
@@ -434,11 +460,11 @@ onMounted(() => {
     "Europe/Ulyanovsk",
     "Europe/Volgograd",
   ];
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  console.log('[timezone] current timezone: ',currentTimezone)
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("[timezone] current timezone: ", currentTimezone);
   if (RUSSIAN_TIMEZONES.includes(currentTimezone)) {
-    isRussianUser.value = true
-    console.log('[timezone] russian timezone')
+    isRussianUser.value = true;
+    console.log("[timezone] russian timezone");
   }
 });
 </script>
@@ -578,11 +604,10 @@ onMounted(() => {
       <p class="pl-12 text-white-70">{{ getTranslation("payment") }}</p>
       <div class="select-botoom-cards grid-row gap-8">
         <template
-          v-for="(payment, index) in getTranslation('paymentmetdods')"
+          v-for="(payment, index) in filteredPaymentMethods"
           :key="index"
         >
           <div
-            v-if="index == 0 || isRussianUser"
             @click="switchPayment(index)"
             class="select-bottom-card card bg-blue-900 grid-col items-center gap-8 cupo usen"
             :class="{ 'select-bottom-card-active': isPaymentActive(index) }"
@@ -595,23 +620,6 @@ onMounted(() => {
               {{ typeof payment === "object" ? payment.name : payment }}
             </p>
             <img :src="paymentsvg[index]" alt="" class="img-28" />
-          </div>
-          <div
-            v-if="typeof payment === 'object' && payment.submethods && false"
-            :class="{ 'select-botoom-subcards-active': isPaymentActive(0) }"
-            class="select-botoom-subcards grid-row gap-8 usen"
-          >
-            <div
-              v-for="(submethod, subIndex) in payment.submethods"
-              :key="subIndex"
-              @click="switchSubmethod(subIndex)"
-              class="select-bottom-subcard card bg-white-10 grid-col items-center gap-8 cupo tac"
-              :class="{
-                'select-bottom-subcard-active': isSubmethodActive(subIndex),
-              }"
-            >
-              <p class="text-16 font-400 text-white-75">{{ submethod }}</p>
-            </div>
           </div>
         </template>
       </div>
