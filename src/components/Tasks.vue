@@ -4,100 +4,77 @@ import { ref, onMounted } from "vue";
 
 const { getTranslation } = useLanguageStore();
 
-// Реактивная переменная для заданий
 const tasks = ref(null);
 const traffyTasks = ref(null);
 
-// Функция загрузки скрипта Traffy
-function loadTraffyScript() {
-  return new Promise((resolve, reject) => {
-    const existingScript = document.querySelector(
-      'script[src="https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js"]'
-    );
-    if (existingScript) {
-      console.log("Скрипт traffy-wrapper.min.js уже загружен");
-      resolve();
+// Функция загрузки скрипта Traffy с расширенной отладкой
+async function loadTraffyScript() {
+  console.log("[Traffy] Начало загрузки скрипта");
+
+  try {
+    // Проверяем, возможно скрипт уже загружен
+    if (window.Traffy) {
+      console.log("[Traffy] Скрипт уже загружен в window.Traffy");
+      initTraffy();
       return;
     }
 
     const script = document.createElement("script");
-    // script.src = "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js";
     script.src = "https://dvq1zz1g273yl.cloudfront.net/index_v1.1.0.min.js";
-    // script.setAttribute("resource-id", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
-    // script.setAttribute("mode", "mock");
+    script.setAttribute("traffy-key", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
     script.setAttribute("test", "true");
     script.async = true;
 
     script.onload = () => {
-      console.log("[tasks] Скрипт traffy-wrapper.min.js успешно загружен");
-      if (traffyTasks.value) {
-        window.Traffy.renderTasks(traffyTasks.value, {
-          max_tasks: 3,
-          onTaskLoad,
-          onTaskRender,
-          onTaskReward,
-          onTaskReject,
-        });
-      } else {
-        console.error("[tasks] Контейнер traffyTasks или window.Traffy не найдены");
-      }
-      resolve();
+      console.log("[Traffy] Скрипт успешно загружен");
+      console.log("window.Traffy:", window.Traffy);
+      initTraffy();
     };
 
     script.onerror = (error) => {
-      console.error(
-        "[tasks] Ошибка при загрузке скрипта traffy-wrapper.min.js:",
-        error
-      );
-      reject(error);
+      console.error("[Traffy] Ошибка загрузки скрипта:", error);
     };
 
     document.head.appendChild(script);
-  });
+    console.log("[Traffy] Скрипт добавлен в head");
+  } catch (error) {
+    console.error("[Traffy] Ошибка в loadTraffyScript:", error);
+  }
 }
 
-// Функция обработки base64-строк (для image_url)
-function getImageSrc(base64) {
-  if (!base64 || typeof base64 !== "string") {
-    console.error("Base64 строка не передана или не является строкой");
-    return "";
+// Инициализация Traffy после загрузки скрипта
+function initTraffy() {
+  console.log("[Traffy] Инициализация Traffy");
+  console.log("traffyTasks ref:", traffyTasks.value);
+
+  if (!traffyTasks.value) {
+    console.error("[Traffy] Контейнер не найден");
+    return;
   }
 
-  let cleaned = base64
-    .replace(/^data:image\/(png|svg\+xml);base64,/, "")
-    .trim();
-  try {
-    cleaned = decodeURIComponent(cleaned);
-  } catch (e) {
-    console.warn("Не удалось декодировать URL-кодированную строку:", e);
-  }
-
-  cleaned = cleaned.replace(/\s+/g, "").replace(/=+$/, "");
-  if (!/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
-    console.error("Строка содержит недопустимые символы для base64:", cleaned);
-    return "";
-  }
-
-  if (cleaned.length % 4 !== 0) {
-    console.warn("Некорректная длина base64-строки, добавляем padding");
-    cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), "=");
+  if (!window.Traffy) {
+    console.error("[Traffy] window.Traffy не доступен");
+    return;
   }
 
   try {
-    atob(cleaned);
-  } catch (e) {
-    console.error("Некорректная base64 строка:", e);
-    return "";
+    window.Traffy.renderTasks(traffyTasks.value, {
+      max_tasks: 10,
+      onTaskLoad,
+      onTaskRender,
+      onTaskReward,
+      onTaskReject,
+    });
+    console.log("[Traffy] renderTasks вызван");
+  } catch (error) {
+    console.error("[Traffy] Ошибка при вызове renderTasks:", error);
   }
-
-  const mime = cleaned.startsWith("PHN2") ? "image/svg+xml" : "image/png";
-  return `data:${mime};base64,${cleaned}`;
 }
 
-// Функции для Traffy
-function onTaskLoad(tasks) {
-  console.log(tasks, "loaded");
-  traffyTasks.value = tasks;
+// Обработчики заданий с подробным логгированием
+function onTaskLoad(loadedTasks) {
+  console.log("[Traffy] Задания загружены:", loadedTasks);
+  tasks.value = loadedTasks;
 }
 
 function onTaskRender(
@@ -106,37 +83,39 @@ function onTaskRender(
   changeDescription,
   changeButtonCheckText
 ) {
-  changeReward(); // Локализованная награда
-  changeCardTitle();
-  changeDescription();
-  changeButtonCheckText();
+  console.log("[Traffy] Рендеринг задания");
+
+  try {
+    // Модифицируем отображение задания
+    const reward = "10 ★"; // Тестовая награда
+    changeReward(reward);
+    changeCardTitle("Тестовое задание");
+    changeDescription("Подпишитесь на канал");
+    changeButtonCheckText("Проверить");
+
+    console.log("[Traffy] Параметры задания изменены");
+  } catch (error) {
+    console.error("[Traffy] Ошибка в onTaskRender:", error);
+  }
 }
 
 function onTaskReward(task, signedToken) {
-  console.log("Задание выполнено:", task, "Токен:", signedToken);
-  const url = new URL("Your Endpoint");
-  url.searchParams.set("auth", "Yout Auth");
-  fetch(url.toString(), {
-    method: "POST",
-    body: JSON.stringify({
-      task_id: task.company_id,
-      hash: signedToken,
-    }),
-  })
-    .then((res) => {
-      if (res.status === 200) {
-        setBalance(state.traffy_reward, "add");
-      }
-    })
-    .catch(() => {});
+  console.log("[Traffy] Задание выполнено:", { task, signedToken });
+
+  // Эмуляция отправки на сервер
+  setTimeout(() => {
+    console.log("[Traffy] Награда успешно обработана");
+    // Здесь должна быть реальная логика начисления награды
+  }, 1000);
 }
 
 function onTaskReject(task) {
-  console.log("Задание не прошло проверку:", task);
+  console.log("[Traffy] Задание отклонено:", task);
 }
 
-// Инициализация Traffy после монтирования компонента
+// Загрузка при монтировании компонента
 onMounted(() => {
+  console.log("[Traffy] Компонент смонтирован");
   loadTraffyScript();
 });
 </script>
@@ -145,9 +124,14 @@ onMounted(() => {
   <main class="gap-12 p-24">
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
     <div class="tasks-cards flex-col gap-8">
-      <!-- Контейнер для заданий Traffy -->
-      <div class="traffyTasks traffy-custom" ref="traffyTasks"></div>
-      <!-- Fallback, если заданий нет -->
+      <!-- Контейнер для Traffy -->
+      <div
+        class="traffyTasks traffy-custom"
+        ref="traffyTasks"
+        data-testid="traffy-container"
+      ></div>
+
+      <!-- Fallback сообщение -->
       <template v-if="!tasks || tasks.length === 0">
         <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
         <p class="text-16 lh-120">
@@ -159,30 +143,32 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Стили для вашего компонента */
-.task-card {
-  padding: 14px 12px;
-  display: grid;
-  grid-template-areas: "A B" "C B";
-  gap: 6px;
-}
-.task-btn {
-  background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
-  padding: 3px 11px;
-  grid-area: B;
-  width: fit-content;
-  justify-self: end;
-}
-
-/* Стили для Traffy */
+/* Стили для контейнера заданий */
 .traffy-custom {
-  --traffy-buttonRewardImage-background-image: url("../assets/img/Star.svg");
-  --traffy-buttonRewardImage-background-size: 16px;
-  --traffy-buttonCheckRewardImage-background-image: none;
-  --traffy-buttonCheckRewardImage-background-size: 0;
-  --traffy-taskElementButtonText-padding-left: 4px;
-  --traffy-taskElementImageCont-display: block;
-  --traffy-taskElementInfoCont-gap: 10px;
-  --traffy-taskElementInstructionCont-width: 150px;
+    --traffy-buttonRewardImage-background-image: url('https://d36t0rmxsg07e0.cloudfront.net/arrow.webp');
+    --traffy-buttonRewardImage-background-size: 24px;
+    --traffy-taskElementButtonContOuter-padding: 0;
+    --traffy-taskElementButtonText-padding-left: 0;
+    --traffy-taskElementButtonContOuter-background-color: none;
+
+    --traffy-buttonLoader-border: 2px solid rgba(142, 142, 147, 1);
+
+    --traffy-buttonCheckRewardImage-background-image: none;
+    --traffy-buttonCheckRewardImage-background-size: 0;
+
+    --traffy-taskElementButtonCheckText-color: rgba(0, 122, 255, 1);
+    --traffy-taskElementButtonCheckText-font-size: 14px; 
+
+    --traffy-taskElementChannelText-color: black;
+    --traffy-taskElementButtonText-padding-left: 4px;
+
+    --traffy-taskElementInstructionInfoCont-flex-direction: row;
+    --traffy-taskElementInstructionInfoCont-gap: 0px;
+
+    --traffy-taskElementInstructionDescriptionCont-display: flex;
+    --traffy-taskElementInstructionDescriptionCont-gap: 2px;
+    --traffy-taskElementInstructionDescriptionImg-image: url('https://d36t0rmxsg07e0.cloudfront.net/coin.webp');
+    --traffy-taskElementInstructionDescriptionImg-size: 14px;
+    --traffy-taskElementInstructionDescriptionText-color: rgba(142, 142, 147, 1);
 }
 </style>

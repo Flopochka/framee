@@ -155,7 +155,7 @@ onMounted(() => {
       </div>
       <div
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
-        @click="linkTo('https://t.me/framestars_support')"
+        @click="linkTo('https://t.me/FrameSupportBot')"
       >
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("Support") }}
