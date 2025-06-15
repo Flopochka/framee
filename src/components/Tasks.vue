@@ -20,7 +20,7 @@ async function loadTraffyScript() {
     }
 
     const script = document.createElement("script");
-    script.src = "https://dvq1zz1g273yl.cloudfront.net/index_v1.1.0.min.js";
+    script.src = "https://cdn.traffy.site/v1.1.0/index.min.js";
     script.setAttribute("traffy-key", "6e1c73ca-e60f-4359-920f-e1d98f2a3d32");
     script.setAttribute("test", "true");
     script.async = true;
