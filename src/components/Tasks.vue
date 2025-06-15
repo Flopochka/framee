@@ -1,83 +1,109 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useLanguageStore } from "../stores/language";
-import axios from 'axios';
-const { getTranslation } = useLanguageStore();
 
-const traffyContainer = ref(null);
+const { getTranslation } = useLanguageStore();
+const traffyTasks = ref(null);
 const tasks = ref([]);
 const loadingError = ref(false);
 
-// Список альтернативных источников
-const TRAFFY_SOURCES = [
-  'https://dvq1zz1g273yl.cloudfront.net/index_v1.1.0.min.js',
-  'https://cdn.traffy.site/v1.1.0/index.min.js',
-  'https://unpkg.com/traffy-js-sdk@latest/dist/index.min.js'
-];
-
-// Загрузка скрипта
-const loadTraffy = async () => {
-  for (const url of TRAFFY_SOURCES) {
-    try {
-      await loadScript(url);
-      if (window.Traffy) {
-        initTraffy();
-        return;
-      }
-    } catch (error) {
-      console.warn(`Ошибка загрузки ${url}:`, error);
-    }
-  }
-  throw new Error('Не удалось загрузить Traffy');
+// Конфигурация Traffy
+const TRAFFY_CONFIG = {
+  resourceId: "YOUR_TRAFFY_KEY", // Замените на ваш ключ
+  scriptUrl: "https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js",
+  mode: "mock" // или "production" для реального режима
 };
 
-// Вспомогательная функция загрузки скрипта
-const loadScript = (url) => {
+// Загрузка скрипта Traffy
+const loadTraffyScript = () => {
   return new Promise((resolve, reject) => {
+    if (window.Traffy) {
+      console.log('Traffy уже загружен');
+      resolve();
+      return;
+    }
+
     const script = document.createElement('script');
-    script.src = url;
+    script.src = TRAFFY_CONFIG.scriptUrl;
+    script.setAttribute('resource-id', TRAFFY_CONFIG.resourceId);
+    script.setAttribute('mode', TRAFFY_CONFIG.mode);
     script.async = true;
-    script.onload = resolve;
-    script.onerror = reject;
+
+    script.onload = () => {
+      console.log('Traffy скрипт загружен');
+      resolve();
+    };
+
+    script.onerror = (error) => {
+      console.error('Ошибка загрузки Traffy:', error);
+      reject(error);
+    };
+
     document.head.appendChild(script);
   });
 };
 
-// Инициализация Traffy
-const initTraffy = () => {
-  window.Traffy.renderTasks(traffyContainer.value, {
-    max_tasks: 1,
-    onTaskLoad: (loadedTasks) => {
-      tasks.value = loadedTasks || [];
-    },
-    onTaskRender: (changeReward) => {
-      changeReward('10 ★');
-    }
-  });
+// Обработчики заданий
+const onTaskLoad = (loadedTasks) => {
+  console.log('Задания загружены:', loadedTasks);
+  tasks.value = loadedTasks || [];
 };
 
-// Фолбэк задания
-const loadFallbackTasks = async () => {
+const onTaskRender = (changeReward, changeCardTitle, changeDescription, changeButtonCheckText) => {
+  changeReward("10 ★");
+  changeCardTitle(getTranslation("subscribeTo"));
+  changeButtonCheckText(getTranslation("check"));
+};
+
+const onTaskReward = (task, signedToken) => {
+  console.log('Задание выполнено:', task);
+  // Здесь отправка токена на ваш сервер для верификации
+};
+
+const onTaskReject = (task) => {
+  console.warn('Задание отклонено:', task);
+};
+
+// Инициализация Traffy
+const initTraffy = () => {
   try {
-    const response = await axios.get('https://your-api-fallback/tasks');
-    tasks.value = response.data;
+    window.Traffy.renderTasks(traffyTasks.value, {
+      max_tasks: 3, // Максимальное количество заданий
+      onTaskLoad,
+      onTaskRender,
+      onTaskReward,
+      onTaskReject
+    });
   } catch (error) {
-    tasks.value = [{
-      id: 'fallback-1',
-      title: 'Demo Task',
-      description: 'Subscribe to our channel',
-      reward: '10 ★'
-    }];
+    console.error('Ошибка инициализации Traffy:', error);
+    loadingError.value = true;
   }
+};
+
+// Загрузка фолбэк заданий
+const loadFallbackTasks = () => {
+  tasks.value = [{
+    id: 'fallback-1',
+    title: getTranslation("demoTaskTitle"),
+    description: getTranslation("demoTaskDescription"),
+    reward: '10 ★'
+  }];
 };
 
 onMounted(async () => {
   try {
-    await loadTraffy();
+    await loadTraffyScript();
+    initTraffy();
+    
+    // Фолбэк если задания не загрузились
+    setTimeout(() => {
+      if (!tasks.value.length) {
+        loadFallbackTasks();
+      }
+    }, 3000);
   } catch (error) {
-    console.error('Ошибка инициализации Traffy:', error);
-    loadingError.value = true;
-    await loadFallbackTasks();
+    console.error('Не удалось загрузить Traffy:', error);
+    loadFallbackTasks();
   }
 });
 </script>
@@ -85,52 +111,49 @@ onMounted(async () => {
 <template>
   <main class="gap-12 p-24">
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
-    <div class="tasks-cards flex-col gap-8">
-      <!-- Контейнер для Traffy -->
-      <div
-        class="traffyTasks traffy-custom"
-        ref="traffyTasks"
-        data-testid="traffy-container"
-      ></div>
-
-      <!-- Fallback сообщение -->
-      <template v-if="!tasks || tasks.length === 0">
-        <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
-        <p class="text-16 lh-120">
-          {{ getTranslation("Takeabreakorcheckbacklaterfornewassignments") }}
-        </p>
-      </template>
-    </div>
+    
+    <!-- Контейнер для Traffy -->
+    <div class="traffy-custom" ref="traffyTasks"></div>
+    
+    <!-- Фолбэк если Traffy не загрузился -->
+    <template v-if="loadingError || tasks.length">
+      <div v-for="task in tasks" :key="task.id" class="task-card">
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description }}</p>
+        <div class="reward">{{ task.reward }}</div>
+      </div>
+    </template>
   </main>
 </template>
 
 <style scoped>
-/* Стили для контейнера заданий */
+/* Стили для контейнера Traffy */
 .traffy-custom {
-    --traffy-buttonRewardImage-background-image: url('https://d36t0rmxsg07e0.cloudfront.net/arrow.webp');
-    --traffy-buttonRewardImage-background-size: 24px;
-    --traffy-taskElementButtonContOuter-padding: 0;
-    --traffy-taskElementButtonText-padding-left: 0;
-    --traffy-taskElementButtonContOuter-background-color: none;
+  --traffy-buttonRewardImage-background-image: url("../assets/img/Star.svg");
+  --traffy-buttonRewardImage-background-size: 16px;
+  --traffy-buttonCheckRewardImage-background-image: none;
+  --traffy-buttonCheckRewardImage-background-size: 0;
+  --traffy-taskElementButtonText-padding-left: 4px;
+  --traffy-taskElementImageCont-display: block;
+  --traffy-taskElementInfoCont-gap: 10px;
+  --traffy-taskElementInstructionCont-width: 150px;
+  --traffy-taskElementCont-bg: #2C3E50;
+  --traffy-taskElementCont-border-radius: 12px;
+  --traffy-taskElementCont-padding: 16px;
+}
 
-    --traffy-buttonLoader-border: 2px solid rgba(142, 142, 147, 1);
+/* Стили для фолбэк заданий */
+.task-card {
+  background: #2C3E50;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  color: white;
+}
 
-    --traffy-buttonCheckRewardImage-background-image: none;
-    --traffy-buttonCheckRewardImage-background-size: 0;
-
-    --traffy-taskElementButtonCheckText-color: rgba(0, 122, 255, 1);
-    --traffy-taskElementButtonCheckText-font-size: 14px; 
-
-    --traffy-taskElementChannelText-color: black;
-    --traffy-taskElementButtonText-padding-left: 4px;
-
-    --traffy-taskElementInstructionInfoCont-flex-direction: row;
-    --traffy-taskElementInstructionInfoCont-gap: 0px;
-
-    --traffy-taskElementInstructionDescriptionCont-display: flex;
-    --traffy-taskElementInstructionDescriptionCont-gap: 2px;
-    --traffy-taskElementInstructionDescriptionImg-image: url('https://d36t0rmxsg07e0.cloudfront.net/coin.webp');
-    --traffy-taskElementInstructionDescriptionImg-size: 14px;
-    --traffy-taskElementInstructionDescriptionText-color: rgba(142, 142, 147, 1);
+.reward {
+  color: gold;
+  font-weight: bold;
+  margin-top: 8px;
 }
 </style>
