@@ -3,7 +3,7 @@ import { useLanguageStore } from "../stores/language";
 import { useModalStore } from "../stores/modal";
 import { useWalletStore } from "../stores/wallet";
 import { sendToBackend } from "../modules/fetch";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const { getTranslation } = useLanguageStore();
 const { disconnectWallet, fetchWalletInfo, getWalletState } = useWalletStore();
