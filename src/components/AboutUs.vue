@@ -6,7 +6,7 @@ import { sendToBackend } from "../modules/fetch";
 import { ref, onMounted, computed } from "vue";
 
 const { getTranslation } = useLanguageStore();
-const { disconnectWallet, connectWallet} = useWalletStore();
+const { disconnectWallet, connectWallet, initializeWallet} = useWalletStore();
 const isWalletConnected = computed(() => useWalletStore().getWalletState());
 const { toggleModal } = useModalStore();
 
@@ -80,6 +80,7 @@ const fetchTotalInfo = async () => {
 };
 
 onMounted(async () => {
+  initializeWallet()
   fetchTotalInfo();
 
   const lottie = await import("lottie-web");
