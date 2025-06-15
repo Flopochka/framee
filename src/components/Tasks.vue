@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useLanguageStore } from "../stores/language";
 import axios from 'axios';
+const { getTranslation } = useLanguageStore();
 
 const traffyContainer = ref(null);
 const tasks = ref([]);
