@@ -91,7 +91,7 @@ onMounted(async () => {
       class="task-card bg-blue-900 rounded-12 items-center"
     >
       <p class="text-16 text-white">
-        {{ i.title }}
+        {{ i.title }}, {{ i.description }}
       </p>
       <div
         class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
