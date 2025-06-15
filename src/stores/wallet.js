@@ -16,7 +16,7 @@ try {
       notifications: ["before", "success", "error"],
       skipRedirectToWallet: "ios", // Default for iOS compatibility
       returnStrategy: "back", // Default return strategy
-      twaReturnUrl: "https://t.me/your_tma_bot", // Replace with your actual TMA URL
+      twaReturnUrl: "https://t.me/framestars_bot?startapp", // Replace with your actual TMA URL
     },
   };
 
