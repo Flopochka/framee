@@ -110,10 +110,8 @@ onMounted(async () => {
 .traffy-custom {
   display: none;
 }
-.traffy-taskElementCont {
-  padding: 14px 12px;
-}
-/* .task-card {
+/* Стили для вашего компонента */
+.task-card {
   padding: 14px 12px;
   display: grid;
   grid-template-areas: "A B" "C B";
@@ -125,5 +123,5 @@ onMounted(async () => {
   grid-area: B;
   width: fit-content;
   justify-self: end;
-} */
+}
 </style>
