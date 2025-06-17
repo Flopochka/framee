@@ -511,7 +511,7 @@ onMounted(() => {
         :class="{ 'select-type-item-selected': currentType === 0 }"
       >
         {{ getTranslation("stars") }}
-        <img src="../assets/img/StarGold.svg" alt="" class="img-16" />
+        <img src="../../assets/img/StarGold.svg" alt="" class="img-16" />
       </div>
       <div
         @click="switchType(1)"
@@ -519,7 +519,7 @@ onMounted(() => {
         :class="{ 'select-type-item-selected': currentType === 1 }"
       >
         {{ getTranslation("premium") }}
-        <img src="../assets/img/StarPremium.svg" alt="" class="img-16" />
+        <img src="../../assets/img/StarPremium.svg" alt="" class="img-16" />
       </div>
     </div>
     <div class="select-top flex-col gap-16">
@@ -581,7 +581,7 @@ onMounted(() => {
               v-if="stars"
               @click="clearStars()"
               class="input-clear img-32 cupo"
-              src="../assets/img/CrossRed.svg"
+              src="../../assets/img/CrossRed.svg"
               alt=""
             />
           </div>
@@ -605,7 +605,7 @@ onMounted(() => {
               class="select-top-stars-card letter-spacing-04 font-600 flex-row items-center justify-center gap-4 rounded-12 text-white cupo usen"
             >
               +{{ amount.toLocaleString() }}
-              <img src="../assets/img/Star.svg" alt="" class="img-16" />
+              <img src="../../assets/img/Star.svg" alt="" class="img-16" />
             </div>
           </div>
         </div>
@@ -681,21 +681,21 @@ onMounted(() => {
         class="bottom-button-stars flex-row gap-4 items-center justify-center"
         :style="{ maxHeight: currentType === 0 ? '18px' : '0' }"
       >
-        <img src="../assets/img/StarGold.svg" alt="" class="img-16" />
+        <img src="../../assets/img/StarGold.svg" alt="" class="img-16" />
         <p class="text-17 font-geist font-600 letter-spacing-04 text-white">
           {{ getTranslation("buy") }} {{ stars ? stars : 100 }}
         </p>
-        <img src="../assets/img/StarGold.svg" alt="" class="img-16" />
+        <img src="../../assets/img/StarGold.svg" alt="" class="img-16" />
       </div>
       <div
         class="bottom-button-prem flex-row gap-4 items-center justify-center"
         :style="{ maxHeight: currentType === 1 ? '18px' : '0' }"
       >
-        <img src="../assets/img/StarPremium.svg" alt="" class="img-16" />
+        <img src="../../assets/img/StarPremium.svg" alt="" class="img-16" />
         <p class="text-17 font-geist font-600 letter-spacing-04 text-white">
           {{ getTranslation("buyPremium") }}
         </p>
-        <img src="../assets/img/StarPremium.svg" alt="" class="img-16" />
+        <img src="../../assets/img/StarPremium.svg" alt="" class="img-16" />
       </div>
     </div>
   </main>
@@ -787,21 +787,21 @@ main {
   border: 2px solid var(--blue-900);
 }
 .select-top-premium-card:nth-of-type(1) {
-  background-image: url("../assets/img/Premium1.svg");
+  background-image: url("../../assets/img/Premium1.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
 }
 .select-top-premium-card:nth-of-type(2) {
-  background-image: url("../assets/img/Premium2.svg");
+  background-image: url("../../assets/img/Premium2.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 .select-top-premium-card:nth-of-type(3) {
-  background-image: url("../assets/img/Premium3.svg");
+  background-image: url("../../assets/img/Premium3.svg");
   background-color: var(--blue-900);
   background-repeat: no-repeat;
   background-position: center;

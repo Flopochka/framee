@@ -165,7 +165,7 @@ onMounted(() => {
         @click="clearStars()"
         class="input-clear img-32 cupo"
         style="top: 36px"
-        src="../assets/img/CrossRed.svg"
+        src="../../assets/img/CrossRed.svg"
         alt=""
       />
       <p v-for="error in valueIncorrects" :key="error" class="pl-14 text-red text-14">

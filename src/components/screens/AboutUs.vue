@@ -103,7 +103,7 @@ onMounted(async () => {
         class="text-white aboutus-btn btn letter-spacing-04 text-16 cupo usen"
       >
         {{ getTranslation("connectWallet") }}
-        <img src="../assets/img/Wallet.svg" alt="" class="img-20 lazy-img" />
+        <img src="../../assets/img/Wallet.svg" alt="" class="img-20 lazy-img" />
       </div>
       <div
         v-else
@@ -116,7 +116,7 @@ onMounted(async () => {
         :class="disconWarn ? 'warn' : ''"
       >
         {{ getTranslation(disconWarn ? "Areyoushure" : "disconectWallet") }}
-        <img src="../assets/img/Wallet.svg" alt="" class="img-20 lazy-img" />
+        <img src="../../assets/img/Wallet.svg" alt="" class="img-20 lazy-img" />
       </div>
       <p
         class="aboutus-cover-header letter-spacing-01 font-600 text-32 lh-110 tac twb"
@@ -152,7 +152,7 @@ onMounted(async () => {
           class="aboutus-other-card items-center gap-2"
         >
           <img
-            src="../assets/img/Star.svg"
+            src="../../assets/img/Star.svg"
             alt=""
             class="img-16 p-133 lazy-img"
           />
@@ -187,7 +187,7 @@ onMounted(async () => {
               :class="{ 'accordion-checkbox-active': isAccordionActive(index) }"
             >
               <img
-                src="../assets/img/Arrow down.svg"
+                src="../../assets/img/Arrow down.svg"
                 alt=""
                 class="img-24 lazy-img"
               />

@@ -102,12 +102,12 @@ onMounted(() => {
         class="text-20 font-600 lh-120 flex-row items-center justify-center gap-4"
       >
         {{ referals_count }}
-        <img src="../assets/img/People.svg" alt="" class="img-24 lazy-img" />
+        <img src="../../assets/img/People.svg" alt="" class="img-24 lazy-img" />
       </p>
       <p class="text-20 font-600 lh-120 flex-row items-center justify-center">
         {{ income }}
         <img
-          src="../assets/img/TONMinimal.svg"
+          src="../../assets/img/TONMinimal.svg"
           alt=""
           class="img-20 lazy-img"
         />
@@ -131,7 +131,7 @@ onMounted(() => {
         @click="shareContent()"
         class="user-referal-box-btn-invite flex-row gap-4 rounded-12 items-center justify-center cupo usen"
       >
-        <img src="../assets/img/Gift.svg" alt="" class="img-16 lazy-img" />
+        <img src="../../assets/img/Gift.svg" alt="" class="img-16 lazy-img" />
         <p class="text-17 letter-spacing-04 text-white">
           {{ getTranslation("Inviteafriend") }}
         </p>
@@ -140,7 +140,7 @@ onMounted(() => {
         @click="copyToClipboard(`${shareData.url}`)"
         class="user-referal-box-btn-copy rounded-12 items-center justify-center flex-row cupo usen"
       >
-        <img src="../assets/img/Copy.svg" alt="" class="img-28 lazy-img" />
+        <img src="../../assets/img/Copy.svg" alt="" class="img-28 lazy-img" />
       </div>
     </div>
     <div class="user-buttons-1 flex-col gap-8">
@@ -151,7 +151,7 @@ onMounted(() => {
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("History") }}
         </p>
-        <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
+        <img src="../../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
@@ -160,7 +160,7 @@ onMounted(() => {
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("Support") }}
         </p>
-        <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
+        <img src="../../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
         class="user-buttons-1-item rounded-10 bg-blue-900 flex-row items-center cupo usen"
@@ -169,7 +169,7 @@ onMounted(() => {
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("OurTelegram") }}
         </p>
-        <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
+        <img src="../../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
         @click="toggleModal('terms')"
@@ -178,7 +178,7 @@ onMounted(() => {
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("Termsofservice") }}
         </p>
-        <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
+        <img src="../../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
       <div
         @click="toggleModal('privacy')"
@@ -187,7 +187,7 @@ onMounted(() => {
         <p class="text-16 font-400 text-neutral-200">
           {{ getTranslation("privacytitle") }}
         </p>
-        <img src="../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
+        <img src="../../assets/img/Arrow down.svg" alt="" class="img-24 rot-90" />
       </div>
     </div>
     <div class="user-language flex-col gap-6">
@@ -201,7 +201,7 @@ onMounted(() => {
             useLanguageStore().langs[useLanguageStore().getCurrentLanguage()]
           }}
         </p>
-        <img src="../assets/img/Arrow down.svg" alt="" class="img-24" />
+        <img src="../../assets/img/Arrow down.svg" alt="" class="img-24" />
       </div>
     </div>
   </main>
@@ -215,7 +215,7 @@ onMounted(() => {
   align-items: center;
   justify-items: center;
   gap: 6px;
-  background: url("../assets/img/SmoshStars.svg") no-repeat center,
+  background: url("../../assets/img/SmoshStars.svg") no-repeat center,
     linear-gradient(90deg, #133e67 0%, #0f497d 100%);
   background-size: contain;
 }

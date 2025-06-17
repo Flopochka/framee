@@ -106,7 +106,7 @@ onMounted(() => {
       <p class="text-20 text-white">{{ getTranslation("Yourbalance") }}</p>
       <p class="text-24 text-white jse">
         {{ useUserStore().getUserBalance()
-        }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-20" />
+        }}<img src="../../assets/img/TONMinimal.svg" alt="" class="img-20" />
       </p>
       <div
         @click="toggleModal('withdrawton')"
@@ -173,7 +173,7 @@ onMounted(() => {
             </div>
             <p class="text-16 text-neutral-200 jse flex-row">
               + {{ (+referal.income).toFixed(5)
-              }}<img src="../assets/img/TONMinimal.svg" alt="" class="img-16" />
+              }}<img src="../../assets/img/TONMinimal.svg" alt="" class="img-16" />
             </p>
           </div>
           <div class="referal-pages" v-if="pageInfo[0] > 0">

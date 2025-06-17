@@ -15,7 +15,7 @@ const { switchLanguage, langs, getCurrentLanguage } = useLanguageStore();
       >
         <p class="text-16 font-400 lh-100">{{ label }}</p>
         <img
-          src="../assets/img/Check.svg"
+          src="../../assets/img/Check.svg"
           :alt="getCurrentLanguage() === key ? 'Selected' : 'Not selected'"
           class="img-24"
           :class="{ hidden: getCurrentLanguage() !== key }"

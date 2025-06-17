@@ -114,7 +114,7 @@ const withdraw = async () => {
         @click="clearTON()"
         class="input-clear img-32 cupo"
         style="top: 36px"
-        src="../assets/img/CrossRed.svg"
+        src="../../assets/img/CrossRed.svg"
         alt=""
       />
       <template v-if="valueIncorrects" v-for="e in valueIncorrects">
