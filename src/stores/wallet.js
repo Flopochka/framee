@@ -130,7 +130,7 @@ export const useWalletStore = defineStore("wallet", {
     },
 
     // Отправка платежа
-    async sendPayment(recipient, amount, message, extraCurrency = null) {
+    async sendPayment(recipient, amount, message) {
       if (!this.getWalletState()) {
         throw new Error(
           "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
@@ -142,9 +142,8 @@ export const useWalletStore = defineStore("wallet", {
         messages: [
           {
             address: recipient,
-            payload: message,
             amount: amount.toString(),
-            ...(extraCurrency && { extraCurrency }), // Conditionally include extraCurrency
+            payload: btoa(unescape(encodeURIComponent(message)))
           },
         ],
       };
