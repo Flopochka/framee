@@ -1,12 +1,12 @@
 <script setup>
 import { ref, watchEffect } from "vue";
-import { useLanguageStore } from "../stores/language";
-import { useHistoryStore } from "../stores/history";
-import StarGold from "../assets/img/StarGold.svg";
-import StarPremium from "../assets/img/StarPremium.svg";
-import TONMinimal from "../assets/img/TONMinimal.svg";
-import Processing from "../assets/img/Processing.svg";
-import Cancelled from "../assets/img/Cancelled.svg";
+import { useLanguageStore } from "../../stores/language";
+import { useHistoryStore } from "../../stores/history";
+import StarGold from "../../assets/img/StarGold.svg";
+import StarPremium from "../../assets/img/StarPremium.svg";
+import TONMinimal from "../../assets/img/TONMinimal.svg";
+import Processing from "../../assets/img/Processing.svg";
+import Cancelled from "../../assets/img/Cancelled.svg";
 
 const { getTranslation } = useLanguageStore();
 const {

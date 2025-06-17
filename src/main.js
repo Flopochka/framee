@@ -1,8 +1,8 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router/index.js";
 import WebApp from "@twa-dev/sdk";
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 import { sendToBackend } from "./modules/fetch.js";
 import { useScreenStore } from "./stores/screen";
 import { useModalStore } from "./stores/modal";
@@ -97,7 +97,7 @@ async function initializeApp() {
       if (isGranted) return;
 
       WebApp.showAlert(
-        "Разрешение необходимо, чтобы бот мог отправлять вам сообщения."
+        "Для корректной работы приложения необходимо разрешить боту отправлять сообщения."
       );
       setTimeout(requestAccessLoop, 500);
     });

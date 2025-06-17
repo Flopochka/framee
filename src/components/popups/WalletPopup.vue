@@ -1,6 +1,6 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
+import { useLanguageStore } from "../../stores/language";
+import { useModalStore } from "../../stores/modal";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -8,16 +8,16 @@ const { getTranslation } = useLanguageStore();
 
 <template>
   <div class="popup-img flex-row items-center justify-center">
-    <img src="../assets/img/Copy.svg" alt="" class="img-32 lazy-img" />
+    <img src="../assets/img/Star.svg" alt="" class="img-32 lazy-img" />
   </div>
   <div class="popup-block flex-col">
     <p class="text-16 text-white letter-spacing-2">
-      {{ getTranslation("Copied") }}
+      {{ getTranslation("TONhavebeensent") }}
     </p>
     <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
       {{
         getTranslation(
-          "Referallinksucessfulcopied"
+          "Thereplenishmentwillarrivetoyourwalletwithinacoupleofminutes"
         )
       }}
     </p>

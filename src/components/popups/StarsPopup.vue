@@ -1,6 +1,6 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
+import { useLanguageStore } from "../../stores/language";
+import { useModalStore } from "../../stores/modal";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -12,7 +12,7 @@ const { getTranslation } = useLanguageStore();
   </div>
   <div class="popup-block flex-col">
     <p class="text-16 text-white letter-spacing-2">
-      {{ getTranslation("Premiumhavebeensent") }}
+      {{ getTranslation("Starshavebeensent") }}
     </p>
     <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
       {{ getTranslation("Youraccountwillbeupdatedwithinafewminutes") }}

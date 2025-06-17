@@ -1,7 +1,7 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { usePaymentStore } from "../stores/payment";
-import Spinner from "../assets/img/Spinner.svg";
+import { useLanguageStore } from "../../stores/language";
+import { usePaymentStore } from "../../stores/payment";
+import Spinner from "../../assets/img/Spinner.svg";
 const { getTranslation } = useLanguageStore();
 const { getPaymentLink } = usePaymentStore();
 </script>
@@ -18,7 +18,7 @@ const { getPaymentLink } = usePaymentStore();
       </p>
       <p class="text-16 lh-120 twb">{{ getTranslation("Itwillonlytakeamoment") }}</p>
     </span>
-    <a :href="getPaymentLink() || ''" class="rd-meself btn text-16">{{
+    <a :href="getPaymentLink() || '/'" class="rd-meself btn text-16">{{
       getTranslation("Openpaymentpagemanually")
     }}</a>
   </div>

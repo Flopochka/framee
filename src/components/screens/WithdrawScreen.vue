@@ -1,11 +1,11 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
-import { sendToBackend } from "../modules/fetch";
-import { useUserStore } from "../stores/user";
+import { useLanguageStore } from "../../stores/language.js";
+import { useModalStore } from "../../stores/modal.js";
+import { sendToBackend } from "../../modules/fetch.js";
+import { useUserStore } from "../../stores/user.js";
 import { ref, onMounted, computed } from "vue";
-import refPhoto from "../assets/img/TESTReferalPhoto.png";
-import { getImageSrc } from "../modules/base64img.js";
+import refPhoto from "../../assets/img/TESTReferalPhoto.png";
+import { getImageSrc } from "../../modules/base64img.js";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();

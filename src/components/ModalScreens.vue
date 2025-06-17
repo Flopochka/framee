@@ -4,20 +4,20 @@ import { useModalStore } from "../stores/modal";
 import { useUserStore } from "../stores/user";
 import { useLanguageStore } from "../stores/language";
 import BaseModal from "./BaseModal.vue";
-import LanguageModal from "./LanguageModal.vue";
-import HistoryModal from "./HistoryModal.vue";
-import WithdrawTonModal from "./WithdrawTonModal.vue";
-import WithdrawStarsModal from "./WithdrawStarsModal.vue";
-import StarsPopup from "./StarsPopup.vue";
-import PremiumPopup from "./StarsPopup.vue"; // Уточните, если нужен другой компонент
-import WalletNCPopup from "./WalletNCPopup.vue"; // Уточните, если нужен другой компонент
-import WalletPopup from "./WalletPopup.vue"; // Уточните, если нужен другой компонент
-import ErrorPopup from "./ErrorPopup.vue";
-import CopiedPopup from "./CopiedPopup.vue";
-import FillerModal from "./FillerModal.vue";
-import ConnectModal from "./ConnectModal.vue";
-import TermsModal from "./TermsModal.vue";
-import PrivacyModal from "./PrivacyModal.vue";
+import LanguageModal from "./modals/LanguageModal.vue";
+import HistoryModal from "./modals/HistoryModal.vue";
+import WithdrawTonModal from "./modals/WithdrawTonModal.vue";
+import WithdrawStarsModal from "./modals/WithdrawStarsModal.vue";
+import PrivacyModal from "./modals/PrivacyModal.vue";
+import ConnectModal from "./modals/ConnectModal.vue";
+import FillerModal from "./modals/FillerModal.vue";
+import TermsModal from "./modals/TermsModal.vue";
+import StarsPopup from "./popups/StarsPopup.vue";
+import PremiumPopup from "./popups/StarsPopup.vue";
+import WalletNCPopup from "./popups/WalletNCPopup.vue";
+import WalletPopup from "./popups/WalletPopup.vue";
+import ErrorPopup from "./popups/ErrorPopup.vue";
+import CopiedPopup from "./popups/CopiedPopup.vue";
 
 const modalStore = useModalStore();
 const { toggleModal, getActiveModal } = modalStore;
@@ -135,16 +135,19 @@ const activeModal = computed(() => getActiveModal());
     ]"
     @click="modal.type === 'modal' ? toggleModal(null) : null"
   >
-    <BaseModal
-      v-if="modal.type === 'modal'"
-      :modal-id="modal.id"
-    >
+    <BaseModal v-if="modal.type === 'modal'" :modal-id="modal.id">
       <template #title>
         <p v-if="modal.hasBalance" class="flex-row gap-14 items-center">
-          <span style="text-wrap-mode: nowrap;">{{ getTranslation("Yourbalance") }}:</span>
+          <span style="text-wrap-mode: nowrap"
+            >{{ getTranslation("Yourbalance") }}:</span
+          >
           <span class="lh-115 flex-row items-center">
             {{ getUserBalance() }}
-            <img src="../assets/img/TONMinimal.svg" alt="TON" class="img-20 lazy-img" />
+            <img
+              src="../assets/img/TONMinimal.svg"
+              alt="TON"
+              class="img-20 lazy-img"
+            />
           </span>
         </p>
         <p v-else>{{ getTranslation(modal.title) }}</p>

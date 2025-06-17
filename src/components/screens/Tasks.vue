@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-import { useLanguageStore } from "../stores/language";
+import { useLanguageStore } from "../../stores/language";
 import WebApp from "@twa-dev/sdk";
 
 const { getTranslation } = useLanguageStore();

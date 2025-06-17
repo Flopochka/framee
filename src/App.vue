@@ -1,11 +1,11 @@
 <script setup>
-import MenuModule from "./components/MenuModule.vue";
-import MainStars from "./components/MainStars.vue";
-import Tasks from "./components/Tasks.vue";
-import AboutUs from "./components/AboutUs.vue";
-import Profile from "./components/Profile.vue";
+import MainStars from "./components/screens/MainStars.vue";
+import Tasks from "./components/screens/Tasks.vue";
+import AboutUs from "./components/screens/AboutUs.vue";
+import Profile from "./components/screens/Profile.vue";
+import WithdrawScreen from "./components/screens/WithdrawScreen.vue";
 import ModalScreens from "./components/ModalScreens.vue";
-import WithdrawScreen from "./components/WithdrawScreen.vue";
+import MenuModule from "./components/MenuModule.vue";
 import telegramAnalytics from "@telegram-apps/analytics";
 import { useRoute } from "vue-router";
 import { useScreenStore } from "./stores/screen";

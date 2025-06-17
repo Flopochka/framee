@@ -1,6 +1,6 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
+import { useLanguageStore } from "../../stores/language";
+import { useModalStore } from "../../stores/modal";
 
 const { toggleModal } = useModalStore();
 const { getTranslation } = useLanguageStore();
@@ -12,18 +12,23 @@ const { getTranslation } = useLanguageStore();
   </div>
   <div class="popup-block flex-col">
     <p class="text-16 text-white letter-spacing-2">
-      {{ getTranslation("Starshavebeensent") }}
+      {{ getTranslation("Walletnotconnected") }}
     </p>
     <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
-      {{ getTranslation("Youraccountwillbeupdatedwithinafewminutes") }}
+      {{
+        getTranslation(
+          "PleaseconnectyourTONwalletonthemainpagetostartpurchasing"
+        )
+      }}
     </p>
     <div
-      @click="toggleModal(null)"
+      @click="toggleModal('connect')"
       class="popup-btn letter-spacing-04 font-600 btn rounded-12 cupo usen"
     >
-      {{ getTranslation("Close") }}
+      {{ getTranslation("connectWallet") }}
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

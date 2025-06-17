@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import { useLanguageStore } from "../stores/language";
-import { useWalletStore } from "../stores/wallet";
-import { useModalStore } from "../stores/modal";
+import { useLanguageStore } from "../../stores/language";
+import { useWalletStore } from "../../stores/wallet";
+import { useModalStore } from "../../stores/modal";
 
 const { getTranslation } = useLanguageStore();
 const { connectWallet, fetchWalletInfo } = useWalletStore();

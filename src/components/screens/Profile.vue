@@ -1,10 +1,10 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
-import { useScreenStore } from "../stores/screen";
-import { sendToBackend } from "../modules/fetch";
+import { useLanguageStore } from "../../stores/language";
+import { useModalStore } from "../../stores/modal";
+import { useScreenStore } from "../../stores/screen";
+import { sendToBackend } from "../../modules/fetch";
 import { ref, onMounted } from "vue";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../../stores/user";
 import WebApp from "@twa-dev/sdk";
 
 const referals_count = ref(0);

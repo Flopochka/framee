@@ -1,17 +1,17 @@
 <script setup>
-import tonsvg from "../assets/img/TON Network.svg";
-import usdtsvg from "../assets/img/USDT.svg";
-import sbpsvg from "../assets/img/SBP.webp";
-import visamastercardsvg from "../assets/img/VISA & MasterCard.svg";
-import { useUserStore } from "../stores/user";
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
-import { useHistoryStore } from "../stores/history";
-import { usePaymentStore } from "../stores/payment";
+import tonsvg from "../../assets/img/TON Network.svg";
+import usdtsvg from "../../assets/img/USDT.svg";
+import sbpsvg from "../../assets/img/SBP.webp";
+import visamastercardsvg from "../../assets/img/VISA & MasterCard.svg";
+import { useUserStore } from "../../stores/user.js";
+import { useLanguageStore } from "../../stores/language.js";
+import { useModalStore } from "../../stores/modal.js";
+import { useHistoryStore } from "../../stores/history.js";
+import { usePaymentStore } from "../../stores/payment.js";
 import { ref, onMounted, watch, nextTick, computed } from "vue";
-import { useWalletStore } from "../stores/wallet";
-import { sendToBackend } from "../modules/fetch";
-import { getImageSrc } from "../modules/base64img.js";
+import { useWalletStore } from "../../stores/wallet.js";
+import { sendToBackend } from "../../modules/fetch.js";
+import { getImageSrc } from "../../modules/base64img.js";
 
 const { toggleModal } = useModalStore();
 const { setPaymentLink } = usePaymentStore();
@@ -264,7 +264,8 @@ const createorder = async () => {
         // Handle TON payment
         const transactionResult = await sendPayment(
           "UQBmVB2crOEoXeXZpunhvUoZB5olgu4_Iw1ThIJzHjH6_Fk6",
-          data.amount
+          data.amount,
+          data.comment
         );
         // Send transaction result to server for verification
         console.log(transactionResult);

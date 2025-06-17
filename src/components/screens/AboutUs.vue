@@ -1,7 +1,7 @@
 <script setup>
-import { useLanguageStore } from "../stores/language";
-import { useWalletStore } from "../stores/wallet";
-import { sendToBackend } from "../modules/fetch";
+import { useLanguageStore } from "../../stores/language";
+import { useWalletStore } from "../../stores/wallet";
+import { sendToBackend } from "../../modules/fetch";
 import { ref, onMounted, computed } from "vue";
 
 const { getTranslation } = useLanguageStore();

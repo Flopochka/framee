@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { useLanguageStore } from "../stores/language";
-import { useModalStore } from "../stores/modal";
-import { useUserStore } from "../stores/user";
-import { sendToBackend } from "../modules/fetch";
-import { useHistoryStore } from "../stores/history";
+import { useLanguageStore } from "../../stores/language";
+import { useModalStore } from "../../stores/modal";
+import { useUserStore } from "../../stores/user";
+import { sendToBackend } from "../../modules/fetch";
+import { useHistoryStore } from "../../stores/history";
  
 
 const { toggleModal } = useModalStore();
