@@ -142,7 +142,7 @@ export const useWalletStore = defineStore("wallet", {
         messages: [
           {
             address: recipient,
-            message: message,
+            payload: message,
             amount: amount.toString(),
             ...(extraCurrency && { extraCurrency }), // Conditionally include extraCurrency
           },
