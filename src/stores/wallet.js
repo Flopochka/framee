@@ -143,7 +143,7 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            payload: btoa(unescape(encodeURIComponent(message)))
+            payload: ""
           },
         ],
       };
