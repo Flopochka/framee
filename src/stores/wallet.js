@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import axios from "axios";
 import { TonConnectUI } from "@tonconnect/ui";
+import { beginCell } from "ton-core";
 
 // Инициализация TonConnect UI
 let tonConnectUI;
@@ -136,6 +136,12 @@ export const useWalletStore = defineStore("wallet", {
           "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
         );
       }
+      const cell = beginCell()
+        .storeStringTail(message) // или .storeBuffer(Buffer.from(message, 'utf-8'))
+        .endCell();
+
+      // 2. Конвертируем ячейку в BOC (Bag of Cells) и кодируем в base64
+      const boc = cell.toBoc().toString("base64");
 
       const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
@@ -143,7 +149,7 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            payload: btoa(encodeURIComponent(message))
+            payload: boc,
           },
         ],
       };
