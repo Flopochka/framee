@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { TonConnectUI } from "@tonconnect/ui";
-import { beginCell } from "ton-core";
 
 // Инициализация TonConnect UI
 let tonConnectUI;
@@ -136,12 +135,6 @@ export const useWalletStore = defineStore("wallet", {
           "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
         );
       }
-      const cell = beginCell()
-        .storeStringTail(message) // или .storeBuffer(Buffer.from(message, 'utf-8'))
-        .endCell();
-
-      // 2. Конвертируем ячейку в BOC (Bag of Cells) и кодируем в base64
-      const boc = cell.toBoc().toString("base64");
 
       const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
@@ -149,7 +142,7 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            payload: boc,
+            payload: message,
           },
         ],
       };
@@ -158,12 +151,12 @@ export const useWalletStore = defineStore("wallet", {
         const result = await tonConnectUI.sendTransaction(transaction, {
           modals: ["before", "success", "error"],
           notifications: ["before", "success", "error"],
-          skipRedirectToWallet: "ios", // Ensure iOS compatibility
-          returnStrategy: "back", // Default return strategy
+          skipRedirectToWallet: "ios",
+          returnStrategy: "back",
         });
 
-        console.log("[wallet] Платеж отправлен, boc:", result.boc);
-        return result.boc;
+        console.log("[wallet] Платеж отправлен:", result);
+        return result;
       } catch (error) {
         console.error("[wallet] Ошибка при отправке платежа:", error);
         throw error;
