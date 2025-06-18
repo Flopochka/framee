@@ -136,13 +136,17 @@ export const useWalletStore = defineStore("wallet", {
         );
       }
 
+      // Конвертируем сообщение в base64
+      const messageBytes = new TextEncoder().encode(message);
+      const base64Message = btoa(String.fromCharCode(...messageBytes));
+
       const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
         messages: [
           {
             address: recipient,
             amount: amount.toString(),
-            payload: message,
+            payload: base64Message,
           },
         ],
       };
