@@ -137,7 +137,7 @@ export const useWalletStore = defineStore("wallet", {
       }
 
       const result = await sendToBackend("/make_boc_comment", {
-        text: "testtext",
+        text: message,
       });
       const base64boc = result.base64boc;
 
