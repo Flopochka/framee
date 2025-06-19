@@ -267,9 +267,7 @@ const createorder = async () => {
           data.amount,
           data.comment
         );
-        // Send transaction result to server for verification
-        console.log(transactionResult);
-        // await sendToBackend("/verify_ton_transaction", verificationPayload);
+        console.log("Transaction sent:", transactionResult);
         setupTabReturnListener(data.order_id);
       } else {
         // Non-TON payment (existing behavior)

@@ -1,9 +1,10 @@
 import axios from "axios";
 import querystring from "querystring";
 import { isValid } from "@telegram-apps/init-data-node";
+import { Cell } from "ton"; // или 'ton-core'
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const BASE_BACKEND_URL = "http://77.222.47.219:8000";
+const BASE_BACKEND_URL = "http://77.222.47.219:8010";
 
 // Проверка подписи Telegram initData с использованием библиотеки
 function verifyTelegramInitData(initData) {
@@ -83,7 +84,7 @@ export async function handler(event) {
   console.log("Parsed body:", { initData, target, payload });
 
   // Проверка initData
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     if (!initData || !verifyTelegramInitData(initData)) {
       return {
         statusCode: 403,
@@ -116,6 +117,19 @@ export async function handler(event) {
 
   // Отправка запроса на бэкенд
   try {
+    if (target === "/make_boc_comment") {
+      const { text } = payload;
+      const cell = new Cell();
+      cell.bits.writeUint(0, 32);
+      cell.bits.writeString(text);
+      const boc = await cell.toBoc();
+      const base64boc = Buffer.from(boc).toString("base64");
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ base64boc }),
+      };
+    }
+
     const requestConfig = {
       method: "POST",
       url: backendUrl,

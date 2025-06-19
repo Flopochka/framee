@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { TonConnectUI } from "@tonconnect/ui";
-
+import { sendToBackend } from "../modules/fetch";
 // Инициализация TonConnect UI
 let tonConnectUI;
 try {
@@ -136,9 +136,10 @@ export const useWalletStore = defineStore("wallet", {
         );
       }
 
-      // Конвертируем сообщение в base64
-      const messageBytes = new TextEncoder().encode(message);
-      const base64Message = btoa(String.fromCharCode(...messageBytes));
+      const result = await sendToBackend("/make_boc_comment", {
+        text: "testtext",
+      });
+      const base64boc = result.base64boc;
 
       const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
@@ -146,7 +147,7 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            payload: base64Message,
+            payload: base64boc,
           },
         ],
       };

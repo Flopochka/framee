@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import { useLanguageStore } from "../../stores/language";
+import { sendToBackend } from "../../modules/fetch";
 import WebApp from "@twa-dev/sdk";
 
 const { getTranslation } = useLanguageStore();
@@ -25,24 +26,76 @@ const onTaskRender = (
   changeButtonCheckText(getTranslation("check"));
 };
 
-const onTaskReward = (task, signedToken) => {
+const onTaskReward = async (task, signedToken) => {
   console.log("[Tasks] Задание выполнено:", task);
-  WebApp.showPopup(
-    {
-      title: "Задание выполнено",
-      message: "Задание выполнено, красава машина вау",
-      buttons: [
+  try {
+    // Формируем payload для TON транзакции
+    const transaction = {
+      validUntil: Math.floor(Date.now() / 1000) + 60, // 60 секунд на подпись
+      messages: [
         {
-          id: "default",
-          type: "default", // или 'default', 'cancel', 'destructive'
+          address: task.address, // Адрес получателя из задания
+          amount: task.amount, // Сумма из задания
+          payload: signedToken // Подписанный токен как payload
+        }
+      ]
+    };
+
+    // Отправляем транзакцию через TonConnect
+    const result = await window.TonConnectUI.sendTransaction(transaction, {
+      modals: ['before', 'success', 'error'],
+      notifications: ['before', 'success', 'error']
+    });
+
+    console.log("[Tasks] Транзакция отправлена:", result);
+
+    // После успешной отправки транзакции, отправляем данные на наш бэкенд
+    const backendPayload = {
+      user_id: useUserStore().getUserId(),
+      task_id: task.id,
+      signed_token: signedToken,
+      transaction_boc: result.boc // Добавляем BOC транзакции
+    };
+    
+    const backendResult = await sendToBackend("/verify_traffy_task", backendPayload);
+    
+    if (backendResult.status === "success") {
+      WebApp.showPopup(
+        {
+          title: "Задание выполнено",
+          message: "Задание выполнено, красава машина вау",
+          buttons: [
+            {
+              id: "default",
+              type: "default",
+            },
+          ],
         },
-      ],
-    },
-    function (buttonId) {
-      console.log("Нажата кнопка:", buttonId); // 'ok'
+        function (buttonId) {
+          console.log("Нажата кнопка:", buttonId);
+        }
+      );
+    } else {
+      throw new Error(backendResult.message || "Ошибка верификации задания");
     }
-  );
-  // Здесь отправка токена на ваш сервер для верификации
+  } catch (error) {
+    console.error("[Tasks] Ошибка при верификации задания:", error);
+    WebApp.showPopup(
+      {
+        title: "Ошибка",
+        message: "Не удалось верифицировать задание. Попробуйте позже.",
+        buttons: [
+          {
+            id: "cancel",
+            type: "cancel",
+          },
+        ],
+      },
+      function (buttonId) {
+        console.log("Нажата кнопка:", buttonId);
+      }
+    );
+  }
 };
 
 const onTaskReject = (task) => {
