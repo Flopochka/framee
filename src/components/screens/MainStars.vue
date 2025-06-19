@@ -268,6 +268,15 @@ const createorder = async () => {
           data.comment
         );
         console.log("Transaction sent:", transactionResult);
+        // Start parallel status checks
+        idkhin(data.order_id).then((result) => {
+          if (result) {
+            toggleModal(currentType.value == 0 ? "popupstars" : "popuppremium");
+          } else {
+            toggleModal("error");
+          }
+        });
+        // Keep the tab return listener as a backup
         setupTabReturnListener(data.order_id);
       } else {
         // Non-TON payment (existing behavior)
@@ -358,21 +367,27 @@ const fetchResult = async (order_id) => {
 
 const setupTabReturnListener = (order_id) => {
   let isReturned = false;
+  // For non-TON payments, we need to fetch user history when they return
+  const handleReturn = () => {
+    if (isReturned) return;
+    isReturned = true;
+    if (currentPayment.value !== 0) {
+      fetchResult(order_id);
+    }
+  };
+
   const handleVisibilityChange = () => {
     if (document.visibilityState === "visible") {
       console.log("User returned to tab");
-      if (isReturned) return;
-      isReturned = true;
-      fetchResult(order_id);
+      handleReturn();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
   };
   document.addEventListener("visibilitychange", handleVisibilityChange);
+
   const handleFocus = () => {
     console.log("Tab focused");
-    if (isReturned) return;
-    isReturned = true;
-    fetchResult(order_id);
+    handleReturn();
     window.removeEventListener("focus", handleFocus);
   };
   window.addEventListener("focus", handleFocus);
