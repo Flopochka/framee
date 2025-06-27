@@ -37,7 +37,9 @@ export async function sendToBackend(target, payload) {
     return data;
   } catch (error) {
     const finalError = new Error(
-      `[fetch] ❌ Backend call failed for "${target}": ${error.message || error}`
+      `[fetch] ❌ Backend call failed for "${target}": ${
+        error.message || error
+      }`
     );
     console.error(finalError);
     throw finalError;

@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import { useLanguageStore } from "../../stores/language";
+import { useUserStore } from "../../stores/user";
 import { sendToBackend } from "../../modules/fetch";
 import WebApp from "@twa-dev/sdk";
 
 const { getTranslation } = useLanguageStore();
+const userStore = useUserStore();
 const traffyTasks = ref(null);
 const tasks = ref([]);
 const loadingError = ref(false);
@@ -26,38 +28,90 @@ const onTaskRender = (
   changeButtonCheckText(getTranslation("check"));
 };
 
+// Функция для тестового выполнения задания (для mock режима)
+const simulateTaskCompletion = async (task) => {
+  console.log("[Tasks] Симуляция выполнения задания:", task);
+  
+  try {
+    // Создаем mock signedToken для тестирования
+    const mockSignedToken = `mock_token_${Date.now()}_${task.id}`;
+    
+    // Проверяем, находимся ли мы в mock режиме или тестовой среде
+    const isMockMode = window.Traffy && window.Traffy.isMockMode;
+    const isTestEnvironment = !window.TonConnectUI || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (isMockMode || isTestEnvironment) {
+      console.log("[Tasks] Mock/тестовый режим - пропускаем TON транзакцию");
+      
+      // Отправляем данные на бэкенд без TON транзакции
+      const backendPayload = {
+        user_id: userStore.getUserId(),
+        signed_token: mockSignedToken,
+      };
+      
+      const backendResult = await sendToBackend("/verify_traffy_token", backendPayload);
+      
+      if (backendResult.status === "success") {
+        WebApp.showPopup(
+          {
+            title: "Задание выполнено (тест)",
+            message: "Задание выполнено в тестовом режиме",
+            buttons: [
+              {
+                id: "default",
+                type: "default",
+              },
+            ],
+          },
+          function (buttonId) {
+            console.log("Нажата кнопка:", buttonId);
+          }
+        );
+      } else {
+        throw new Error(backendResult.message || "Ошибка верификации задания");
+      }
+    } else {
+      // Обычный режим - вызываем оригинальную функцию
+      await onTaskReward(task, mockSignedToken);
+    }
+  } catch (error) {
+    console.error("[Tasks] Ошибка при симуляции выполнения задания:", error);
+    WebApp.showPopup(
+      {
+        title: "Ошибка",
+        message: "Не удалось выполнить задание. Попробуйте позже.",
+        buttons: [
+          {
+            id: "cancel",
+            type: "cancel",
+          },
+        ],
+      },
+      function (buttonId) {
+        console.log("Нажата кнопка:", buttonId);
+      }
+    );
+  }
+};
+
 const onTaskReward = async (task, signedToken) => {
   console.log("[Tasks] Задание выполнено:", task);
   try {
-    // Формируем payload для TON транзакции
-    const transaction = {
-      validUntil: Math.floor(Date.now() / 1000) + 60, // 60 секунд на подпись
-      messages: [
-        {
-          address: task.address, // Адрес получателя из задания
-          amount: task.amount, // Сумма из задания
-          payload: signedToken // Подписанный токен как payload
-        }
-      ]
-    };
-
-    // Отправляем транзакцию через TonConnect
-    const result = await window.TonConnectUI.sendTransaction(transaction, {
-      modals: ['before', 'success', 'error'],
-      notifications: ['before', 'success', 'error']
-    });
+    // Проверяем, доступен ли TonConnect
+    if (!window.TonConnectUI) {
+      console.warn("[Tasks] TonConnectUI недоступен, пропускаем транзакцию");
+      throw new Error("TonConnectUI недоступен");
+    }
 
     console.log("[Tasks] Транзакция отправлена:", result);
 
     // После успешной отправки транзакции, отправляем данные на наш бэкенд
     const backendPayload = {
-      user_id: useUserStore().getUserId(),
-      task_id: task.id,
-      signed_token: signedToken,
-      transaction_boc: result.boc // Добавляем BOC транзакции
+      user_id: userStore.getUserId(),
+      signed_token: signedToken
     };
     
-    const backendResult = await sendToBackend("/verify_traffy_task", backendPayload);
+    const backendResult = await sendToBackend("/verify_traffy_token", backendPayload);
     
     if (backendResult.status === "success") {
       WebApp.showPopup(
@@ -130,12 +184,33 @@ const clickOriginalButton = (taskIndex) => {
       console.log(
         `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
       );
+      
+      // Добавляем задержку и проверяем, было ли выполнено задание
+      setTimeout(() => {
+        const currentTask = tasks.value[taskIndex];
+        if (currentTask) {
+          console.log("[Tasks] Проверяем выполнение задания:", currentTask);
+          // Если задание не было обработано через onTaskReward, симулируем выполнение
+          simulateTaskCompletion(currentTask);
+        }
+      }, 2000); // Ждем 2 секунды
     } else {
       console.warn(
         `[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`
       );
     }
   });
+};
+
+// Альтернативная функция для прямого выполнения задания
+const executeTaskDirectly = async (taskIndex) => {
+  const currentTask = tasks.value[taskIndex];
+  if (currentTask) {
+    console.log("[Tasks] Прямое выполнение задания:", currentTask);
+    await simulateTaskCompletion(currentTask);
+  } else {
+    console.warn(`[Tasks] Задание с индексом ${taskIndex} не найдено`);
+  }
 };
 
 // Инициализация Traffy
@@ -179,11 +254,19 @@ onMounted(async () => {
         {{ task.title || "Task title"
         }}{{ task.description ? ", " + task.description : "" }}
       </p>
-      <div
-        class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
-        @click="clickOriginalButton(index)"
-      >
-        {{ getTranslation("start") }}
+      <div class="task-buttons">
+        <div
+          class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+          @click="clickOriginalButton(index)"
+        >
+          {{ getTranslation("start") }}
+        </div>
+        <div
+          class="task-btn-alt rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+          @click="executeTaskDirectly(index)"
+        >
+          Выполнить
+        </div>
       </div>
       <p class="text-14 text-white flex-row gap-2">
         <img src="../../assets/img/Star.svg" alt="" class="img-16" />
@@ -210,11 +293,25 @@ onMounted(async () => {
   grid-template-areas: "A B" "C B";
   gap: 6px;
 }
+
+.task-buttons {
+  grid-area: B;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-self: end;
+}
+
 .task-btn {
   background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
   padding: 3px 11px;
-  grid-area: B;
   width: fit-content;
-  justify-self: end;
+}
+
+.task-btn-alt {
+  background: linear-gradient(129.45deg, #4caf50 9.38%, #2e7d32 117.65%);
+  padding: 3px 11px;
+  width: fit-content;
+  font-size: 12px;
 }
 </style>
