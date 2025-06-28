@@ -28,72 +28,6 @@ const onTaskRender = (
   changeButtonCheckText(getTranslation("check"));
 };
 
-// Функция для тестового выполнения задания (для mock режима)
-const simulateTaskCompletion = async (task) => {
-  console.log("[Tasks] Симуляция выполнения задания:", task);
-  
-  try {
-    // Создаем mock signedToken для тестирования
-    const mockSignedToken = `mock_token_${Date.now()}_${task.id}`;
-    
-    // Проверяем, находимся ли мы в mock режиме или тестовой среде
-    const isMockMode = window.Traffy && window.Traffy.isMockMode;
-    const isTestEnvironment = !window.TonConnectUI || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    
-    if (isMockMode || isTestEnvironment) {
-      console.log("[Tasks] Mock/тестовый режим - пропускаем TON транзакцию");
-      
-      // Отправляем данные на бэкенд без TON транзакции
-      const backendPayload = {
-        user_id: userStore.getUserId(),
-        signed_token: mockSignedToken,
-      };
-      
-      const backendResult = await sendToBackend("/verify_traffy_token", backendPayload);
-      
-      if (backendResult.status === "success") {
-        WebApp.showPopup(
-          {
-            title: "Задание выполнено (тест)",
-            message: "Задание выполнено в тестовом режиме",
-            buttons: [
-              {
-                id: "default",
-                type: "default",
-              },
-            ],
-          },
-          function (buttonId) {
-            console.log("Нажата кнопка:", buttonId);
-          }
-        );
-      } else {
-        throw new Error(backendResult.message || "Ошибка верификации задания");
-      }
-    } else {
-      // Обычный режим - вызываем оригинальную функцию
-      await onTaskReward(task, mockSignedToken);
-    }
-  } catch (error) {
-    console.error("[Tasks] Ошибка при симуляции выполнения задания:", error);
-    WebApp.showPopup(
-      {
-        title: "Ошибка",
-        message: "Не удалось выполнить задание. Попробуйте позже.",
-        buttons: [
-          {
-            id: "cancel",
-            type: "cancel",
-          },
-        ],
-      },
-      function (buttonId) {
-        console.log("Нажата кнопка:", buttonId);
-      }
-    );
-  }
-};
-
 const onTaskReward = async (task, signedToken) => {
   console.log("[Tasks] Задание выполнено:", task);
   try {
@@ -184,33 +118,12 @@ const clickOriginalButton = (taskIndex) => {
       console.log(
         `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
       );
-      
-      // Добавляем задержку и проверяем, было ли выполнено задание
-      setTimeout(() => {
-        const currentTask = tasks.value[taskIndex];
-        if (currentTask) {
-          console.log("[Tasks] Проверяем выполнение задания:", currentTask);
-          // Если задание не было обработано через onTaskReward, симулируем выполнение
-          simulateTaskCompletion(currentTask);
-        }
-      }, 2000); // Ждем 2 секунды
     } else {
       console.warn(
         `[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`
       );
     }
   });
-};
-
-// Альтернативная функция для прямого выполнения задания
-const executeTaskDirectly = async (taskIndex) => {
-  const currentTask = tasks.value[taskIndex];
-  if (currentTask) {
-    console.log("[Tasks] Прямое выполнение задания:", currentTask);
-    await simulateTaskCompletion(currentTask);
-  } else {
-    console.warn(`[Tasks] Задание с индексом ${taskIndex} не найдено`);
-  }
 };
 
 // Инициализация Traffy
@@ -261,12 +174,6 @@ onMounted(async () => {
         >
           {{ getTranslation("start") }}
         </div>
-        <div
-          class="task-btn-alt rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
-          @click="executeTaskDirectly(index)"
-        >
-          Выполнить
-        </div>
       </div>
       <p class="text-14 text-white flex-row gap-2">
         <img src="../../assets/img/Star.svg" alt="" class="img-16" />
@@ -306,12 +213,5 @@ onMounted(async () => {
   background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
   padding: 3px 11px;
   width: fit-content;
-}
-
-.task-btn-alt {
-  background: linear-gradient(129.45deg, #4caf50 9.38%, #2e7d32 117.65%);
-  padding: 3px 11px;
-  width: fit-content;
-  font-size: 12px;
 }
 </style>
