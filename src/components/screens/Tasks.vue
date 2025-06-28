@@ -31,15 +31,6 @@ const onTaskRender = (
 const onTaskReward = async (task, signedToken) => {
   console.log("[Tasks] Задание выполнено:", task);
   try {
-    // Проверяем, доступен ли TonConnect
-    if (!window.TonConnectUI) {
-      console.warn("[Tasks] TonConnectUI недоступен, пропускаем транзакцию");
-      throw new Error("TonConnectUI недоступен");
-    }
-
-    console.log("[Tasks] Транзакция отправлена:", result);
-
-    // После успешной отправки транзакции, отправляем данные на наш бэкенд
     const backendPayload = {
       user_id: userStore.getUserId(),
       signed_token: signedToken
