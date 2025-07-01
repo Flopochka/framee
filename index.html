@@ -13,7 +13,50 @@
   <script src="https://embed.traffy.site/v0.0.7/traffy-wrapper.min.js" resource-id="6e1c73ca-e60f-4359-920f-e1d98f2a3d32" mode="mock"></script>
 </head>
 <body>
+  <div id="preloader-wrapper">
+    <div class="preloader-bg"></div>
+    <video
+      class="preloader-video"
+      src="/src/assets/img/Frame_Preview_1.mp4"
+      autoplay
+      loop
+      muted
+      playsinline
+    ></video>
+    <div class="preloader-fade"></div>
+  </div>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
+<style>
+#preloader-wrapper {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.preloader-bg {
+  position: absolute;
+  inset: 0;
+  background: #42aaf4;
+  z-index: 1;
+}
+.preloader-video {
+  position: relative;
+  z-index: 2;
+  width: 100vw;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  /* Прямоугольная маска: плавная прозрачность по краям */
+  mask-image:
+    linear-gradient(to right, transparent 0%, #fff 10%, #fff 60%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #fff 10%, #fff 60%, transparent 100%);
+  mask-composite: intersect;
+}
+</style>
 </html>

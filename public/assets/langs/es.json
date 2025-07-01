@@ -136,5 +136,13 @@
   "our Terms": "nuestros Términos",
   ", and confirm that you are not U.S. resident": ", ní, y confirmas que no eres residente de EE. UU.",
    "privacytitle": "Política de Privacidad",
-  "privacytext": "FRAME respeta su privacidad. Recopilamos solo los datos mínimos necesarios para operar nuestro servicio, como su dirección de billetera TON e información básica de uso para fines técnicos y analíticos.<br><br>No vendemos sus datos ni los compartimos con terceros, excepto cuando sea necesario para el procesamiento de pagos o el cumplimiento legal.<br><br>Al utilizar FRAME, usted acepta esta política de privacidad. Si tiene alguna pregunta, contáctenos en https://t.me/FrameSupportBot."
+  "privacytext": "FRAME respeta su privacidad. Recopilamos solo los datos mínimos necesarios para operar nuestro servicio, como su dirección de billetera TON e información básica de uso para fines técnicos y analíticos.<br><br>No vendemos sus datos ni los compartimos con terceros, excepto cuando sea necesario para el procesamiento de pagos o el cumplimiento legal.<br><br>Al utilizar FRAME, usted acepta esta política de privacidad. Si tiene alguna pregunta, contáctenos en https://t.me/FrameSupportBot.",
+  "subscribe": "Suscribirse",
+  "check": "Verificar",
+  "taskCompleted": "Tarea completada",
+  "rewardWillBeCreditedWithin10Minutes": "La recompensa se acreditará en 10 minutos",
+  "error": "Error",
+  "failedToVerifyTask": "No se pudo verificar la tarea. Inténtalo de nuevo más tarde.",
+  "taskRejected": "Tarea rechazada",
+  "taskExecutionRejected": "Ejecución de tarea rechazada, inténtalo de nuevo"
 }

@@ -41,8 +41,8 @@ const onTaskReward = async (task, signedToken) => {
     if (backendResult.status === "success") {
       WebApp.showPopup(
         {
-          title: "Задание выполнено",
-          message: "Задание выполнено, красава машина вау",
+          title: getTranslation("taskCompleted"),
+          message: getTranslation("rewardWillBeCreditedWithin10Minutes"),
           buttons: [
             {
               id: "default",
@@ -61,8 +61,8 @@ const onTaskReward = async (task, signedToken) => {
     console.error("[Tasks] Ошибка при верификации задания:", error);
     WebApp.showPopup(
       {
-        title: "Ошибка",
-        message: "Не удалось верифицировать задание. Попробуйте позже.",
+        title: getTranslation("error"),
+        message: getTranslation("failedToVerifyTask"),
         buttons: [
           {
             id: "cancel",
@@ -81,8 +81,8 @@ const onTaskReject = (task) => {
   console.warn("[Tasks] Задание отклонено:", task);
   WebApp.showPopup(
     {
-      title: "Задание отклонено",
-      message: "Выполнение задания отклонено, попробуйте снова",
+      title: getTranslation("taskRejected"),
+      message: getTranslation("taskExecutionRejected"),
       buttons: [
         {
           id: "cancel",
