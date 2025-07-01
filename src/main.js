@@ -28,6 +28,18 @@ async function initializeApp() {
   app.mount("#app");
   WebApp.ready();
 
+  // Ждём длительность видео, затем плавно скрываем прелоадер
+  const preloader = document.getElementById("preloader-wrapper");
+  const video = preloader?.querySelector(".preloader-video");
+  let duration = 200; // fallback 2 сек
+  setTimeout(() => {
+    if (preloader) {
+      preloader.style.transition = "opacity 200ms";
+      preloader.style.opacity = "0";
+      setTimeout(() => preloader.remove(), 220);
+    }
+  }, duration);
+
   const isInsideTelegram = WebApp.platform !== "unknown";
 
   // Выход из полноэкранного режима для десктопов

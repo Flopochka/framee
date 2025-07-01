@@ -48,8 +48,8 @@
       "Orders are typically processed instantly. In rare cases, it may take a few minutes. If your purchase hasn't arrived, please check your transaction details or contact our @framestars_support."
     ],
     [
-      "What happens if my purchase doesn’t arrive?",
-      "If you haven't received your Stars or Premium subscription within a reasonable time, please reach out to our @framestars_support with your payment details. We’ll assist you as quickly as possible."
+      "What happens if my purchase doesn't arrive?",
+      "If you haven't received your Stars or Premium subscription within a reasonable time, please reach out to our @framestars_support with your payment details. We'll assist you as quickly as possible."
     ],
     [
       "Is it safe to buy from FRAME?",
@@ -57,11 +57,11 @@
     ],
     [
       "How can I send Stars to a friend?",
-      "Simply enter the recipient’s Telegram @username during the purchase process, and the Stars or Premium subscription will be sent directly to their account."
+      "Simply enter the recipient's Telegram @username during the purchase process, and the Stars or Premium subscription will be sent directly to their account."
     ],
     [
       "How can I get Telegram Stars for free?",
-      "Our task page is currently in development. Soon, you’ll be able to earn Stars by watching short promotional videos."
+      "Our task page is currently in development. Soon, you'll be able to earn Stars by watching short promotional videos."
     ]
   ],
   "totalUsers": "Total Users",
@@ -137,5 +137,13 @@
   "our Terms":"our Terms",
   ", and confirm that you are not U.S. resident":", and confirm that you are not U.S. resident",
   "privacytitle": "Privacy Policy",
-  "privacytext": "FRAME respects your privacy. We collect minimal data required to operate our service, such as your TON wallet address and basic usage information for technical and analytics purposes.<br><br>We do not sell your data or share it with third parties except as required for payment processing or legal compliance.<br><br>By using FRAME, you consent to this privacy policy. If you have any questions, please contact us at https://t.me/framestars_support."
+  "privacytext": "FRAME respects your privacy. We collect minimal data required to operate our service, such as your TON wallet address and basic usage information for technical and analytics purposes.<br><br>We do not sell your data or share it with third parties except as required for payment processing or legal compliance.<br><br>By using FRAME, you consent to this privacy policy. If you have any questions, please contact us at https://t.me/framestars_support.",
+  "subscribe": "Subscribe",
+  "check": "Check",
+  "taskCompleted": "Task completed",
+  "rewardWillBeCreditedWithin10Minutes": "Reward will be credited within 10 minutes",
+  "error": "Error",
+  "failedToVerifyTask": "Failed to verify task. Please try again later.",
+  "taskRejected": "Task rejected",
+  "taskExecutionRejected": "Task execution rejected, please try again"
 }
