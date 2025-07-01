@@ -31,7 +31,7 @@ async function initializeApp() {
   // Ждём длительность видео, затем плавно скрываем прелоадер
   const preloader = document.getElementById("preloader-wrapper");
   const video = preloader?.querySelector(".preloader-video");
-  let duration = 200; // fallback 2 сек
+  let duration = 4000; // fallback 2 сек
   setTimeout(() => {
     if (preloader) {
       preloader.style.transition = "opacity 200ms";
