@@ -6,6 +6,14 @@ import { useUserStore } from '../../stores/user'
 import { sendToBackend } from '../../modules/fetch'
 import { useHistoryStore } from '../../stores/history'
 
+// Определяем пропсы
+const props = defineProps({
+  updateBalance: {
+    type: Function,
+    required: true
+  }
+})
+
 const { toggleModal } = useModalStore()
 const { getTranslation } = useLanguageStore()
 const userStore = useUserStore()
@@ -84,15 +92,10 @@ const fetchTasksBalance = async () => {
 
 // Обновление заголовка модального окна
 const updateModalTitle = () => {
-  nextTick(() => {
-    const titleElement = document.querySelector('.withdrawtasksstars .tasks-balance-placeholder')
-    if (titleElement) {
-      titleElement.innerHTML = `
-        ${tasksBalance.value}
-        <img src="../../assets/img/Star.svg" alt="Stars" class="img-20 lazy-img" />
-      `
-    }
-  })
+  // Обновляем баланс в родительском компоненте
+  if (props.updateBalance) {
+    props.updateBalance(tasksBalance.value)
+  }
 }
 
 const searchRecipient = async (username) => {

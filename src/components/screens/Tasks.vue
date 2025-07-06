@@ -181,7 +181,7 @@ onMounted(async () => {
   <main class="gap-12 p-24">
     <!-- Полоска с балансом и кнопкой вывода -->
     <div
-      class="balance-section flex-row items-center jcsb bg-blue-900 rounded-12 p-16 text-20 gap-4"
+      class="balance-section flex-row items-center jcsb bg-blue-900 rounded-12 p-16 text-16 gap-4"
     >
       <div
       class="flex-row items-center gap-4">

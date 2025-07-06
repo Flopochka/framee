@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useModalStore } from '../stores/modal'
 import { useUserStore } from '../stores/user'
 import { useLanguageStore } from '../stores/language'
@@ -32,6 +32,14 @@ const getModalBalance = (modalId) => {
     return { type: 'tasks-stars', balance: 0 } // Баланс будет обновлен в компоненте
   }
   return { type: 'ton', balance: getUserBalance() }
+}
+
+// Реактивная переменная для баланса заданий
+const tasksBalance = ref(0)
+
+// Функция для обновления баланса заданий
+const updateTasksBalance = (balance) => {
+  tasksBalance.value = balance
 }
 
 const modals = [
@@ -160,7 +168,12 @@ const activeModal = computed(() => getActiveModal())
           </span>
           <span class="lh-115 flex-row items-center">
             <span v-if="modal.id === 'withdrawtasksstars'" class="tasks-balance-placeholder">
-              <!-- Баланс будет обновлен в компоненте -->
+              {{ tasksBalance }}
+              <img
+                src="../assets/img/Star.svg"
+                alt="Stars"
+                class="img-20 lazy-img"
+              />
             </span>
             <span v-else>
               {{ getUserBalance() }}
@@ -174,7 +187,15 @@ const activeModal = computed(() => getActiveModal())
         </p>
         <p v-else>{{ getTranslation(modal.title) }}</p>
       </template>
-      <component :is="modal.component" />
+      <component
+        :is="modal.component"
+        v-if="modal.id === 'withdrawtasksstars'"
+        :update-balance="updateTasksBalance"
+      />
+      <component
+        v-else
+        :is="modal.component"
+      />
     </BaseModal>
     <component v-else-if="modal.type === 'popup'" :is="modal.component" />
   </div>
