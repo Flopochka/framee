@@ -11,9 +11,15 @@ export default defineConfig({
           // Разделяем вендоры на отдельные чанки
           'vue-vendor': ['vue', 'vue-router'],
           'telegram-vendor': ['@twa-dev/sdk', '@telegram-apps/analytics'],
-          'ton-vendor': ['ton', 'ton-core', 'tonweb', '@tonconnect/ui'],
           'utils-vendor': ['axios', 'buffer', 'lottie-web', 'lozad']
         }
+      },
+      // Оптимизация для CommonJS модулей
+      external: [],
+      onwarn(warning, warn) {
+        // Игнорируем предупреждения о циклических зависимостях
+        if (warning.code === 'CIRCULAR_DEPENDENCY') return
+        warn(warning)
       }
     },
     // Оптимизация размера бандла
@@ -21,7 +27,12 @@ export default defineConfig({
     // Минификация CSS
     cssMinify: true,
     // Оптимизация изображений
-    assetsInlineLimit: 4096
+    assetsInlineLimit: 4096,
+    // Оптимизация для CommonJS
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
+    }
   },
   // Поддержка .webp и .json
   assetsInclude: ['**/*.webp', '**/*.json'],
@@ -34,5 +45,17 @@ export default defineConfig({
   // Оптимизация CSS
   css: {
     devSourcemap: true
+  },
+  // Оптимизация для CommonJS модулей
+  optimizeDeps: {
+    include: ['vue', 'vue-router', 'pinia'],
+    exclude: ['ton', 'ton-core', 'tonweb']
+  },
+  // Разрешение модулей
+  resolve: {
+    alias: {
+      // Алиасы для лучшей совместимости
+      ton: 'ton/dist/index.js'
+    }
   }
 })

@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { useLanguageStore } from '../../stores/language'
-import { useUserStore } from '../../stores/user'
-import { useModalStore } from '../../stores/modal'
-import { sendToBackend } from '../../modules/fetch'
+import { useLanguageStore } from '../../stores/language.js'
+import { useUserStore } from '../../stores/user.js'
+import { useModalStore } from '../../stores/modal.js'
+import { sendToBackend } from '../../modules/fetch.js'
 import { showPopup } from '../../utils/telegram.js'
 
 const { getTranslation } = useLanguageStore()

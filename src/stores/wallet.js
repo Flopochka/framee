@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { TonConnectUI } from '@tonconnect/ui'
-import { sendToBackend } from '../modules/fetch'
+import { sendToBackend } from '../modules/fetch.js'
 // Инициализация TonConnect UI
 let tonConnectUI
 try {

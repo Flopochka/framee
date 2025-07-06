@@ -1,7 +1,7 @@
 import axios from 'axios'
 import querystring from 'querystring'
 import { isValid } from '@telegram-apps/init-data-node'
-import { Cell } from 'ton' // или 'ton-core'
+import { Cell } from 'ton-core'
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const BASE_BACKEND_URL = 'http://77.222.47.219:8011'
