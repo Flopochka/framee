@@ -223,7 +223,7 @@ onMounted(async () => {
       </div>
       <p class="text-14 text-white flex-row gap-2">
         <img src="../../assets/img/Star.svg" alt="" class="img-16" />
-        {{ task.reward || 0 }}
+        {{ task.reward || 1 }}
       </p>
     </div>
     <template v-else>
