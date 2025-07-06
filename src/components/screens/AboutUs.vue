@@ -1,97 +1,97 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language";
-import { useWalletStore } from "../../stores/wallet";
-import { sendToBackend } from "../../modules/fetch";
-import { ref, onMounted, computed } from "vue";
+import { useLanguageStore } from '../../stores/language'
+import { useWalletStore } from '../../stores/wallet'
+import { sendToBackend } from '../../modules/fetch'
+import { ref, onMounted, computed } from 'vue'
 
-const { getTranslation } = useLanguageStore();
-const { disconnectWallet, connectWallet, initializeWallet} = useWalletStore();
-const isWalletConnected = computed(() => useWalletStore().getWalletState());
+const { getTranslation } = useLanguageStore()
+const { disconnectWallet, connectWallet, initializeWallet} = useWalletStore()
+const isWalletConnected = computed(() => useWalletStore().getWalletState())
 
-const boughtToday = ref(0);
-const boughtYesterday = ref(0);
-const boughtAlltime = ref(0);
-const boughtMonthPremium = ref(0);
+const boughtToday = ref(0)
+const boughtYesterday = ref(0)
+const boughtAlltime = ref(0)
+const boughtMonthPremium = ref(0)
 const cards = ref([
   {
     value: boughtToday,
-    translation: "boughttoday",
+    translation: 'boughttoday'
   },
   {
     value: boughtYesterday,
-    translation: "boughtyesterday",
+    translation: 'boughtyesterday'
   },
   {
     value: boughtAlltime,
-    translation: "boughtalltime",
+    translation: 'boughtalltime'
   },
   {
     value: boughtMonthPremium,
-    translation: "boughtmonthpremium",
-  },
-]);
-const disconWarn = ref(false);
-const lottieContainer = ref(null);
+    translation: 'boughtmonthpremium'
+  }
+])
+const disconWarn = ref(false)
+const lottieContainer = ref(null)
 
 const toggleWarn = () => {
-  disconWarn.value = !disconWarn.value;
+  disconWarn.value = !disconWarn.value
   const xze = setTimeout(() => {
-    disconWarn.value = !disconWarn.value;
-  }, 3000);
-};
+    disconWarn.value = !disconWarn.value
+  }, 3000)
+}
 
-const currentAccordion = ref(0);
-const switchAccordion = (type) => (currentAccordion.value = type);
-const isAccordionActive = (index) => currentAccordion.value === index;
+const currentAccordion = ref(0)
+const switchAccordion = (type) => (currentAccordion.value = type)
+const isAccordionActive = (index) => currentAccordion.value === index
 
 // Функция форматирования чисел
 function formatNumber(num) {
-  if (typeof num !== "number" || isNaN(num)) return "0";
-  const absNum = Math.abs(num);
-  const sign = num < 0 ? "-" : "";
+  if (typeof num !== 'number' || isNaN(num)) return '0'
+  const absNum = Math.abs(num)
+  const sign = num < 0 ? '-' : ''
   if (absNum >= 1_000_000_000)
-    return `${sign}${Math.floor(absNum / 1_000_000_000)}B`;
-  if (absNum >= 1_000_000) return `${sign}${Math.floor(absNum / 1_000_000)}M`;
+    return `${sign}${Math.floor(absNum / 1_000_000_000)}B`
+  if (absNum >= 1_000_000) return `${sign}${Math.floor(absNum / 1_000_000)}M`
   if (absNum >= 1_000)
     return `${sign}${Math.floor(absNum)
       .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
-  return `${sign}${Math.floor(absNum)}`;
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}`
+  return `${sign}${Math.floor(absNum)}`
 }
 
 const fetchTotalInfo = async () => {
-  sendToBackend("/get_stat_stars", {})
+  sendToBackend('/get_stat_stars', {})
     .then((result) => {
-      const data = result.data;
+      const data = result.data
       boughtToday.value =
         data.stats[0] != 0
           ? formatNumber(data.stats[0])
-          : formatNumber(Math.round(Math.random() * 25) * 50);
+          : formatNumber(Math.round(Math.random() * 25) * 50)
       boughtYesterday.value =
         data.stats[1] != 0
           ? formatNumber(data.stats[1])
-          : formatNumber(Math.round(Math.random() * 25) * 50);
-      boughtAlltime.value = formatNumber(data.stats[2]);
-      boughtMonthPremium.value = formatNumber(data.stats[3]);
+          : formatNumber(Math.round(Math.random() * 25) * 50)
+      boughtAlltime.value = formatNumber(data.stats[2])
+      boughtMonthPremium.value = formatNumber(data.stats[3])
     })
-    .catch(() => {});
-};
+    .catch(() => {})
+}
 
 onMounted(async () => {
   initializeWallet()
-  fetchTotalInfo();
+  fetchTotalInfo()
 
-  const lottie = await import("lottie-web");
-  const container = lottieContainer.value;
+  const lottie = await import('lottie-web')
+  const container = lottieContainer.value
   console.log(lottieContainer)
   lottie.default.loadAnimation({
     container,
-    renderer: "svg",
+    renderer: 'svg',
     loop: true,
     autoplay: true,
-    path: "/content/UtyaDuck_AgADAwEAAladvQo.json",
-  });
-});
+    path: '/content/UtyaDuck_AgADAwEAAladvQo.json'
+  })
+})
 </script>
 
 <template>

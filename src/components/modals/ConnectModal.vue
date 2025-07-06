@@ -1,55 +1,55 @@
 <script setup>
-import { ref } from "vue";
-import { useLanguageStore } from "../../stores/language";
-import { useWalletStore } from "../../stores/wallet";
-import { useModalStore } from "../../stores/modal";
+import { ref } from 'vue'
+import { useLanguageStore } from '../../stores/language'
+import { useWalletStore } from '../../stores/wallet'
+import { useModalStore } from '../../stores/modal'
 
-const { getTranslation } = useLanguageStore();
-const { connectWallet, fetchWalletInfo } = useWalletStore();
-const { toggleModal } = useModalStore();
-const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id);
+const { getTranslation } = useLanguageStore()
+const { connectWallet, fetchWalletInfo } = useWalletStore()
+const { toggleModal } = useModalStore()
+const userId = ref(window.Telegram?.WebApp?.initDataUnsafe?.user?.id)
 const conList = [
-  "Wallet",
-  "Tonkeeper",
-  "MyTonWallet",
-  "Tonhub",
-  "Bitget Wallet",
-  "OKX Mini Wallet",
-  "Binance Wallet",
-  "Fintopio",
-  "OKX Wallet",
-  "HOT",
-  "Bybit Wallet",
-  "DeWallet",
-  "SafePal",
-  "GateWallet",
-  "BitgetWeb3",
-  "Tobi",
-  "Bitget Wallet Lite",
-  "Tomo Wallet",
-  "Mirai Mini App",
-  "Architec.ton",
-  "TokenPocket",
-  "UXUY Wallet",
-];
+  'Wallet',
+  'Tonkeeper',
+  'MyTonWallet',
+  'Tonhub',
+  'Bitget Wallet',
+  'OKX Mini Wallet',
+  'Binance Wallet',
+  'Fintopio',
+  'OKX Wallet',
+  'HOT',
+  'Bybit Wallet',
+  'DeWallet',
+  'SafePal',
+  'GateWallet',
+  'BitgetWeb3',
+  'Tobi',
+  'Bitget Wallet Lite',
+  'Tomo Wallet',
+  'Mirai Mini App',
+  'Architec.ton',
+  'TokenPocket',
+  'UXUY Wallet'
+]
 const tryConnect = (e) => {
-  connectWallet(e);
-  toggleModal();
+  connectWallet(e)
+  toggleModal()
   const handleVisibilityChangeWC = () => {
-    if (document.visibilityState === "visible") {
-      console.log("User returned to tab");
-      fetchWalletInfo();
-      document.removeEventListener("visibilitychange", handleVisibilityChangeWC);
+    if (document.visibilityState === 'visible') {
+      console.log('User returned to tab')
+      fetchWalletInfo()
+      document.removeEventListener('visibilitychange', handleVisibilityChangeWC)
     }
-  };
-  document.addEventListener("visibilitychange", handleVisibilityChangeWC);
+  }
+  document.addEventListener('visibilitychange', handleVisibilityChangeWC)
   const handleFocusWC = () => {
-    console.log("Tab focused");
-    fetchWalletInfo();
-    window.removeEventListener("focus", handleFocusWC);
-  };
-  window.addEventListener("focus", handleFocusWC);
-};
+    console.log('Tab focused')
+    fetchWalletInfo()
+    window.removeEventListener('focus', handleFocusWC)
+  }
+  window.addEventListener('focus', handleFocusWC)
+}
 </script>
 
 <template>

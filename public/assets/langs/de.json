@@ -144,5 +144,7 @@
   "error": "Fehler",
   "failedToVerifyTask": "Aufgabe konnte nicht verifiziert werden. Versuchen Sie es später erneut.",
   "taskRejected": "Aufgabe abgelehnt",
-  "taskExecutionRejected": "Aufgabenausführung abgelehnt, versuchen Sie es erneut"
+  "taskExecutionRejected": "Aufgabenausführung abgelehnt, versuchen Sie es erneut",
+  "TasksBalance": "Aufgaben-Guthaben",
+  "Availablebalance": "Verfügbares Guthaben"
 }

@@ -144,5 +144,7 @@
   "error": "Error",
   "failedToVerifyTask": "No se pudo verificar la tarea. Inténtalo de nuevo más tarde.",
   "taskRejected": "Tarea rechazada",
-  "taskExecutionRejected": "Ejecución de tarea rechazada, inténtalo de nuevo"
+  "taskExecutionRejected": "Ejecución de tarea rechazada, inténtalo de nuevo",
+  "TasksBalance": "Saldo de tareas",
+  "Availablebalance": "Saldo disponible"
 }

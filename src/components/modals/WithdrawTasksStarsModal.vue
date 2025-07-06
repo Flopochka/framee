@@ -1,17 +1,17 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import { useLanguageStore } from '../../stores/language'
 import { useModalStore } from '../../stores/modal'
 import { useUserStore } from '../../stores/user'
 import { sendToBackend } from '../../modules/fetch'
 import { useHistoryStore } from '../../stores/history'
 
-
 const { toggleModal } = useModalStore()
 const { getTranslation } = useLanguageStore()
+const userStore = useUserStore()
 
-// Переменные для withdrawstars (уже есть)
-const targetUserName = ref('') // Имя пользователя для withdrawstars
+// Переменные для вывода звезд из заданий
+const targetUserName = ref('') // Имя пользователя для вывода
 const recipientName = ref('') // Имя найденного получателя
 const recipientPhoto = ref('') // Фото получателя
 const recipient = ref(null) // Данные получателя
@@ -19,14 +19,14 @@ const recipientCorrect = ref(true) // Флаг валидности получа
 const recipientIncorrects = ref([])
 const withdrawAmount = ref(null)
 const searchTimeout = ref(null)
-const kef = ref(187.265917)
+const tasksBalance = ref(0) // Баланс звезд из заданий
 const valueCorrect = ref(true)
 const valueIncorrects = ref([])
 
 const MAX_LENGTH = 45
 
 // Максимальное допустимое значение
-const MAX_NUMBER = 1000000 // замените на нужное значение
+const MAX_NUMBER = 1000000
 
 // Watcher — ограничивает ввод чисел по max
 watch(withdrawAmount, (newVal, oldVal) => {
@@ -65,18 +65,34 @@ watch(targetUserName, (newValue) => {
   }, 300)
 })
 
-const fetchStarsPrice = async () => {
-  const payload = {
-    user_id: useUserStore().getUserId(),
-    amount: 1000000
-  }
+// Получение баланса звезд из заданий
+const fetchTasksBalance = async () => {
   try {
-    const result = await sendToBackend('/get_price_stars', payload)
-    const data = result.data
-    kef.value = data.count_stars / 1000000
+    const payload = {
+      user_id: userStore.getUserId()
+    }
+    const result = await sendToBackend('/get_user_balance_stars', payload)
+    if (result.status === 'success') {
+      tasksBalance.value = result.data.balance || 0
+      // Обновляем заголовок модального окна
+      updateModalTitle()
+    }
   } catch (error) {
-    console.error('Failed to fetch stars price:', error)
+    console.error('Failed to fetch tasks balance:', error)
   }
+}
+
+// Обновление заголовка модального окна
+const updateModalTitle = () => {
+  nextTick(() => {
+    const titleElement = document.querySelector('.withdrawtasksstars .tasks-balance-placeholder')
+    if (titleElement) {
+      titleElement.innerHTML = `
+        ${tasksBalance.value}
+        <img src="../../assets/img/Star.svg" alt="Stars" class="img-20 lazy-img" />
+      `
+    }
+  })
 }
 
 const searchRecipient = async (username) => {
@@ -101,7 +117,7 @@ const searchRecipient = async (username) => {
 }
 
 const buyForMyself = () => {
-  targetUserName.value = useUserStore().getUser()
+  targetUserName.value = userStore.getUser()
 }
 
 const withdraw = async () => {
@@ -109,12 +125,12 @@ const withdraw = async () => {
   recipientIncorrects.value = []
 
   const amount = withdrawAmount.value || 0
-  if (amount >= 0.5 && amount <= 1000000 && amount <= useUserStore().getUserBalance()) {
+  if (amount >= 50 && amount <= 1000000 && amount <= tasksBalance.value) {
     valueCorrect.value = true
   } else {
     valueCorrect.value = false
     valueIncorrects.value.push(
-      amount < 0.5 ? 'Min01' : amount > 1000000 ? 'Max1000000' : 'Notenoughbalace'
+      amount < 50 ? 'Min01' : amount > 1000000 ? 'Max1000000' : 'Notenoughbalace'
     )
   }
 
@@ -125,16 +141,19 @@ const withdraw = async () => {
   }
 
   if (valueCorrect.value && recipientCorrect.value) {
-
     const payload = {
-      user_id: useUserStore().getUserId(),
-      amount: Math.floor(withdrawAmount.value * kef.value),
-      adress: targetUserName.value
+      user_id: userStore.getUserId(),
+      username: targetUserName.value,
+      count: Math.floor(withdrawAmount.value)
     }
     try {
-      await sendToBackend('/withdraw', payload)
+      await sendToBackend('/withdraw_stars', payload)
       toggleModal('popupstars')
       useHistoryStore().fetchUserHistory()
+      // Обновляем баланс после успешного вывода
+      await fetchTasksBalance()
+      // Обновляем заголовок модального окна
+      updateModalTitle()
     } catch (error) {
       console.error('Withdraw failed:', error)
       toggleModal('Error')
@@ -143,7 +162,7 @@ const withdraw = async () => {
 }
 
 onMounted(() => {
-  fetchStarsPrice()
+  fetchTasksBalance()
 })
 </script>
 
@@ -155,8 +174,8 @@ onMounted(() => {
         type="number"
         :class="{ incorrect: !valueCorrect }"
         class="withdraw-inp rounded-12 bg-neutral-200 text-neutral-700 text-16 usea"
-        placeholder="Min 0.5"
-        min="0.5"
+        placeholder="Min 50"
+        min="50"
         max="1000000"
         v-model="withdrawAmount"
       />
@@ -197,12 +216,6 @@ onMounted(() => {
       <p v-for="error in recipientIncorrects" :key="error" class="pl-14 text-red text-14">
         {{ getTranslation(error) }}
       </p>
-      <div class="withdraw-info gap-12">
-        <p style="grid-area: A" class="text-16 font-400 text-white">
-          {{ getTranslation("For") }} {{ withdrawAmount || 0 }} TON {{ getTranslation("Youget") }} ≈
-        </p>
-        <p class="text-24 text-white">{{ Math.floor((withdrawAmount || 0) * kef) }} Stars</p>
-      </div>
     </div>
     <div
       @click="withdraw"
@@ -246,6 +259,13 @@ onMounted(() => {
   padding: 16px;
   text-align: center;
   border-radius: 12px;
+  cursor: pointer;
+}
+
+.input-clear {
+  position: absolute;
+  right: 12px;
+  top: 36px;
   cursor: pointer;
 }
 </style>

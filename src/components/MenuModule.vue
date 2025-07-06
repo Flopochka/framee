@@ -1,36 +1,36 @@
 <script setup>
-import { ref } from "vue";
-import { useScreenStore } from "../stores/screen";
+import { ref } from 'vue'
+import { useScreenStore } from '../stores/screen'
 
-const { switchScreen, getCurrentScreen } = useScreenStore();
+const { switchScreen, getCurrentScreen } = useScreenStore()
 // Проверка активного экрана
 const isActive = (index) => {
   // Последний экран активен для индекса > 2
-  return index === 3 ? getCurrentScreen() > 2 : getCurrentScreen() === index;
-};
+  return index === 3 ? getCurrentScreen() > 2 : getCurrentScreen() === index
+}
 
 const menuItems = ref([
   {
-    icon: new URL("../assets/img/Icon.webp", import.meta.url).href,
-    alt: "Replenishment",
-    imgClass: "menu-item-img replenishment-img",
+    icon: new URL('../assets/img/Icon.webp', import.meta.url).href,
+    alt: 'Replenishment',
+    imgClass: 'menu-item-img replenishment-img'
   },
   {
-    icon: new URL("../assets/img/Tasks.svg", import.meta.url).href,
-    alt: "Tasks",
-    imgClass: "menu-item-img tasks-img",
+    icon: new URL('../assets/img/Tasks.svg', import.meta.url).href,
+    alt: 'Tasks',
+    imgClass: 'menu-item-img tasks-img'
   },
   {
-    icon: new URL("../assets/img/Question.svg", import.meta.url).href,
-    alt: "FAQ",
-    imgClass: "menu-item-img faq-img",
+    icon: new URL('../assets/img/Question.svg', import.meta.url).href,
+    alt: 'FAQ',
+    imgClass: 'menu-item-img faq-img'
   },
   {
-    icon: new URL("../assets/img/User.svg", import.meta.url).href,
-    alt: "User",
-    imgClass: "menu-item-img user-img",
-  },
-]);
+    icon: new URL('../assets/img/User.svg', import.meta.url).href,
+    alt: 'User',
+    imgClass: 'menu-item-img user-img'
+  }
+])
 </script>
 
 <template>

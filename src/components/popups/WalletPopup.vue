@@ -1,9 +1,9 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language";
-import { useModalStore } from "../../stores/modal";
+import { useLanguageStore } from '../../stores/language'
+import { useModalStore } from '../../stores/modal'
 
-const { toggleModal } = useModalStore();
-const { getTranslation } = useLanguageStore();
+const { toggleModal } = useModalStore()
+const { getTranslation } = useLanguageStore()
 </script>
 
 <template>

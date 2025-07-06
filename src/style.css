@@ -198,7 +198,7 @@ body {
   background: linear-gradient(
     129.45deg,
     var(--blue-400) 9.38%,
-    var(--blue-600) 117.65%
+    var(--blue-500) 100%
   );
 }
 
@@ -267,16 +267,16 @@ body {
   text-wrap: balance;
 }
 .letter-spacing-2 {
-  letter-spacing: -2%;
+  letter-spacing: 2px;
 }
 .letter-spacing-01 {
-  letter-spacing: -0.1px;
+  letter-spacing: 0.1px;
 }
 .letter-spacing-04 {
-  letter-spacing: -0.4px;
+  letter-spacing: 0.4px;
 }
 .letter-spacing-05 {
-  letter-spacing: -0.5px;
+  letter-spacing: 0.5px;
 }
 .lh-22 {
   line-height: 22px;
@@ -323,7 +323,7 @@ body {
   border-radius: 50%;
 }
 .shadow-25 {
-  box-shadow: 0px 2px 6px 0px var(--shadow-25);
+  box-shadow: 0px 4px 20px var(--shadow-25);
 }
 
 /* Buttons and Cards */
@@ -393,36 +393,34 @@ body {
 }
 /* Custom styles */
 .custom-radio {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--neutral-300);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--white-60);
   border-radius: 50%;
   position: relative;
-  transition: border-color 0.3s;
 }
 
 .custom-radio-active {
-  border-color: var(--blue-700-80);
+  border-color: var(--blue-400);
 }
 
 .custom-radio-active::after {
   content: "";
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
+  background: var(--blue-400);
   border-radius: 50%;
-  background: var(--blue-700-80);
   position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  transition: background 0.3s;
 }
 
 .rot-90 {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 .rot-180 {
-  transform: rotate(-180deg);
+  transform: rotate(180deg);
 }
 main {
   box-sizing: border-box;

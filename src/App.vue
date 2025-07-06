@@ -1,100 +1,67 @@
 <script setup>
-import MainStars from "./components/screens/MainStars.vue";
-import Tasks from "./components/screens/Tasks.vue";
-import AboutUs from "./components/screens/AboutUs.vue";
-import Profile from "./components/screens/Profile.vue";
-import WithdrawScreen from "./components/screens/WithdrawScreen.vue";
-import ModalScreens from "./components/ModalScreens.vue";
-import MenuModule from "./components/MenuModule.vue";
-import telegramAnalytics from "@telegram-apps/analytics";
-import { useRoute } from "vue-router";
-import { useScreenStore } from "./stores/screen";
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
-import lozad from "lozad";
-import WebApp from "@twa-dev/sdk";
+import MainStars from './components/screens/MainStars.vue'
+import Tasks from './components/screens/Tasks.vue'
+import AboutUs from './components/screens/AboutUs.vue'
+import Profile from './components/screens/Profile.vue'
+import WithdrawScreen from './components/screens/WithdrawScreen.vue'
+import ModalScreens from './components/ModalScreens.vue'
+import MenuModule from './components/MenuModule.vue'
+import telegramAnalytics from '@telegram-apps/analytics'
+import { useRoute } from 'vue-router'
+import { useScreenStore } from './stores/screen'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import lozad from 'lozad'
+import { isMobileDevice, isInsideTelegram } from './utils/device.js'
+import { useKeyboard } from './composables/useKeyboard.js'
+import { CSS_CLASSES, ERROR_MESSAGES } from './constants/index.js'
 
-const { getCurrentScreen, syncWithRoute } = useScreenStore();
-const route = useRoute();
+const { getCurrentScreen, syncWithRoute } = useScreenStore()
+const route = useRoute()
 
 // Синхронизация маршрута со стором
 watch(
   () => route.path,
   (newPath) => {
-    syncWithRoute(newPath);
+    syncWithRoute(newPath)
   },
   { immediate: true }
-);
+)
 
-let observer;
+let observer
 
-const isKeyboardOpen = ref(false);
-let blurTimeout = null;
+const { isKeyboardOpen } = useKeyboard()
 
-function isMobileDevice() {
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-const onFocus = () => {
-  clearTimeout(blurTimeout); // отменяем отложенный blur
-  isKeyboardOpen.value = true;
-};
-
-const onBlur = () => {
-  // ждём чуть-чуть: если в это время произойдёт focus, мы его отменим
-  blurTimeout = setTimeout(() => {
-    isKeyboardOpen.value = false;
-  }, 100); // 100мс — хватает для переключения между инпутами
-};
-
-const isInsideTelegram = WebApp.platform !== "unknown";
+const telegramInside = isInsideTelegram()
 
 onMounted(() => {
   // Инициализация аналитики (раскомментируй и укажи токен)
-  if (isInsideTelegram) {
+  if (telegramInside) {
     telegramAnalytics.init({
       token:
-        "eyJhcHBfbmFtZSI6IkZSQU1FIiwiYXBwX3VybCI6Imh0dHBzOi8vdC5tZS9GcmFtZXN0YXJzX2JvdCIsImFwcF9kb21haW4iOiJodHRwczovL2ZyYW1lLXN0YXJzLmNvbSJ9!I+r7Qr8f0c2CpNQMdsvYo4B7ukow0dpw3pFoavLDtB0=",
-      appName: "FRAME",
-    });
+        'eyJhcHBfbmFtZSI6IkZSQU1FIiwiYXBwX3VybCI6Imh0dHBzOi8vdC5tZS9GcmFtZXN0YXJzX2JvdCIsImFwcF9kb21haW4iOiJodHRwczovL2ZyYW1lLXN0YXJzLmNvbSJ9!I+r7Qr8f0c2CpNQMdsvYo4B7ukow0dpw3pFoavLDtB0=',
+      appName: 'FRAME'
+    })
   }
 
   // Инициализация lazy-loading
   try {
-    observer = lozad(".lazy-img, .lazy-bg", {
+    observer = lozad(`.${CSS_CLASSES.LAZY_IMG}, .${CSS_CLASSES.LAZY_BG}`, {
       error: (el) => {
-        console.error("Lazy load failed:", el);
-      },
-    });
-    observer.observe();
+        console.error(ERROR_MESSAGES.LAZY_LOAD_FAILED, el)
+      }
+    })
+    observer.observe()
   } catch (error) {
-    console.error("Lozad init failed:", error);
+    console.error(ERROR_MESSAGES.LOZAD_INIT_FAILED, error)
   }
-
-  if (!isMobileDevice()) return;
-
-  const inputs = document.querySelectorAll(
-    "input, textarea, [contenteditable]"
-  );
-  inputs.forEach((el) => {
-    el.addEventListener("focus", onFocus);
-    el.addEventListener("blur", onBlur);
-  });
-});
+})
 
 onBeforeUnmount(() => {
   if (observer) {
-    observer.observer.disconnect();
-    observer = null;
+    observer.observer.disconnect()
+    observer = null
   }
-  const inputs = document.querySelectorAll(
-    "input, textarea, [contenteditable]"
-  );
-  inputs.forEach((el) => {
-    el.removeEventListener("focus", onFocus);
-    el.removeEventListener("blur", onBlur);
-  });
-  clearTimeout(blurTimeout);
-});
+})
 </script>
 
 <template>

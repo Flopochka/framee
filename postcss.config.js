@@ -1,8 +1,8 @@
-import postcssPresetEnv from 'postcss-preset-env';
-import autoprefixer from 'autoprefixer';
-import postcssNormalize from 'postcss-normalize';
-import postcssFlexbugsFixes from 'postcss-flexbugs-fixes';
-import postcssCustomProperties from 'postcss-custom-properties';
+import postcssPresetEnv from 'postcss-preset-env'
+import autoprefixer from 'autoprefixer'
+import postcssNormalize from 'postcss-normalize'
+import postcssFlexbugsFixes from 'postcss-flexbugs-fixes'
+import postcssCustomProperties from 'postcss-custom-properties'
 
 export default {
   plugins: [
@@ -18,4 +18,4 @@ export default {
     autoprefixer(),
     postcssNormalize()
   ]
-};
+}

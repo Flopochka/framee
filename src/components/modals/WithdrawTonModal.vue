@@ -1,97 +1,97 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language";
-import { useModalStore } from "../../stores/modal";
-import { useUserStore } from "../../stores/user";
-import { ref, watch } from "vue";
-import { useHistoryStore } from "../../stores/history";
-import { sendToBackend } from "../../modules/fetch";
+import { useLanguageStore } from '../../stores/language'
+import { useModalStore } from '../../stores/modal'
+import { useUserStore } from '../../stores/user'
+import { ref, watch } from 'vue'
+import { useHistoryStore } from '../../stores/history'
+import { sendToBackend } from '../../modules/fetch'
 
-const { toggleModal } = useModalStore();
-const { getTranslation } = useLanguageStore();
+const { toggleModal } = useModalStore()
+const { getTranslation } = useLanguageStore()
 
-const withdrawTonAmmount = ref(null);
-const targetWallet = ref(null);
-const valueCorrect = ref(true);
-const valueIncorrects = ref([]);
-const walletCorrect = ref(true);
-const walletIncorrects = ref([]);
+const withdrawTonAmmount = ref(null)
+const targetWallet = ref(null)
+const valueCorrect = ref(true)
+const valueIncorrects = ref([])
+const walletCorrect = ref(true)
+const walletIncorrects = ref([])
 
 
-const MAX_LENGTH = 90;
+const MAX_LENGTH = 90
 
 watch(targetWallet, (newVal, oldVal) => {
   if (newVal && newVal.length > MAX_LENGTH) {
-    targetWallet.value = newVal.slice(0, MAX_LENGTH);
+    targetWallet.value = newVal.slice(0, MAX_LENGTH)
   }
-});
+})
 
 // Максимальное допустимое значение
-const MAX_NUMBER = 1000000; // замените на нужное значение
+const MAX_NUMBER = 1000000 // замените на нужное значение
 
 // Watcher — ограничивает ввод чисел по max
 watch(withdrawTonAmmount, (newVal, oldVal) => {
-  if (newVal === "") return;
+  if (newVal === '') return
 
   // Разрешаем числа с точкой на конце (например, "1.")
-  if (/^\d+\.$/.test(newVal)) return;
+  if (/^\d+\.$/.test(newVal)) return
 
-  const parsed = parseFloat(newVal);
+  const parsed = parseFloat(newVal)
   if (!isNaN(parsed) && parsed > MAX_NUMBER) {
     // Если на единицу больше max и это целое — удаляем последнюю цифру
     if (Number.isInteger(parsed) && parsed === MAX_NUMBER + 1) {
-      withdrawTonAmmount.value = newVal.slice(0, -1);
+      withdrawTonAmmount.value = newVal.slice(0, -1)
     } else {
-      withdrawTonAmmount.value = String(MAX_NUMBER);
+      withdrawTonAmmount.value = String(MAX_NUMBER)
     }
   }
-});
+})
 
 const clearTON = () => {
-  withdrawTonAmmount.value = null;
-};
+  withdrawTonAmmount.value = null
+}
 
 const withdraw = async () => {
-  valueIncorrects.value = [];
-  walletIncorrects.value = [];
+  valueIncorrects.value = []
+  walletIncorrects.value = []
   if (
     0.5 <= withdrawTonAmmount.value &&
     withdrawTonAmmount.value < 1000000 &&
     withdrawTonAmmount.value <= useUserStore().getUserBalance()
   ) {
-    valueCorrect.value = true;
+    valueCorrect.value = true
   } else {
-    valueCorrect.value = false;
+    valueCorrect.value = false
     valueIncorrects.value.push(
       0.1 > (withdrawTonAmmount.value || 0)
-        ? "Min01"
+        ? 'Min01'
         : (withdrawTonAmmount.value || 0) > 1000000
-        ? "Max1000000"
-        : "Notenoughbalace"
-    );
+          ? 'Max1000000'
+          : 'Notenoughbalace'
+    )
   }
   if (targetWallet.value && targetWallet.value.length > 24) {
-    walletCorrect.value = true;
+    walletCorrect.value = true
   } else {
-    walletCorrect.value = false;
-    walletIncorrects.value.push("Walletincorrect");
+    walletCorrect.value = false
+    walletIncorrects.value.push('Walletincorrect')
   }
   if (valueCorrect.value && walletCorrect.value) {
     const payload = {
       user_id: useUserStore().getUserId(),
       amount:
         withdrawTonAmmount.value % 1 === 0
-          ? withdrawTonAmmount.value + ".0"
+          ? `${withdrawTonAmmount.value}.0`
           : withdrawTonAmmount.value,
-      adress: targetWallet.value,
-    };
-    sendToBackend("/withdraw", payload)
-    .then((result) => {
-      toggleModal("popupwallet");
-      useHistoryStore().fetchUserHistory();
-    })
-    .catch(() => {});
+      adress: targetWallet.value
+    }
+    sendToBackend('/withdraw', payload)
+      .then((result) => {
+        toggleModal('popupwallet')
+        useHistoryStore().fetchUserHistory()
+      })
+      .catch(() => {})
   }
-};
+}
 </script>
 
 <template>

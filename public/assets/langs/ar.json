@@ -144,5 +144,7 @@
   "error": "خطأ",
   "failedToVerifyTask": "فشل في التحقق من المهمة. يرجى المحاولة مرة أخرى لاحقًا.",
   "taskRejected": "تم رفض المهمة",
-  "taskExecutionRejected": "تم رفض تنفيذ المهمة، يرجى المحاولة مرة أخرى"
+  "taskExecutionRejected": "تم رفض تنفيذ المهمة، يرجى المحاولة مرة أخرى",
+  "TasksBalance": "رصيد المهام",
+  "Availablebalance": "الرصيد المتاح"
 }

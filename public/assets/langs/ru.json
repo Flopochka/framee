@@ -144,5 +144,7 @@
   "error": "Ошибка",
   "failedToVerifyTask": "Не удалось верифицировать задание. Попробуйте позже.",
   "taskRejected": "Задание отклонено",
-  "taskExecutionRejected": "Выполнение задания отклонено, попробуйте снова"
+  "taskExecutionRejected": "Выполнение задания отклонено, попробуйте снова",
+  "TasksBalance": "Баланс заданий",
+  "Availablebalance": "Доступный баланс"
 }

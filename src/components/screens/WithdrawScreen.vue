@@ -1,103 +1,103 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language.js";
-import { useModalStore } from "../../stores/modal.js";
-import { sendToBackend } from "../../modules/fetch.js";
-import { useUserStore } from "../../stores/user.js";
-import { ref, onMounted, computed } from "vue";
-import refPhoto from "../../assets/img/TESTReferalPhoto.png";
-import { getImageSrc } from "../../modules/base64img.js";
+import { useLanguageStore } from '../../stores/language.js'
+import { useModalStore } from '../../stores/modal.js'
+import { sendToBackend } from '../../modules/fetch.js'
+import { useUserStore } from '../../stores/user.js'
+import { ref, onMounted, computed } from 'vue'
+import refPhoto from '../../assets/img/TESTReferalPhoto.png'
+import { getImageSrc } from '../../modules/base64img.js'
 
-const { toggleModal } = useModalStore();
-const { getTranslation } = useLanguageStore();
+const { toggleModal } = useModalStore()
+const { getTranslation } = useLanguageStore()
 
-const pageInfo = ref([0, 0]);
-const referals = ref([]);
+const pageInfo = ref([0, 0])
+const referals = ref([])
 
 const setPage = (page) => {
-  fetchUserReferals(page);
+  fetchUserReferals(page)
   if (page >= 0 && page <= pageInfo.value[0]) {
-    pageInfo.value[1] = page;
+    pageInfo.value[1] = page
   }
-};
+}
 
 const visiblePages = computed(() => {
-  const total = pageInfo.value[0];
-  const current = pageInfo.value[1];
+  const total = pageInfo.value[0]
+  const current = pageInfo.value[1]
 
   // Если страниц меньше 3 — нечего вычислять
   if (total <= 1) {
-    return total > 2 ? Array.from({ length: total - 1 }, (_, i) => i + 1) : [];
+    return total > 2 ? Array.from({ length: total - 1 }, (_, i) => i + 1) : []
   }
 
-  let start = Math.max(1, current - 2);
-  let end = Math.min(total - 2, current + 2);
+  let start = Math.max(1, current - 2)
+  let end = Math.min(total - 2, current + 2)
 
   if (end - start < 4) {
-    if (start === 1) end = Math.min(total - 1, start + 4);
-    else if (end === total - 1) start = Math.max(1, end - 4);
+    if (start === 1) end = Math.min(total - 1, start + 4)
+    else if (end === total - 1) start = Math.max(1, end - 4)
   }
 
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-});
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+})
 
-const CACHE_KEY = "cached_referrals";
+const CACHE_KEY = 'cached_referrals'
 
 const fetchUserReferals = async (pageIndex) => {
-  const userId = useUserStore().getUserId();
-  const cacheKey = `${CACHE_KEY}_${userId}_${pageIndex}`;
+  const userId = useUserStore().getUserId()
+  const cacheKey = `${CACHE_KEY}_${userId}_${pageIndex}`
 
   // Пробуем достать из кэша
-  const cached = localStorage.getItem(cacheKey);
+  const cached = localStorage.getItem(cacheKey)
   if (cached) {
     try {
-      referals.value = JSON.parse(cached);
+      referals.value = JSON.parse(cached)
     } catch (e) {
-      localStorage.removeItem(cacheKey);
+      localStorage.removeItem(cacheKey)
     }
   }
 
   // Загружаем с бэка
   const payload = {
     user_id: userId,
-    current_page: pageIndex,
-  };
+    current_page: pageIndex
+  }
 
   try {
-    const result = await sendToBackend("/get_user_referrals", payload);
-    const data = result.data;
-    referals.value = data.referrals;
-    pageInfo.value[0] = data.pages;
+    const result = await sendToBackend('/get_user_referrals', payload)
+    const data = result.data
+    referals.value = data.referrals
+    pageInfo.value[0] = data.pages
 
     // Обновляем кэш
-    localStorage.setItem(cacheKey, JSON.stringify(data.referrals));
+    localStorage.setItem(cacheKey, JSON.stringify(data.referrals))
   } catch (e) {
-    console.error("Fetch failed:", e);
+    console.error('Fetch failed:', e)
   }
-};
+}
 
 const fetchWithdraw = async () => {
   const payload = {
-    user_id: useUserStore().getUserId(),
-  };
-  sendToBackend("/page_withdraw_info", payload)
+    user_id: useUserStore().getUserId()
+  }
+  sendToBackend('/page_withdraw_info', payload)
     .then((result) => {
-      const data = result.data;
+      const data = result.data
       useUserStore().updateUser(
         data.user_profile.name,
         data.username,
         data.user_profile.photo,
         data.balance,
         window.Telegram?.WebApp?.initDataUnsafe?.user?.id
-      );
+      )
     })
-    .catch(() => {});
-};
+    .catch(() => {})
+}
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  fetchUserReferals(0);
-  fetchWithdraw();
-});
+  fetchUserReferals(0)
+  fetchWithdraw()
+})
 </script>
 
 <template>

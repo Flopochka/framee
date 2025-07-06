@@ -1,53 +1,53 @@
 <script setup>
-import { ref, watchEffect } from "vue";
-import { useLanguageStore } from "../../stores/language";
-import { useHistoryStore } from "../../stores/history";
-import StarGold from "../../assets/img/StarGold.svg";
-import StarPremium from "../../assets/img/StarPremium.svg";
-import TONMinimal from "../../assets/img/TONMinimal.svg";
-import Processing from "../../assets/img/Processing.svg";
-import Cancelled from "../../assets/img/Cancelled.svg";
+import { ref, watchEffect } from 'vue'
+import { useLanguageStore } from '../../stores/language'
+import { useHistoryStore } from '../../stores/history'
+import StarGold from '../../assets/img/StarGold.svg'
+import StarPremium from '../../assets/img/StarPremium.svg'
+import TONMinimal from '../../assets/img/TONMinimal.svg'
+import Processing from '../../assets/img/Processing.svg'
+import Cancelled from '../../assets/img/Cancelled.svg'
 
-const { getTranslation } = useLanguageStore();
+const { getTranslation } = useLanguageStore()
 const {
   getHistory,
   fetchUserHistory,
   setPage,
   getVisiblePages,
   getCurrentPage,
-  getPagesCount,
-} = useHistoryStore();
+  getPagesCount
+} = useHistoryStore()
 
-const history = ref([]);
-const withdrawType = ref(["TON", "Stars", "Stars", "Stars"]);
-const currentYear = new Date().getFullYear();
+const history = ref([])
+const withdrawType = ref(['TON', 'Stars', 'Stars', 'Stars'])
+const currentYear = new Date().getFullYear()
 
 // Подгружаем первую страницу при монтировании
 watchEffect(async () => {
-  await fetchUserHistory(0);
-  history.value = getHistory();
-});
+  await fetchUserHistory(0)
+  history.value = getHistory()
+})
 
 // Обновляем данные при смене страницы
 watchEffect(() => {
-  history.value = getHistory();
-});
+  history.value = getHistory()
+})
 
 const getIconPath = (type, count) => {
   switch (type) {
-    case 0:
-      return Cancelled;
-    case 1:
-      return Processing;
-    case 2:
-      return count < 15 ? StarPremium : StarGold;
-    case 3:
-      return TONMinimal;
-    case 4:
-    default:
-      return StarGold;
+  case 0:
+    return Cancelled
+  case 1:
+    return Processing
+  case 2:
+    return count < 15 ? StarPremium : StarGold
+  case 3:
+    return TONMinimal
+  case 4:
+  default:
+    return StarGold
   }
-};
+}
 </script>
 
 <template>
@@ -77,7 +77,7 @@ const getIconPath = (type, count) => {
             </div>
             <p class="text-14 flex-row twp">
               <template v-if="item.type <= 2">
-                {{ getTranslation("buy") }} 
+                {{ getTranslation("buy") }}
                 <span class="font-400 twp" style="display: contents">
                   {{
                     item.Count < 15

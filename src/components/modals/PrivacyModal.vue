@@ -1,7 +1,7 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language";
+import { useLanguageStore } from '../../stores/language'
 
-const { getTranslation } = useLanguageStore();
+const { getTranslation } = useLanguageStore()
 </script>
 
 <template>

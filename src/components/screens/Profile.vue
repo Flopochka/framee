@@ -1,96 +1,96 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language";
-import { useModalStore } from "../../stores/modal";
-import { useScreenStore } from "../../stores/screen";
-import { sendToBackend } from "../../modules/fetch";
-import { ref, onMounted } from "vue";
-import { useUserStore } from "../../stores/user";
-import WebApp from "@twa-dev/sdk";
+import { useLanguageStore } from '../../stores/language'
+import { useModalStore } from '../../stores/modal'
+import { useScreenStore } from '../../stores/screen'
+import { sendToBackend } from '../../modules/fetch'
+import { ref, onMounted } from 'vue'
+import { useUserStore } from '../../stores/user'
+import WebApp from '@twa-dev/sdk'
 
-const referals_count = ref(0);
-const income = ref(0);
+const referals_count = ref(0)
+const income = ref(0)
 
-const { toggleModal } = useModalStore();
-const { getTranslation } = useLanguageStore();
+const { toggleModal } = useModalStore()
+const { getTranslation } = useLanguageStore()
 function toBase64(obj) {
-  const jsonStr = JSON.stringify(obj);
-  const bytes = new TextEncoder().encode(jsonStr); // UTF-8
-  let binary = "";
-  for (let b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary);
+  const jsonStr = JSON.stringify(obj)
+  const bytes = new TextEncoder().encode(jsonStr) // UTF-8
+  let binary = ''
+  for (const b of bytes) binary += String.fromCharCode(b)
+  return btoa(binary)
 }
 
 const shareData = {
   text: getTranslation(
-    "FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself"
+    'FRAMEisyourbestchoiceforbuyingstars!ThepricesarelowerthanintheofficialTelegrambot,andthereisnoKYCverification.Comeinandseeforyourself'
   ),
   url:
-    "https://t.me/framestars_bot?startapp=" +
-    toBase64({
-      referal: WebApp.initDataUnsafe?.user?.id || useUserStore().getUserId(),
-    }),
-};
+    `https://t.me/framestars_bot?startapp=${
+      toBase64({
+        referal: WebApp.initDataUnsafe?.user?.id || useUserStore().getUserId()
+      })}`
+}
 
 function linkTo(url, options = { tryInstantView: false }) {
-  if (url.startsWith("https://t.me/") || url.startsWith("tg://")) {
-    WebApp.openTelegramLink(url);
+  if (url.startsWith('https://t.me/') || url.startsWith('tg://')) {
+    WebApp.openTelegramLink(url)
   } else {
     WebApp.openLink(url, {
-      try_instant_view: options.tryInstantView,
-    });
+      try_instant_view: options.tryInstantView
+    })
   }
 }
 
 const fetchUserInfo = async () => {
   const payload = {
-    user_id: useUserStore().getUserId(),
-  };
-  sendToBackend("/get_user_info", payload)
+    user_id: useUserStore().getUserId()
+  }
+  sendToBackend('/get_user_info', payload)
     .then((result) => {
-      const data = result.data;
-      referals_count.value = data.count_referrals; // Обновляем счетчик рефералов
-      income.value = data.income;
+      const data = result.data
+      referals_count.value = data.count_referrals // Обновляем счетчик рефералов
+      income.value = data.income
       if (
         useLanguageStore().getCurrentLanguage() != data.language.slice(0, 2)
       ) {
-        useLanguageStore().switchLanguage(data.language.slice(0, 2));
+        useLanguageStore().switchLanguage(data.language.slice(0, 2))
       }
     })
-    .catch(() => {});
-};
+    .catch(() => {})
+}
 
 async function copyToClipboard(text) {
-  if (typeof WebApp.writeTextToClipboard === "function") {
-    WebApp.writeTextToClipboard(text);
-    toggleModal("Copied");
+  if (typeof WebApp.writeTextToClipboard === 'function') {
+    WebApp.writeTextToClipboard(text)
+    toggleModal('Copied')
   } else if (navigator.clipboard) {
     try {
-      await navigator.clipboard.writeText(text);
-      toggleModal("Copied");
+      await navigator.clipboard.writeText(text)
+      toggleModal('Copied')
     } catch (e) {
-      toggleModal("Clipboard error");
-      console.error("Clipboard write failed:", e);
+      toggleModal('Clipboard error')
+      console.error('Clipboard write failed:', e)
     }
   } else {
-    toggleModal("Copy not supported");
+    toggleModal('Copy not supported')
   }
 }
 
 function shareContent() {
   const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
     shareData.url
-  )}&text=${encodeURIComponent(shareData.text)}`;
+  )}&text=${encodeURIComponent(shareData.text)}`
   if (window.Telegram?.WebApp?.openTelegramLink) {
-    window.Telegram.WebApp.openTelegramLink(shareUrl);
+    window.Telegram.WebApp.openTelegramLink(shareUrl)
   } else {
-    window.open(shareUrl, "_blank");
+    window.open(shareUrl, '_blank')
   }
 }
 
 // Инициализация user_id после загрузки компонента
 onMounted(() => {
-  fetchUserInfo();
-});
+  fetchUserInfo()
+})
 </script>
 
 <template>

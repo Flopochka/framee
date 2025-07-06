@@ -1,86 +1,86 @@
-import { defineStore } from "pinia";
-import { TonConnectUI } from "@tonconnect/ui";
-import { sendToBackend } from "../modules/fetch";
+import { defineStore } from 'pinia'
+import { TonConnectUI } from '@tonconnect/ui'
+import { sendToBackend } from '../modules/fetch'
 // Инициализация TonConnect UI
-let tonConnectUI;
+let tonConnectUI
 try {
   tonConnectUI = new TonConnectUI({
-    manifestUrl: "https://frame-stars.com/tonconnect-manifest.json",
-  });
+    manifestUrl: 'https://frame-stars.com/tonconnect-manifest.json'
+  })
 
   // Set global UI options for consistent behavior
   tonConnectUI.uiOptions = {
     actionsConfiguration: {
-      modals: ["before", "success", "error"],
-      notifications: ["before", "success", "error"],
-      skipRedirectToWallet: "ios", // Default for iOS compatibility
-      returnStrategy: "back", // Default return strategy
+      modals: ['before', 'success', 'error'],
+      notifications: ['before', 'success', 'error'],
+      skipRedirectToWallet: 'ios', // Default for iOS compatibility
+      returnStrategy: 'back', // Default return strategy
       twaReturnUrl: window.Telegram.WebApp.initDataUnsafe.start_param
         ? `https://t.me/${window.Telegram.WebApp.initDataUnsafe.user.username}?startapp=${window.Telegram.WebApp.initDataUnsafe.start_param}`
-        : "https://t.me/framestars_bot?startapp", // Replace with your actual TMA URL
-    },
-  };
+        : 'https://t.me/framestars_bot?startapp' // Replace with your actual TMA URL
+    }
+  }
 
-  console.log("[wallet] TonConnectUI инициализирован");
+  console.log('[wallet] TonConnectUI инициализирован')
 } catch (error) {
-  console.error("[wallet] Ошибка инициализации TonConnectUI:", error);
-  throw new Error("[wallet] Не удалось инициализировать TonConnectUI");
+  console.error('[wallet] Ошибка инициализации TonConnectUI:', error)
+  throw new Error('[wallet] Не удалось инициализировать TonConnectUI')
 }
 
-export const useWalletStore = defineStore("wallet", {
+export const useWalletStore = defineStore('wallet', {
   state: () => ({
-    wallet: localStorage.getItem("walletAddress") || null,
+    wallet: localStorage.getItem('walletAddress') || null,
     connectionError: null,
-    isConnected: false, // Добавляем реактивное состояние подключения
+    isConnected: false // Добавляем реактивное состояние подключения
   }),
   actions: {
     // Инициализация состояния кошелька при загрузке
     async initializeWallet() {
       try {
         if (!tonConnectUI) {
-          throw new Error("[wallet] TonConnectUI не инициализирован");
+          throw new Error('[wallet] TonConnectUI не инициализирован')
         }
 
         // Подписываемся на изменения состояния кошелька
         tonConnectUI.onStatusChange((wallet) => {
-          this.isConnected = wallet !== null;
-          this.wallet = wallet?.account?.address || null;
+          this.isConnected = wallet !== null
+          this.wallet = wallet?.account?.address || null
           if (this.wallet) {
-            localStorage.setItem("walletAddress", this.wallet);
+            localStorage.setItem('walletAddress', this.wallet)
           } else {
-            localStorage.removeItem("walletAddress");
+            localStorage.removeItem('walletAddress')
           }
-        });
+        })
 
-        const restored = await tonConnectUI.connectionRestored;
-        this.isConnected = tonConnectUI.connected;
-        console.log("[wallet] Connection status: ", this.isConnected);
+        const restored = await tonConnectUI.connectionRestored
+        this.isConnected = tonConnectUI.connected
+        console.log('[wallet] Connection status: ', this.isConnected)
 
         if (restored && tonConnectUI.connected) {
-          this.wallet = tonConnectUI.wallet?.account?.address || null;
+          this.wallet = tonConnectUI.wallet?.account?.address || null
           if (this.wallet) {
-            localStorage.setItem("walletAddress", this.wallet);
-            console.log("[wallet] Connection restored. Wallet:", this.wallet);
+            localStorage.setItem('walletAddress', this.wallet)
+            console.log('[wallet] Connection restored. Wallet:', this.wallet)
           } else {
-            localStorage.removeItem("walletAddress");
-            console.log("[wallet] Connection restored but no wallet found.");
+            localStorage.removeItem('walletAddress')
+            console.log('[wallet] Connection restored but no wallet found.')
           }
         } else {
-          this.wallet = null;
-          localStorage.removeItem("walletAddress");
-          console.log("[wallet] Connection was not restored.");
+          this.wallet = null
+          localStorage.removeItem('walletAddress')
+          console.log('[wallet] Connection was not restored.')
         }
-        this.connectionError = null;
+        this.connectionError = null
         tonConnectUI.uiOptions = {
-          twaReturnUrl: "https://frame-stars.com",
-        };
+          twaReturnUrl: 'https://frame-stars.com'
+        }
       } catch (error) {
         console.error(
-          "[wallet] Ошибка при инициализации состояния кошелька:",
+          '[wallet] Ошибка при инициализации состояния кошелька:',
           error
-        );
-        this.connectionError = error.message;
-        throw error;
+        )
+        this.connectionError = error.message
+        throw error
       }
     },
 
@@ -88,19 +88,19 @@ export const useWalletStore = defineStore("wallet", {
     async connectWallet() {
       try {
         if (!tonConnectUI) {
-          throw new Error("[wallet] TonConnectUI не инициализирован");
+          throw new Error('[wallet] TonConnectUI не инициализирован')
         }
-        await tonConnectUI.openModal();
-        this.wallet = tonConnectUI.wallet?.account?.address || null;
+        await tonConnectUI.openModal()
+        this.wallet = tonConnectUI.wallet?.account?.address || null
         if (this.wallet) {
-          localStorage.setItem("walletAddress", this.wallet);
-          console.log("[wallet] Кошелек подключен:", this.wallet);
+          localStorage.setItem('walletAddress', this.wallet)
+          console.log('[wallet] Кошелек подключен:', this.wallet)
         }
-        this.connectionError = null;
+        this.connectionError = null
       } catch (error) {
-        console.error("[wallet] Ошибка при подключении кошелька:", error);
-        this.connectionError = error.message;
-        throw error;
+        console.error('[wallet] Ошибка при подключении кошелька:', error)
+        this.connectionError = error.message
+        throw error
       }
     },
 
@@ -108,38 +108,38 @@ export const useWalletStore = defineStore("wallet", {
     disconnectWallet() {
       try {
         if (!tonConnectUI) {
-          throw new Error("[wallet] TonConnectUI не инициализирован");
+          throw new Error('[wallet] TonConnectUI не инициализирован')
         }
-        tonConnectUI.disconnect();
-        this.wallet = null;
-        localStorage.removeItem("walletAddress");
-        this.connectionError = null;
-        console.log("[wallet] Кошелек отключен");
+        tonConnectUI.disconnect()
+        this.wallet = null
+        localStorage.removeItem('walletAddress')
+        this.connectionError = null
+        console.log('[wallet] Кошелек отключен')
       } catch (error) {
-        console.error("[wallet] Ошибка при отключении кошелька:", error);
-        this.connectionError = error.message;
-        throw error;
+        console.error('[wallet] Ошибка при отключении кошелька:', error)
+        this.connectionError = error.message
+        throw error
       }
     },
 
     // Получение состояния кошелька
     getWalletState() {
-      console.log("[wallet] wallet state", this.isConnected);
-      return this.isConnected;
+      console.log('[wallet] wallet state', this.isConnected)
+      return this.isConnected
     },
 
     // Отправка платежа
     async sendPayment(recipient, amount, message) {
       if (!this.getWalletState()) {
         throw new Error(
-          "[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала."
-        );
+          '[wallet] Кошелек не подключен. Пожалуйста, подключите кошелек сначала.'
+        )
       }
 
-      const result = await sendToBackend("/make_boc_comment", {
-        text: message,
-      });
-      const base64boc = result.base64boc;
+      const result = await sendToBackend('/make_boc_comment', {
+        text: message
+      })
+      const base64boc = result.base64boc
 
       const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
@@ -147,25 +147,25 @@ export const useWalletStore = defineStore("wallet", {
           {
             address: recipient,
             amount: amount.toString(),
-            payload: base64boc,
-          },
-        ],
-      };
+            payload: base64boc
+          }
+        ]
+      }
 
       try {
         const result = await tonConnectUI.sendTransaction(transaction, {
-          modals: ["before", "success", "error"],
-          notifications: ["before", "success", "error"],
-          skipRedirectToWallet: "ios",
-          returnStrategy: "back",
-        });
+          modals: ['before', 'success', 'error'],
+          notifications: ['before', 'success', 'error'],
+          skipRedirectToWallet: 'ios',
+          returnStrategy: 'back'
+        })
 
-        console.log("[wallet] Платеж отправлен:", result);
-        return result;
+        console.log('[wallet] Платеж отправлен:', result)
+        return result
       } catch (error) {
-        console.error("[wallet] Ошибка при отправке платежа:", error);
-        throw error;
+        console.error('[wallet] Ошибка при отправке платежа:', error)
+        throw error
       }
-    },
-  },
-});
+    }
+  }
+})

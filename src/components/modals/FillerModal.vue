@@ -1,9 +1,9 @@
 <script setup>
-import { useLanguageStore } from "../../stores/language";
-import { usePaymentStore } from "../../stores/payment";
-import Spinner from "../../assets/img/Spinner.svg";
-const { getTranslation } = useLanguageStore();
-const { getPaymentLink } = usePaymentStore();
+import { useLanguageStore } from '../../stores/language'
+import { usePaymentStore } from '../../stores/payment'
+import Spinner from '../../assets/img/Spinner.svg'
+const { getTranslation } = useLanguageStore()
+const { getPaymentLink } = usePaymentStore()
 </script>
 
 <template>

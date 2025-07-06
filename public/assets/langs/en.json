@@ -145,5 +145,7 @@
   "error": "Error",
   "failedToVerifyTask": "Failed to verify task. Please try again later.",
   "taskRejected": "Task rejected",
-  "taskExecutionRejected": "Task execution rejected, please try again"
+  "taskExecutionRejected": "Task execution rejected, please try again",
+  "TasksBalance": "Tasks Balance",
+  "Availablebalance": "Available balance"
 }
