@@ -4,24 +4,30 @@ import { useModalStore } from '../../stores/modal'
 
 const { toggleModal } = useModalStore()
 const { getTranslation } = useLanguageStore()
+
+defineProps({
+  title: String,
+  message: String,
+  closeText: String
+})
 </script>
 
 <template>
   <div class="popup-img flex-row items-center justify-center">
-    <img src="../../assets/img/Star.svg" alt="" class="img-32 lazy-img" />
+    <img src="../../assets/img/Copy.svg" alt="" class="img-32 lazy-img" />
   </div>
   <div class="popup-block flex-col">
-    <p class="text-16 text-white letter-spacing-2">
-      {{ getTranslation("Starshavebeensent") }}
+    <p class="text-16 text-white">
+      {{ title || getTranslation('taskCompleted') }}
     </p>
-    <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
-      {{ getTranslation("Youraccountwillbeupdatedwithinafewminutes") }}
+    <p class="text-14 font-400 text-neutral-300 lh-120">
+      {{ message || getTranslation('rewardWillBeCreditedWithin10Minutes') }}
     </p>
     <div
       @click="toggleModal(null)"
       class="popup-btn letter-spacing-04 font-600 btn rounded-12 cupo usen"
     >
-      {{ getTranslation("Close") }}
+      {{ closeText || getTranslation('Close') }}
     </div>
   </div>
 </template>

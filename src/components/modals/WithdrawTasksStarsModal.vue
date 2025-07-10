@@ -80,7 +80,7 @@ const fetchTasksBalance = async () => {
       user_id: userStore.getUserId()
     }
     const result = await sendToBackend('/get_user_balance_stars', payload)
-    if (result.status === 'success') {
+    if (result.status.code === 200) {
       tasksBalance.value = result.data.balance || 0
       // Обновляем заголовок модального окна
       updateModalTitle()
@@ -133,7 +133,7 @@ const withdraw = async () => {
   } else {
     valueCorrect.value = false
     valueIncorrects.value.push(
-      amount < 50 ? 'Min01' : amount > 1000000 ? 'Max1000000' : 'Notenoughbalace'
+      amount < 50 ? 'Min50' : amount > 1000000 ? 'Max1000000' : 'Notenoughbalace'
     )
   }
 

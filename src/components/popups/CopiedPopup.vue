@@ -11,10 +11,10 @@ const { getTranslation } = useLanguageStore()
     <img src="../../assets/img/Copy.svg" alt="" class="img-32 lazy-img" />
   </div>
   <div class="popup-block flex-col">
-    <p class="text-16 text-white letter-spacing-2">
+    <p class="text-16 text-white">
       {{ getTranslation("Copied") }}
     </p>
-    <p class="text-14 font-400 text-neutral-300 letter-spacing-2 lh-120">
+    <p class="text-14 font-400 text-neutral-300 lh-120">
       {{
         getTranslation(
           "Referallinksucessfulcopied"
