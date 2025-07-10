@@ -1,37 +1,37 @@
 <script setup>
-import { ref, onMounted, nextTick, onUnmounted } from 'vue'
-import { useLanguageStore } from '../../stores/language.js'
-import { useUserStore } from '../../stores/user.js'
-import { useModalStore } from '../../stores/modal.js'
-import { sendToBackend } from '../../modules/fetch.js'
-import { showPopup } from '../../utils/telegram.js'
+import { ref, onMounted, nextTick, onUnmounted } from "vue";
+import { useLanguageStore } from "../../stores/language.js";
+import { useUserStore } from "../../stores/user.js";
+import { useModalStore } from "../../stores/modal.js";
+import { sendToBackend } from "../../modules/fetch.js";
+import { showPopup } from "../../utils/telegram.js";
 
-const { getTranslation } = useLanguageStore()
-const { toggleModal } = useModalStore()
-const userStore = useUserStore()
-const traffyTasks = ref(null)
-const tasks = ref([])
-const loadingError = ref(false)
-const tasksBalance = ref(0)
-const isLoadingBalance = ref(false)
-const activeTaskIndex = ref(null)
-const disappearingTasks = ref([])
-let visibilityHandler = null
+const { getTranslation } = useLanguageStore();
+const { toggleModal } = useModalStore();
+const userStore = useUserStore();
+const traffyTasks = ref(null);
+const tasks = ref([]);
+const loadingError = ref(false);
+const tasksBalance = ref(0);
+const isLoadingBalance = ref(false);
+const activeTaskIndex = ref(null);
+const disappearingTasks = ref([]);
+let visibilityHandler = null;
 
 // Обработчики заданий
 const onTaskLoad = (loadedTasks) => {
-  console.log('[Tasks] Задания загружены:', loadedTasks)
+  console.log("[Tasks] Задания загружены:", loadedTasks);
   // Убираем дубли по id
-  const uniqueTasks = []
-  const seenIds = new Set()
+  const uniqueTasks = [];
+  const seenIds = new Set();
   for (const t of loadedTasks || []) {
     if (!seenIds.has(t.id)) {
-      uniqueTasks.push(t)
-      seenIds.add(t.id)
+      uniqueTasks.push(t);
+      seenIds.add(t.id);
     }
   }
-  tasks.value = uniqueTasks
-}
+  tasks.value = uniqueTasks;
+};
 
 const onTaskRender = (
   changeReward,
@@ -39,171 +39,187 @@ const onTaskRender = (
   changeDescription,
   changeButtonCheckText
 ) => {
-  changeReward('10')
-  changeCardTitle(getTranslation('subscribe:'))
-  changeButtonCheckText(getTranslation('check'))
-}
+  changeReward("10");
+  changeCardTitle(getTranslation("subscribe:"));
+  changeButtonCheckText(getTranslation("check"));
+};
 
 const onTaskReward = async (task, signedToken) => {
-  console.log('[Tasks] Задание выполнено:', task)
+  console.log("[Tasks] Задание выполнено:", task);
   try {
     const backendPayload = {
       user_id: userStore.getUserId(),
-      signed_token: signedToken
-    }
+      signed_token: signedToken,
+    };
     const backendResult = await sendToBackend(
-      '/verify_traffy_token',
+      "/verify_traffy_token",
       backendPayload
-    )
-    console.log('[fetch] Response from /verify_traffy_token : ', backendResult)
+    );
+    console.log("[fetch] Response from /verify_traffy_token : ", backendResult);
     // Исправленная проверка успешности
     if (backendResult.data && backendResult.data.success) {
-      await fetchTasksBalance()
-      showPopup(
-        {
-          title: getTranslation('taskCompleted'),
-          message: getTranslation('rewardWillBeCreditedWithin10Minutes'),
-          buttons: [
-            {
-              id: 'default',
-              type: 'default'
-            }
-          ]
-        },
-        function (buttonId) {
-          console.log('Нажата кнопка:', buttonId)
-        }
-      )
+      await fetchTasksBalance();
+      try {
+        showPopup(
+          {
+            title: getTranslation("taskCompleted"),
+            message: getTranslation("rewardWillBeCreditedWithin10Minutes"),
+            buttons: [
+              {
+                id: "default",
+                type: "default",
+              },
+            ],
+          },
+          function (buttonId) {
+            console.log("Нажата кнопка:", buttonId);
+          }
+        );
+      } catch (error) {
+        console.error("[Tasks] Ошибка при отображении модального окна:", error);
+      }
       // Анимация исчезновения задания
-      const idx = tasks.value.findIndex(t => t.id === task.id)
-      console.log('[Tasks] Анимация исчезновения задания idx:', idx)
-      if (idx !== -1) animateAndRemoveTask(idx)
+      const idx = tasks.value.findIndex((t) => t.id === task.id);
+      console.log("[Tasks] Анимация исчезновения задания idx:", idx);
+      animateAndRemoveTask(idx);
     } else {
-      throw new Error(backendResult.data?.message || 'Ошибка верификации задания')
+      throw new Error(
+        backendResult.data?.message || "Ошибка верификации задания"
+      );
     }
   } catch (error) {
-    console.error('[Tasks] Ошибка при верификации задания:', error)
+    console.error("[Tasks] Ошибка при верификации задания:", error);
+    // Анимация исчезновения задания
+    const idx = tasks.value.findIndex((t) => t.id === task.id);
+    console.log("[Tasks] Анимация исчезновения задания idx:", idx);
+    animateAndRemoveTask(idx);
     showPopup(
       {
-        title: getTranslation('error'),
-        message: getTranslation('failedToVerifyTask'),
+        title: getTranslation("error"),
+        message: getTranslation("failedToVerifyTask"),
         buttons: [
           {
-            id: 'cancel',
-            type: 'cancel'
-          }
-        ]
+            id: "cancel",
+            type: "cancel",
+          },
+        ],
       },
       function (buttonId) {
-        console.log('Нажата кнопка:', buttonId)
+        console.log("Нажата кнопка:", buttonId);
       }
-    )
+    );
   }
-}
+};
 
 const onTaskReject = (task) => {
-  console.warn('[Tasks] Задание отклонено:', task)
+  console.warn("[Tasks] Задание отклонено:", task);
   showPopup(
     {
-      title: getTranslation('taskRejected'),
-      message: getTranslation('taskExecutionRejected'),
+      title: getTranslation("taskRejected"),
+      message: getTranslation("taskExecutionRejected"),
       buttons: [
         {
-          id: 'cancel',
-          type: 'cancel' // или 'default', 'cancel', 'destructive'
-        }
-      ]
+          id: "cancel",
+          type: "cancel", // или 'default', 'cancel', 'destructive'
+        },
+      ],
     },
     function (buttonId) {
-      console.log('Нажата кнопка:', buttonId) // 'ok'
+      console.log("Нажата кнопка:", buttonId); // 'ok'
     }
-  )
+  );
   // Анимация исчезновения задания
-  const idx = tasks.value.findIndex(t => t.id === task.id)
-  if (idx !== -1) animateAndRemoveTask(idx)
-}
+  const idx = tasks.value.findIndex((t) => t.id === task.id);
+  animateAndRemoveTask(idx);
+};
 
 // Функция для плавного исчезновения задания
 const animateAndRemoveTask = (taskIndex) => {
-  console.log('[Tasks] Запуск анимации исчезновения для taskIndex:', taskIndex)
-  disappearingTasks.value.push(taskIndex)
+  console.log("[Tasks] Запуск анимации исчезновения для taskIndex:", taskIndex);
+  disappearingTasks.value.push(taskIndex);
   setTimeout(() => {
-    tasks.value.splice(taskIndex, 1)
+    tasks.value.splice(taskIndex, 1);
     // Скрыть оригинальную кнопку Traffy
     const originalButtons = document.querySelectorAll(
-      '.traffy-custom .traffy-taskElementButtonContOuter'
-    )
+      ".traffy-custom .traffy-taskElementButtonContOuter"
+    );
     if (originalButtons && originalButtons.length > taskIndex) {
-      originalButtons[taskIndex].style.display = 'none'
+      originalButtons[taskIndex].style.display = "none";
     }
     // Удалить из исчезающих
-    const idx = disappearingTasks.value.indexOf(taskIndex)
-    if (idx !== -1) disappearingTasks.value.splice(idx, 1)
-  }, 200)
-}
+    const idx = disappearingTasks.value.indexOf(taskIndex);
+    disappearingTasks.value.splice(idx, 1);
+  }, 200);
+};
 
 // Функция для клика на оригинальную кнопку Traffy по индексу
 const clickOriginalButton = (taskIndex) => {
   nextTick(() => {
     const originalButtons = document.querySelectorAll(
-      '.traffy-custom .traffy-taskElementButtonContOuter'
-    )
+      ".traffy-custom .traffy-taskElementButtonContOuter"
+    );
     if (originalButtons && originalButtons.length > taskIndex) {
-      originalButtons[taskIndex].click()
-      activeTaskIndex.value = taskIndex
+      originalButtons[taskIndex].click();
+      activeTaskIndex.value = taskIndex;
       // Устанавливаем обработчик возврата на страницу
       if (!visibilityHandler) {
         visibilityHandler = () => {
-          if (document.visibilityState === 'visible' && activeTaskIndex.value !== null) {
+          if (
+            document.visibilityState === "visible" &&
+            activeTaskIndex.value !== null
+          ) {
             // Клик "Проверить" (второй этап)
             nextTick(() => {
               const checkButtons = document.querySelectorAll(
-                '.traffy-custom .traffy-taskElementButtonContOuter'
-              )
-              console.log('[Tasks] Автоклик по кнопке проверки для индекса:', activeTaskIndex.value)
+                ".traffy-custom .traffy-taskElementButtonContOuter"
+              );
+              console.log(
+                "[Tasks] Автоклик по кнопке проверки для индекса:",
+                activeTaskIndex.value
+              );
               if (checkButtons && checkButtons.length > activeTaskIndex.value) {
-                checkButtons[activeTaskIndex.value].click()
+                checkButtons[activeTaskIndex.value].click();
               }
-              activeTaskIndex.value = null
-            })
+              activeTaskIndex.value = null;
+            });
           }
-        }
-        document.addEventListener('visibilitychange', visibilityHandler)
+        };
+        document.addEventListener("visibilitychange", visibilityHandler);
       }
       console.log(
         `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
-      )
+      );
     } else {
       console.warn(
         `[Tasks] Оригинальная кнопка для задания с индексом ${taskIndex} не найдена`
-      )
+      );
     }
-  })
-}
+  });
+};
 
 // Получение баланса звезд из заданий
 const fetchTasksBalance = async () => {
-  isLoadingBalance.value = true
+  isLoadingBalance.value = true;
   try {
     const payload = {
-      user_id: userStore.getUserId()
-    }
-    const result = await sendToBackend('/get_user_balance_stars', payload)
-    if (result.status === 'success') {
-      tasksBalance.value = result.data.balance || 0
+      user_id: userStore.getUserId(),
+    };
+    const result = await sendToBackend("/get_user_balance_stars", payload);
+    if (result.status === "success") {
+      tasksBalance.value = result.data.balance;
     }
   } catch (error) {
-    console.error('[Tasks] Failed to fetch tasks balance:', error)
+    console.error("[Tasks] Failed to fetch tasks balance:", error);
   } finally {
-    isLoadingBalance.value = false
+    isLoadingBalance.value = false;
   }
-}
+};
 
 // Открытие модального окна вывода с обновлением баланса
 const openWithdrawModal = async () => {
-  await fetchTasksBalance()
-  toggleModal('withdrawtasksstars')
-}
+  await fetchTasksBalance();
+  toggleModal("withdrawtasksstars");
+};
 
 // Инициализация Traffy
 const initTraffy = () => {
@@ -213,30 +229,30 @@ const initTraffy = () => {
       onTaskLoad,
       onTaskRender,
       onTaskReward,
-      onTaskReject
-    })
+      onTaskReject,
+    });
   } catch (error) {
-    console.error('[Tasks] Ошибка инициализации Traffy:', error)
-    loadingError.value = true
+    console.error("[Tasks] Ошибка инициализации Traffy:", error);
+    loadingError.value = true;
   }
-}
+};
 
 onMounted(async () => {
   try {
-    await fetchTasksBalance()
-    initTraffy()
+    await fetchTasksBalance();
+    initTraffy();
   } catch (error) {
-    console.error('[Tasks] Не удалось загрузить Traffy:', error)
+    console.error("[Tasks] Не удалось загрузить Traffy:", error);
   }
-})
+});
 
 // Очистка обработчика при размонтировании
 onUnmounted(() => {
   if (visibilityHandler) {
-    document.removeEventListener('visibilitychange', visibilityHandler)
-    visibilityHandler = null
+    document.removeEventListener("visibilitychange", visibilityHandler);
+    visibilityHandler = null;
   }
-})
+});
 </script>
 
 <template>
@@ -245,8 +261,7 @@ onUnmounted(() => {
     <div
       class="balance-section flex-row items-center jcsb bg-blue-900 rounded-12 p-16 text-16 gap-4"
     >
-      <div
-      class="flex-row items-center gap-4">
+      <div class="flex-row items-center gap-4">
         <p class="text-white">{{ getTranslation("TasksBalance") }}:</p>
         <p class="text-white font-600">
           {{ isLoadingBalance ? "..." : tasksBalance }}
@@ -265,18 +280,16 @@ onUnmounted(() => {
 
     <!-- Контейнер для Traffy -->
     <div class="traffy-custom" ref="traffyTasks"></div>
-    <div
-      v-if="tasks && tasks.length > 0"
-      class="tasks-list"
-    >
+    <div v-if="tasks && tasks.length > 0" class="tasks-list">
       <div
         v-for="(task, index) in tasks"
         :key="task.id"
         class="task-card bg-blue-900 rounded-12 items-center"
-        :class="{ 'disappearing': disappearingTasks.includes(index) }"
+        :class="{ disappearing: disappearingTasks.includes(index) }"
       >
         <p class="text-16 text-white">
-          {{ task.title || "Task title" }}{{ task.description ? ", " + task.description : "" }}
+          {{ task.title || "Task title"
+          }}{{ task.description ? ", " + task.description : "" }}
         </p>
         <div class="task-buttons">
           <div
@@ -311,7 +324,10 @@ onUnmounted(() => {
   display: grid;
   grid-template-areas: "A B" "C B";
   gap: 6px;
-  transition: transform 0.2s, opacity 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
+  margin-bottom: 12px;
 }
 .task-card.disappearing {
   transform: scale(0.8);
