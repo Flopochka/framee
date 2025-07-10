@@ -205,8 +205,9 @@ const fetchTasksBalance = async () => {
       user_id: userStore.getUserId(),
     };
     const result = await sendToBackend("/get_user_balance_stars", payload);
-    if (result.status === "success") {
+    if (result.status.code === 200) {
       tasksBalance.value = result.data.balance;
+      console.log("[Tasks] Баланс звезд:", tasksBalance.value);
     }
   } catch (error) {
     console.error("[Tasks] Failed to fetch tasks balance:", error);
