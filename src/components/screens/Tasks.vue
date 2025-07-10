@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted } from 'vue'
 import { useLanguageStore } from '../../stores/language.js'
 import { useUserStore } from '../../stores/user.js'
 import { useModalStore } from '../../stores/modal.js'
@@ -14,6 +14,9 @@ const tasks = ref([])
 const loadingError = ref(false)
 const tasksBalance = ref(0)
 const isLoadingBalance = ref(false)
+const activeTaskIndex = ref(null)
+const disappearingTasks = ref([])
+let visibilityHandler = null
 
 // Обработчики заданий
 const onTaskLoad = (loadedTasks) => {
@@ -64,6 +67,9 @@ const onTaskReward = async (task, signedToken) => {
           console.log('Нажата кнопка:', buttonId)
         }
       )
+      // Анимация исчезновения задания
+      const idx = tasks.value.findIndex(t => t.id === task.id)
+      if (idx !== -1) animateAndRemoveTask(idx)
     } else {
       throw new Error(backendResult.message || 'Ошибка верификации задания')
     }
@@ -104,18 +110,56 @@ const onTaskReject = (task) => {
       console.log('Нажата кнопка:', buttonId) // 'ok'
     }
   )
+  // Анимация исчезновения задания
+  const idx = tasks.value.findIndex(t => t.id === task.id)
+  if (idx !== -1) animateAndRemoveTask(idx)
+}
+
+// Функция для плавного исчезновения задания
+const animateAndRemoveTask = (taskIndex) => {
+  disappearingTasks.value.push(taskIndex)
+  setTimeout(() => {
+    tasks.value.splice(taskIndex, 1)
+    // Скрыть оригинальную кнопку Traffy
+    const originalButtons = document.querySelectorAll(
+      '.traffy-custom .traffy-taskElementButtonContOuter'
+    )
+    if (originalButtons && originalButtons.length > taskIndex) {
+      originalButtons[taskIndex].style.display = 'none'
+    }
+    // Удалить из исчезающих
+    const idx = disappearingTasks.value.indexOf(taskIndex)
+    if (idx !== -1) disappearingTasks.value.splice(idx, 1)
+  }, 200)
 }
 
 // Функция для клика на оригинальную кнопку Traffy по индексу
 const clickOriginalButton = (taskIndex) => {
   nextTick(() => {
-    // Находим все оригинальные кнопки Traffy
     const originalButtons = document.querySelectorAll(
       '.traffy-custom .traffy-taskElementButtonContOuter'
     )
-
     if (originalButtons && originalButtons.length > taskIndex) {
       originalButtons[taskIndex].click()
+      activeTaskIndex.value = taskIndex
+      // Устанавливаем обработчик возврата на страницу
+      if (!visibilityHandler) {
+        visibilityHandler = () => {
+          if (document.visibilityState === 'visible' && activeTaskIndex.value !== null) {
+            // Клик "Проверить" (второй этап)
+            nextTick(() => {
+              const checkButtons = document.querySelectorAll(
+                '.traffy-custom .traffy-taskElementButtonContOuter'
+              )
+              if (checkButtons && checkButtons.length > activeTaskIndex.value) {
+                checkButtons[activeTaskIndex.value].click()
+              }
+              activeTaskIndex.value = null
+            })
+          }
+        }
+        document.addEventListener('visibilitychange', visibilityHandler)
+      }
       console.log(
         `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
       )
@@ -175,6 +219,14 @@ onMounted(async () => {
     console.error('[Tasks] Не удалось загрузить Traffy:', error)
   }
 })
+
+// Очистка обработчика при размонтировании
+onUnmounted(() => {
+  if (visibilityHandler) {
+    document.removeEventListener('visibilitychange', visibilityHandler)
+    visibilityHandler = null
+  }
+})
 </script>
 
 <template>
@@ -205,26 +257,30 @@ onMounted(async () => {
     <div class="traffy-custom" ref="traffyTasks"></div>
     <div
       v-if="tasks && tasks.length > 0"
-      v-for="(task, index) in tasks"
-      :key="task.id"
-      class="task-card bg-blue-900 rounded-12 items-center"
+      class="tasks-list"
     >
-      <p class="text-16 text-white">
-        {{ task.title || "Task title"
-        }}{{ task.description ? ", " + task.description : "" }}
-      </p>
-      <div class="task-buttons">
-        <div
-          class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
-          @click="clickOriginalButton(index)"
-        >
-          {{ getTranslation("start") }}
+      <div
+        v-for="(task, index) in tasks"
+        :key="task.id"
+        class="task-card bg-blue-900 rounded-12 items-center"
+        :class="{ 'disappearing': disappearingTasks.includes(index) }"
+      >
+        <p class="text-16 text-white">
+          {{ task.title || "Task title" }}{{ task.description ? ", " + task.description : "" }}
+        </p>
+        <div class="task-buttons">
+          <div
+            class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
+            @click="clickOriginalButton(index)"
+          >
+            {{ getTranslation("start") }}
+          </div>
         </div>
+        <p class="text-14 text-white flex-row gap-2">
+          <img src="../../assets/img/Star.svg" alt="" class="img-16" />
+          {{ task.reward || 1 }}
+        </p>
       </div>
-      <p class="text-14 text-white flex-row gap-2">
-        <img src="../../assets/img/Star.svg" alt="" class="img-16" />
-        {{ task.reward || 1 }}
-      </p>
     </div>
     <template v-else>
       <p class="text-32 lh-120">{{ getTranslation("Notasksforyou") }}</p>
@@ -245,6 +301,11 @@ onMounted(async () => {
   display: grid;
   grid-template-areas: "A B" "C B";
   gap: 6px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.task-card.disappearing {
+  transform: scale(0.8);
+  opacity: 0;
 }
 
 .task-buttons {
