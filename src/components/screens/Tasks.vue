@@ -21,7 +21,16 @@ let visibilityHandler = null
 // Обработчики заданий
 const onTaskLoad = (loadedTasks) => {
   console.log('[Tasks] Задания загружены:', loadedTasks)
-  tasks.value = loadedTasks || []
+  // Убираем дубли по id
+  const uniqueTasks = []
+  const seenIds = new Set()
+  for (const t of loadedTasks || []) {
+    if (!seenIds.has(t.id)) {
+      uniqueTasks.push(t)
+      seenIds.add(t.id)
+    }
+  }
+  tasks.value = uniqueTasks
 }
 
 const onTaskRender = (
@@ -42,16 +51,14 @@ const onTaskReward = async (task, signedToken) => {
       user_id: userStore.getUserId(),
       signed_token: signedToken
     }
-
     const backendResult = await sendToBackend(
       '/verify_traffy_token',
       backendPayload
     )
-
-    if (backendResult.status === 'success') {
-      // Обновляем баланс после успешного выполнения задания
+    console.log('[fetch] Response from /verify_traffy_token : ', backendResult)
+    // Исправленная проверка успешности
+    if (backendResult.data && backendResult.data.success) {
       await fetchTasksBalance()
-
       showPopup(
         {
           title: getTranslation('taskCompleted'),
@@ -69,9 +76,10 @@ const onTaskReward = async (task, signedToken) => {
       )
       // Анимация исчезновения задания
       const idx = tasks.value.findIndex(t => t.id === task.id)
+      console.log('[Tasks] Анимация исчезновения задания idx:', idx)
       if (idx !== -1) animateAndRemoveTask(idx)
     } else {
-      throw new Error(backendResult.message || 'Ошибка верификации задания')
+      throw new Error(backendResult.data?.message || 'Ошибка верификации задания')
     }
   } catch (error) {
     console.error('[Tasks] Ошибка при верификации задания:', error)
@@ -117,6 +125,7 @@ const onTaskReject = (task) => {
 
 // Функция для плавного исчезновения задания
 const animateAndRemoveTask = (taskIndex) => {
+  console.log('[Tasks] Запуск анимации исчезновения для taskIndex:', taskIndex)
   disappearingTasks.value.push(taskIndex)
   setTimeout(() => {
     tasks.value.splice(taskIndex, 1)
@@ -151,6 +160,7 @@ const clickOriginalButton = (taskIndex) => {
               const checkButtons = document.querySelectorAll(
                 '.traffy-custom .traffy-taskElementButtonContOuter'
               )
+              console.log('[Tasks] Автоклик по кнопке проверки для индекса:', activeTaskIndex.value)
               if (checkButtons && checkButtons.length > activeTaskIndex.value) {
                 checkButtons[activeTaskIndex.value].click()
               }
