@@ -147,5 +147,6 @@
   "taskRejected": "Tarea rechazada",
   "taskExecutionRejected": "Ejecución de tarea rechazada, inténtalo de nuevo",
   "TasksBalance": "Saldo de tareas",
-  "Availablebalance": "Saldo disponible"
+  "Availablebalance": "Saldo disponible",
+  "loadingTasks": "Cargando tareas..."
 }

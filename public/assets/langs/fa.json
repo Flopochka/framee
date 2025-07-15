@@ -147,5 +147,6 @@
   "taskRejected": "وظیفه رد شد",
   "taskExecutionRejected": "اجرای وظیفه رد شد، لطفاً دوباره تلاش کنید",
   "TasksBalance": "موجودی وظایف",
-  "Availablebalance": "موجودی موجود"
+  "Availablebalance": "موجودی موجود",
+  "loadingTasks": "در حال بارگذاری وظایف..."
 }

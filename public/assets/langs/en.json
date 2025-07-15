@@ -148,5 +148,6 @@
   "taskExecutionRejected": "Task execution rejected, please try again",
   "TasksBalance": "Tasks Balance",
   "Availablebalance": "Available balance",
+  "loadingTasks": "Loading tasks...",
   "Min50": "Minimum 50"
 }

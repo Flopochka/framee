@@ -147,5 +147,6 @@
   "taskRejected": "تم رفض المهمة",
   "taskExecutionRejected": "تم رفض تنفيذ المهمة، يرجى المحاولة مرة أخرى",
   "TasksBalance": "رصيد المهام",
-  "Availablebalance": "الرصيد المتاح"
+  "Availablebalance": "الرصيد المتاح",
+  "loadingTasks": "...جاري تحميل المهام"
 }

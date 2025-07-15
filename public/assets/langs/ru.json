@@ -147,5 +147,6 @@
   "taskRejected": "Задание отклонено",
   "taskExecutionRejected": "Выполнение задания отклонено, попробуйте снова",
   "TasksBalance": "Баланс заданий",
-  "Availablebalance": "Доступный баланс"
+  "Availablebalance": "Доступный баланс",
+  "loadingTasks": "Загрузка заданий..."
 }

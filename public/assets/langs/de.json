@@ -147,5 +147,6 @@
   "taskRejected": "Aufgabe abgelehnt",
   "taskExecutionRejected": "Aufgabenausführung abgelehnt, versuchen Sie es erneut",
   "TasksBalance": "Aufgaben-Guthaben",
-  "Availablebalance": "Verfügbares Guthaben"
+  "Availablebalance": "Verfügbares Guthaben",
+  "loadingTasks": "Aufgaben werden geladen..."
 }

@@ -22,18 +22,18 @@ const disappearingTaskElements = {} // taskIndex: DOM-элемент
 
 // Обработчики заданий
 const onTaskLoad = (loadedTasks) => {
-  console.log("[Tasks] Задания загружены:", loadedTasks);
+  console.log('[Tasks] Задания загружены:', loadedTasks)
   // Убираем дубли по id
-  const uniqueTasks = [];
-  const seenIds = new Set();
+  const uniqueTasks = []
+  const seenIds = new Set()
   for (const t of loadedTasks || []) {
     if (!seenIds.has(t.id)) {
-      uniqueTasks.push(t);
-      seenIds.add(t.id);
+      uniqueTasks.push(t)
+      seenIds.add(t.id)
     }
   }
-  tasks.value = uniqueTasks;
-};
+  tasks.value = uniqueTasks
+}
 
 const onTaskRender = (
   changeReward,
@@ -41,17 +41,17 @@ const onTaskRender = (
   changeDescription,
   changeButtonCheckText
 ) => {
-  changeReward("10");
-  changeCardTitle(getTranslation("subscribe:"));
-  changeButtonCheckText(getTranslation("check"));
-};
+  changeReward('10')
+  changeCardTitle(getTranslation('subscribe:'))
+  changeButtonCheckText(getTranslation('check'))
+}
 
 const onTaskReward = async (task, signedToken) => {
   console.log('[Tasks] Задание выполнено:', task)
   try {
     const backendPayload = {
       user_id: userStore.getUserId(),
-      signed_token: signedToken,
+      signed_token: signedToken
     }
     const backendResult = await sendToBackend(
       '/verify_traffy_token',
@@ -64,7 +64,7 @@ const onTaskReward = async (task, signedToken) => {
         name: 'stars',
         title: getTranslation('taskCompleted'),
         message: getTranslation('rewardWillBeCreditedWithin10Minutes'),
-        closeText: getTranslation('Close'),
+        closeText: getTranslation('Close')
       }
       toggleModal('stars')
       // Анимация исчезновения задания
@@ -84,9 +84,9 @@ const onTaskReward = async (task, signedToken) => {
     animateAndRemoveTask(idx)
     modalStore.modal = {
       name: 'error',
-      title: getTranslation('error'),
+      title: getTranslation('failedToVerifyTask'),
       message: getTranslation('failedToVerifyTask'),
-      closeText: getTranslation('Close'),
+      closeText: getTranslation('Close')
     }
     toggleModal('error')
   }
@@ -98,7 +98,7 @@ const onTaskReject = (task) => {
     name: 'error',
     title: getTranslation('taskRejected'),
     message: getTranslation('taskExecutionRejected'),
-    closeText: getTranslation('Close'),
+    closeText: getTranslation('Close')
   }
   toggleModal('error')
   // Анимация исчезновения задания
@@ -166,6 +166,23 @@ const clickOriginalButton = (taskIndex) => {
         }
         document.addEventListener('visibilitychange', visibilityHandler)
       }
+      // --- ДОБАВЛЯЕМ ТАЙМЕР НА 7 СЕКУНД ---
+      setTimeout(() => {
+        if (activeTaskIndex.value !== null) {
+          nextTick(() => {
+            const checkButtons = document.querySelectorAll(
+              '.traffy-custom .traffy-taskElementButtonContOuter'
+            )
+            console.log('[Tasks] Таймер автоклика по кнопке проверки для индекса:', activeTaskIndex.value)
+            if (checkButtons && checkButtons.length > activeTaskIndex.value) {
+              checkButtons[activeTaskIndex.value].click()
+              disappearingTaskElements[activeTaskIndex.value] = checkButtons[activeTaskIndex.value]
+            }
+            activeTaskIndex.value = null
+          })
+        }
+      }, 7000)
+      // --- КОНЕЦ ДОБАВЛЕНИЯ ТАЙМЕРА ---
       console.log(
         `[Tasks] Клик на оригинальную кнопку для задания с индексом ${taskIndex}`
       )
@@ -179,28 +196,28 @@ const clickOriginalButton = (taskIndex) => {
 
 // Получение баланса звезд из заданий
 const fetchTasksBalance = async () => {
-  isLoadingBalance.value = true;
+  isLoadingBalance.value = true
   try {
     const payload = {
-      user_id: userStore.getUserId(),
-    };
-    const result = await sendToBackend("/get_user_balance_stars", payload);
+      user_id: userStore.getUserId()
+    }
+    const result = await sendToBackend('/get_user_balance_stars', payload)
     if (result.status.code === 200) {
-      tasksBalance.value = result.data.balance;
-      console.log("[Tasks] Баланс звезд:", tasksBalance.value);
+      tasksBalance.value = result.data.balance
+      console.log('[Tasks] Баланс звезд:', tasksBalance.value)
     }
   } catch (error) {
-    console.error("[Tasks] Failed to fetch tasks balance:", error);
+    console.error('[Tasks] Failed to fetch tasks balance:', error)
   } finally {
-    isLoadingBalance.value = false;
+    isLoadingBalance.value = false
   }
-};
+}
 
 // Открытие модального окна вывода с обновлением баланса
 const openWithdrawModal = async () => {
-  await fetchTasksBalance();
-  toggleModal("withdrawtasksstars");
-};
+  await fetchTasksBalance()
+  toggleModal('withdrawtasksstars')
+}
 
 // Инициализация Traffy
 const initTraffy = () => {
@@ -210,30 +227,30 @@ const initTraffy = () => {
       onTaskLoad,
       onTaskRender,
       onTaskReward,
-      onTaskReject,
-    });
+      onTaskReject
+    })
   } catch (error) {
-    console.error("[Tasks] Ошибка инициализации Traffy:", error);
-    loadingError.value = true;
+    console.error('[Tasks] Ошибка инициализации Traffy:', error)
+    loadingError.value = true
   }
-};
+}
 
 onMounted(async () => {
   try {
-    await fetchTasksBalance();
-    initTraffy();
+    await fetchTasksBalance()
+    initTraffy()
   } catch (error) {
-    console.error("[Tasks] Не удалось загрузить Traffy:", error);
+    console.error('[Tasks] Не удалось загрузить Traffy:', error)
   }
-});
+})
 
 // Очистка обработчика при размонтировании
 onUnmounted(() => {
   if (visibilityHandler) {
-    document.removeEventListener("visibilitychange", visibilityHandler);
-    visibilityHandler = null;
+    document.removeEventListener('visibilitychange', visibilityHandler)
+    visibilityHandler = null
   }
-});
+})
 </script>
 
 <template>
@@ -261,7 +278,10 @@ onUnmounted(() => {
 
     <!-- Контейнер для Traffy -->
     <div class="traffy-custom" ref="traffyTasks"></div>
-    <div v-if="tasks && tasks.length > 0" class="tasks-list">
+    <div v-if="isLoadingBalance" class="tasks-loading">
+      <p class="text-20 text-white">{{ getTranslation('loadingTasks') }}</p>
+    </div>
+    <div v-else-if="tasks && tasks.length > 0" class="tasks-list">
       <div
         v-for="(task, index) in tasks"
         :key="task.id"
@@ -338,3 +358,4 @@ onUnmounted(() => {
   background: linear-gradient(129.45deg, #4da9ec 9.38%, #0f67be 117.65%);
 }
 </style>
+
