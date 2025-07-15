@@ -82,10 +82,12 @@ async function initializeApp() {
 
       // Навигация к нужному экрану
       const screenStore = useScreenStore();
+      console.log("[main.js] переход к экрану", path)
       screenStore.syncWithRoute(path);
 
       // Открытие модального окна, если указано
       if (modalName) {
+        console.log("[main.js] открытие модального окна", modalName)
         const modalStore = useModalStore();
         modalStore.toggleModal(modalName);
       }
