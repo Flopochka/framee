@@ -149,5 +149,11 @@
   "TasksBalance": "Tasks Balance",
   "Availablebalance": "Available balance",
   "loadingTasks": "Loading tasks...",
-  "Min50": "Minimum 50"
+  "Min50": "Minimum 50",
+  "reportBugTitle": "Report a bug",
+  "reportBugPlaceholder": "Describe the problem or bug...",
+  "send": "Send",
+  "sending": "Sending...",
+  "reportBugSuccess": "Thank you! Your message has been sent.",
+  "reportBugError": "Error sending. Please try again later."
 }

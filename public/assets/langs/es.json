@@ -148,5 +148,11 @@
   "taskExecutionRejected": "Ejecución de tarea rechazada, inténtalo de nuevo",
   "TasksBalance": "Saldo de tareas",
   "Availablebalance": "Saldo disponible",
-  "loadingTasks": "Cargando tareas..."
+  "loadingTasks": "Cargando tareas...",
+  "reportBugTitle": "Reportar un error",
+  "reportBugPlaceholder": "Describe el problema o error...",
+  "send": "Enviar",
+  "sending": "Enviando...",
+  "reportBugSuccess": "¡Gracias! Tu mensaje ha sido enviado.",
+  "reportBugError": "Error al enviar. Por favor, inténtalo de nuevo más tarde."
 }

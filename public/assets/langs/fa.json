@@ -148,5 +148,11 @@
   "taskExecutionRejected": "اجرای وظیفه رد شد، لطفاً دوباره تلاش کنید",
   "TasksBalance": "موجودی وظایف",
   "Availablebalance": "موجودی موجود",
-  "loadingTasks": "در حال بارگذاری وظایف..."
+  "loadingTasks": "در حال بارگذاری وظایف...",
+  "reportBugTitle": "گزارش باگ",
+  "reportBugPlaceholder": "مشکل یا باگ را توضیح دهید...",
+  "send": "ارسال",
+  "sending": "در حال ارسال...",
+  "reportBugSuccess": "متشکرم! پیام شما ارسال شد.",
+  "reportBugError": "خطا در ارسال. لطفاً بعداً دوباره تلاش کنید."
 }

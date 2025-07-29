@@ -148,5 +148,11 @@
   "taskExecutionRejected": "Выполнение задания отклонено, попробуйте снова",
   "TasksBalance": "Баланс заданий",
   "Availablebalance": "Доступный баланс",
-  "loadingTasks": "Загрузка заданий..."
+  "loadingTasks": "Загрузка заданий...",
+  "reportBugTitle": "Сообщить об ошибке",
+  "reportBugPlaceholder": "Опишите проблему или баг...",
+  "send": "Отправить",
+  "sending": "Отправка...",
+  "reportBugSuccess": "Спасибо! Ваше сообщение отправлено.",
+  "reportBugError": "Ошибка при отправке. Попробуйте позже."
 }

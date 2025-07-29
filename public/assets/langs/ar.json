@@ -148,5 +148,11 @@
   "taskExecutionRejected": "تم رفض تنفيذ المهمة، يرجى المحاولة مرة أخرى",
   "TasksBalance": "رصيد المهام",
   "Availablebalance": "الرصيد المتاح",
-  "loadingTasks": "...جاري تحميل المهام"
+  "loadingTasks": "...جاري تحميل المهام",
+  "reportBugTitle": "الإبلاغ عن خطأ",
+  "reportBugPlaceholder": "صف المشكلة أو الخطأ...",
+  "send": "إرسال",
+  "sending": "جارٍ الإرسال...",
+  "reportBugSuccess": "شكرًا لك! تم إرسال رسالتك.",
+  "reportBugError": "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى لاحقًا."
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import querystring from "querystring";
 import { isValid } from "@telegram-apps/init-data-node";
 import { Cell, beginCell } from "ton-core";
+import nodemailer from "nodemailer";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const BASE_BACKEND_URL = "http://77.222.47.219:8011";
@@ -111,6 +112,39 @@ export async function handler(event) {
     };
   }
 
+  // Отправка отчёта об ошибке на почту (теперь просто лог в консоль)
+  if (target === "/report_bug") {
+    const { message, logs, user_id } = payload || {};
+    if (!message) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "No message provided" }),
+      };
+    }
+    try {
+      console.log(
+        "BUG REPORT\nUser ID:",
+        user_id,
+        "\nMessage:",
+        message,
+        "\n---\nLogs:\n",
+        logs
+      );
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true }),
+      };
+    } catch (err) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          error: "Failed to log bug report",
+          details: err.message,
+        }),
+      };
+    }
+  }
+
   // Формирование URL для бэкенда
   const backendUrl = `${BASE_BACKEND_URL}${target}`;
   console.log("Backend URL:", backendUrl);
@@ -122,7 +156,7 @@ export async function handler(event) {
       const cell = beginCell().storeUint(0, 32).storeStringTail(text).endCell();
       const boc = await cell.toBoc();
       const base64boc = Buffer.from(boc).toString("base64");
-      
+
       return {
         statusCode: 200,
         body: JSON.stringify({ base64boc }),

@@ -19,6 +19,7 @@ import WalletNCPopup from './popups/WalletNCPopup.vue'
 import WalletPopup from './popups/WalletPopup.vue'
 import ErrorPopup from './popups/ErrorPopup.vue'
 import CopiedPopup from './popups/CopiedPopup.vue'
+import ReportBugModal from './modals/ReportBugModal.vue'
 
 const modalStore = useModalStore()
 const { toggleModal, getActiveModal } = modalStore
@@ -98,6 +99,13 @@ const modals = [
     type: 'modal',
     class: 'withdrawtasksstars madal-screen',
     hasBalance: true // Флаг для модалок с балансом
+  },
+  {
+    id: 'reportbug',
+    component: ReportBugModal,
+    type: 'modal',
+    class: 'report-bug-modal madal-screen',
+    title: 'reportBugTitle'
   },
   {
     id: 'popupstars',

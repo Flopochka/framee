@@ -148,5 +148,11 @@
   "taskExecutionRejected": "Aufgabenausführung abgelehnt, versuchen Sie es erneut",
   "TasksBalance": "Aufgaben-Guthaben",
   "Availablebalance": "Verfügbares Guthaben",
-  "loadingTasks": "Aufgaben werden geladen..."
+  "loadingTasks": "Aufgaben werden geladen...",
+  "reportBugTitle": "Fehler melden",
+  "reportBugPlaceholder": "Beschreiben Sie das Problem oder den Fehler...",
+  "send": "Senden",
+  "sending": "Senden...",
+  "reportBugSuccess": "Danke! Ihre Nachricht wurde gesendet.",
+  "reportBugError": "Fehler beim Senden. Bitte versuchen Sie es später erneut."
 }
