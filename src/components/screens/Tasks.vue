@@ -322,8 +322,14 @@ onUnmounted(() => {
   display: none;
 }
 
+.traffy-custom *{
+  box-sizing: content-box;
+}
+
 .traffy-custom.dev-visible {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 /* Стили для вашего компонента */
 .task-card {

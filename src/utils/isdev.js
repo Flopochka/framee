@@ -11,6 +11,11 @@ const DEVELOPER_IDS = [227363776, 1341978600];
  */
 export function isDev() {
   try {
+    // Проверяем режим разработки
+    if (import.meta.env.DEV) {
+      return true;
+    }
+
     // Получаем пользователя из Telegram WebApp
     const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
 
