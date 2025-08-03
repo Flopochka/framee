@@ -4,6 +4,7 @@ import { useLanguageStore } from '../../stores/language.js'
 import { useUserStore } from '../../stores/user.js'
 import { useModalStore } from '../../stores/modal.js'
 import { sendToBackend } from '../../modules/fetch.js'
+import { isDev } from '../../utils/isdev.js'
 // Для передачи данных в попап используем modalStore
 const modalStore = useModalStore()
 
@@ -238,6 +239,7 @@ const initTraffy = () => {
 onMounted(async () => {
   try {
     await fetchTasksBalance()
+    // Инициализируем Traffy всегда, но показываем только разработчикам
     initTraffy()
   } catch (error) {
     console.error('[Tasks] Не удалось загрузить Traffy:', error)
@@ -276,8 +278,8 @@ onUnmounted(() => {
 
     <p class="text-20 text-white">{{ getTranslation("tasks") }}</p>
 
-    <!-- Контейнер для Traffy -->
-    <div class="traffy-custom" ref="traffyTasks"></div>
+    <!-- Контейнер для Traffy (скрыт по умолчанию, видим для разработчиков) -->
+    <div class="traffy-custom" ref="traffyTasks" :class="{ 'dev-visible': isDev() }"></div>
     <div v-if="isLoadingBalance" class="tasks-loading">
       <p class="text-20 text-white">{{ getTranslation('loadingTasks') }}</p>
     </div>
@@ -318,6 +320,10 @@ onUnmounted(() => {
 <style scoped>
 .traffy-custom {
   display: none;
+}
+
+.traffy-custom.dev-visible {
+  display: block;
 }
 /* Стили для вашего компонента */
 .task-card {

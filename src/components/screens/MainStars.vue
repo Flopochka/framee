@@ -444,9 +444,13 @@ watch(targetUserName, (newValue, oldValue) => {
 const updatePremiumBoxHeight = () => {
   if (premiumBox.value) {
     premiumBoxHeight.value = premiumBox.value.offsetHeight
+  } else {
+    premiumBoxHeight.value = 200
   }
   if (starBox.value) {
     starBoxHeight.value = starBox.value.offsetHeight
+  } else {
+    starBoxHeight.value = 200
   }
 }
 
