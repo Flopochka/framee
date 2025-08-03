@@ -295,6 +295,7 @@ onUnmounted(() => {
           }}{{ task.description ? ", " + task.description : "" }}
         </p>
         <div class="task-buttons">
+          <input type="text" v-if="task.target === 'twitter'" class="task-input" :placeholder="getTranslation('enterXUsername')">
           <div
             class="task-btn rounded-8 lh-22 letter-spacing-04 text-white cupo usen"
             @click="clickOriginalButton(index)"
@@ -350,9 +351,27 @@ onUnmounted(() => {
 .task-buttons {
   grid-area: B;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 18px;
   justify-self: end;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+}
+
+.task-input{
+  background: none;
+  border: none;
+  border-bottom: 1px solid white;
+  color: white;
+  padding: 0;
+  line-height: 1;
+}
+
+.task-input::placeholder{
+  color: white;
+}
+
+.task-input:focus{
+  outline: none;
 }
 
 .task-btn {

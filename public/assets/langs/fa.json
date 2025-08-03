@@ -154,5 +154,6 @@
   "send": "ارسال",
   "sending": "در حال ارسال...",
   "reportBugSuccess": "متشکرم! پیام شما ارسال شد.",
-  "reportBugError": "خطا در ارسال. لطفاً بعداً دوباره تلاش کنید."
+  "reportBugError": "خطا در ارسال. لطفاً بعداً دوباره تلاش کنید.",
+  "enterXUsername": "X @username را وارد کنید"
 }

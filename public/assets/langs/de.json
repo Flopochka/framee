@@ -154,5 +154,6 @@
   "send": "Senden",
   "sending": "Senden...",
   "reportBugSuccess": "Danke! Ihre Nachricht wurde gesendet.",
-  "reportBugError": "Fehler beim Senden. Bitte versuchen Sie es später erneut."
+  "reportBugError": "Fehler beim Senden. Bitte versuchen Sie es später erneut.",
+  "enterXUsername": "X @username eingeben"
 }

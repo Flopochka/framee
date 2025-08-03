@@ -154,5 +154,6 @@
   "send": "Enviar",
   "sending": "Enviando...",
   "reportBugSuccess": "¡Gracias! Tu mensaje ha sido enviado.",
-  "reportBugError": "Error al enviar. Por favor, inténtalo de nuevo más tarde."
+  "reportBugError": "Error al enviar. Por favor, inténtalo de nuevo más tarde.",
+  "enterXUsername": "Ingresa X @username"
 }
