@@ -1,43 +1,69 @@
 export function getImageSrc(base64) {
-  if (!base64 || typeof base64 !== 'string') {
-    console.error('[base64img] Base64 строка не передана или не является строкой')
-    return ''
+  if (!base64 || typeof base64 !== "string") {
+    console.error(
+      "[base64img] Base64 строка не передана или не является строкой"
+    );
+    return "";
+  }
+
+  // Проверяем, является ли строка путем к файлу (начинается с / или содержит расширения)
+  if (
+    base64.startsWith("/") ||
+    base64.includes(".png") ||
+    base64.includes(".jpg") ||
+    base64.includes(".svg")
+  ) {
+    console.warn(
+      "[base64img] Передан путь к файлу вместо base64 строки:",
+      base64
+    );
+    return base64; // Возвращаем как есть, если это путь к файлу
   }
 
   // Удалить префикс data:image/...;base64, если он есть
-  let cleaned = base64.replace(/^data:image\/(png|svg\+xml);base64,/, '').trim()
+  let cleaned = base64
+    .replace(/^data:image\/(png|svg\+xml);base64,/, "")
+    .trim();
 
   // Попробовать декодировать URL-кодированную строку
   try {
-    cleaned = decodeURIComponent(cleaned)
+    cleaned = decodeURIComponent(cleaned);
   } catch (e) {
-    console.warn('[base64img] Не удалось декодировать URL-кодированную строку:', e)
+    console.warn(
+      "[base64img] Не удалось декодировать URL-кодированную строку:",
+      e
+    );
   }
 
   // Удалить пробелы и лишние = в конце
-  cleaned = cleaned.replace(/\s+/g, '').replace(/=+$/, '')
+  cleaned = cleaned.replace(/\s+/g, "").replace(/=+$/, "");
 
   // Проверка на валидные base64-символы
   if (!/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
-    console.error('[base64img] Строка содержит недопустимые символы для base64:', cleaned)
-    return ''
+    console.error(
+      "[base64img] Строка содержит недопустимые символы для base64:",
+      cleaned
+    );
+    return "";
   }
 
   // Проверка длины (должна быть кратна 4)
   if (cleaned.length % 4 !== 0) {
-    console.log('[base64img] Некорректная длина base64-строки, добавляем padding')
-    cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), '=')
+    console.log(
+      "[base64img] Некорректная длина base64-строки, добавляем padding"
+    );
+    cleaned = cleaned.padEnd(cleaned.length + (4 - (cleaned.length % 4)), "=");
   }
 
   // Попробуем декодировать
   try {
-    atob(cleaned)
+    atob(cleaned);
   } catch (e) {
-    console.error('[base64img] Некорректная base64 строка:', e)
-    return ''
+    console.error("[base64img] Некорректная base64 строка:", e);
+    return "";
   }
 
   // Определяем тип: SVG или PNG
-  const mime = cleaned.startsWith('PHN2') ? 'image/svg+xml' : 'image/png'
-  return `data:${mime};base64,${cleaned}`
+  const mime = cleaned.startsWith("PHN2") ? "image/svg+xml" : "image/png";
+  return `data:${mime};base64,${cleaned}`;
 }

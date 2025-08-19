@@ -132,11 +132,9 @@ onMounted(() => {
           <img
             style="grid-area: A"
             :src="
-              getImageSrc(
-                useUserStore().getUserPhoto()
-                  ? useUserStore().getUserPhoto()
-                  : refPhoto
-              )
+              useUserStore().getUserPhoto() && useUserStore().getUserPhoto().startsWith('data:')
+                ? getImageSrc(useUserStore().getUserPhoto())
+                : useUserStore().getUserPhoto() || refPhoto
             "
             alt=""
             class="img-44 rounded-22"
@@ -151,9 +149,9 @@ onMounted(() => {
           >
             <img
               :src="
-                referal.photo
+                referal.photo && referal.photo.startsWith('data:')
                   ? getImageSrc(referal.photo)
-                  : refPhoto
+                  : referal.photo || refPhoto
               "
               alt=""
               class="img-44 rounded-20"
