@@ -54,10 +54,10 @@ async function sendReport() {
   error.value = false
   success.value = false
   try {
-    await sendToBackend('/report_bug', {
-      user_id: useUserStore().getUserId(),
+    await sendToBackend('/log', {
+      user: useUserStore().getUserId(),
       message: message.value,
-      logs: logs.value.join('\n')
+      log_text: logs.value.join('\n')
     })
     success.value = true
     message.value = ''
