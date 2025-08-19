@@ -21,48 +21,98 @@ const message = ref('')
 const loading = ref(false)
 const success = ref(false)
 const error = ref(false)
-const title = 'Сообщить об ошибке'
 const logs = ref([])
 const originalConsole = {}
 
+// Простое логирование без агрессивного сбора данных
 function captureConsole() {
-  ['log', 'error', 'warn', 'info'].forEach(type => {
-    originalConsole[type] = console[type]
-    console[type] = function (...args) {
-      logs.value.push(`[${type}] ${args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ')}`)
-      originalConsole[type].apply(console, args)
-    }
-  })
+  try {
+    ['log', 'error', 'warn', 'info'].forEach(type => {
+      originalConsole[type] = console[type]
+      console[type] = function (...args) {
+        // Логируем только базовые сообщения
+        const logMessage = `[${type}] ${args.map(a => {
+          if (typeof a === 'object') {
+            // Ограничиваем размер объектов для безопасности
+            try {
+              const str = JSON.stringify(a)
+              return str.length > 200 ? `${str.substring(0, 200)}...` : str
+            } catch {
+              return '[Object]'
+            }
+          }
+          return String(a)
+        }).join(' ')}`
+
+        logs.value.push(logMessage)
+
+        // Ограничиваем количество логов
+        if (logs.value.length > 100) {
+          logs.value = logs.value.slice(-100)
+        }
+
+        // Вызываем оригинальный метод
+        originalConsole[type].apply(console, args)
+      }
+    })
+  } catch (e) {
+    console.warn('Console capture failed:', e.message)
+  }
 }
 
 function restoreConsole() {
-  ['log', 'error', 'warn', 'info'].forEach(type => {
-    if (originalConsole[type]) console[type] = originalConsole[type]
-  })
+  try {
+    ['log', 'error', 'warn', 'info'].forEach(type => {
+      if (originalConsole[type]) {
+        console[type] = originalConsole[type]
+      }
+    })
+  } catch (e) {
+    console.warn('Console restore failed:', e.message)
+  }
 }
 
 onMounted(() => {
+  // Добавляем базовую информацию о системе
+  logs.value.push(`[system] User Agent: ${navigator.userAgent}`)
+  logs.value.push(`[system] Platform: ${navigator.platform}`)
+  logs.value.push(`[system] Time: ${new Date().toISOString()}`)
+
+  // Проверяем Telegram WebView
+  if (window.Telegram && window.Telegram.WebView) {
+    logs.value.push('[telegram] WebView detected')
+  } else {
+    logs.value.push('[telegram] WebView not detected')
+  }
+
   captureConsole()
 })
+
 onUnmounted(() => {
   restoreConsole()
 })
 
 async function sendReport() {
   if (!message.value.trim()) return
+
   loading.value = true
   error.value = false
   success.value = false
+
   try {
     await sendToBackend('/log', {
       user: useUserStore().getUserId(),
       message: message.value,
       log_text: logs.value.join('\n')
     })
+
     success.value = true
     message.value = ''
+    // Очищаем логи после успешной отправки
+    logs.value = []
   } catch (e) {
     error.value = true
+    console.error('Failed to send report:', e)
   } finally {
     loading.value = false
   }

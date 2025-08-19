@@ -56,10 +56,27 @@ function verifyTelegramInitData(initData) {
 }
 
 export async function handler(event) {
+  // Добавляем CORS заголовки для всех ответов
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+
+  // Обработка preflight OPTIONS запроса
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: "",
+    };
+  }
+
   if (event.httpMethod !== "POST") {
     console.log("Invalid method:", event.httpMethod);
     return {
       statusCode: 405,
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Method Not Allowed",
         method: event.httpMethod,
@@ -74,6 +91,7 @@ export async function handler(event) {
     console.log("Failed to parse body:", error.message);
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Invalid JSON body",
         details: error.message,
@@ -89,6 +107,7 @@ export async function handler(event) {
     if (!initData || !verifyTelegramInitData(initData)) {
       return {
         statusCode: 403,
+        headers: corsHeaders,
         body: JSON.stringify({
           error: "Invalid Telegram signature or data",
           initDataProvided: !!initData,
@@ -104,6 +123,7 @@ export async function handler(event) {
     console.log("Invalid target:", target);
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Invalid or missing target",
         targetProvided: !!target,
@@ -113,11 +133,52 @@ export async function handler(event) {
   }
 
   // Отправка отчёта об ошибке на почту (теперь просто лог в консоль)
+  if (target === "/log") {
+    const { message, log_text, user } = payload || {};
+    if (!message) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: "No message provided" }),
+      };
+    }
+    try {
+      console.log(
+        "BUG REPORT\nUser ID:",
+        user,
+        "\nMessage:",
+        message,
+        "\n---\nLogs:\n",
+        log_text
+      );
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          status: { code: 200, message: "Запрос выполнен успешно" },
+          data: { message: "Лог успешно записан" },
+          output: { type: "", msg: "" },
+        }),
+      };
+    } catch (err) {
+      return {
+        statusCode: 500,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "Failed to log bug report",
+          details: err.message,
+        }),
+      };
+    }
+  }
+
+  // Отправка отчёта об ошибке на почту (теперь просто лог в консоль)
   if (target === "/report_bug") {
     const { message, logs, user_id } = payload || {};
     if (!message) {
       return {
         statusCode: 400,
+        headers: corsHeaders,
         body: JSON.stringify({ error: "No message provided" }),
       };
     }
@@ -132,11 +193,17 @@ export async function handler(event) {
       );
       return {
         statusCode: 200,
-        body: JSON.stringify({ success: true }),
+        headers: corsHeaders,
+        body: JSON.stringify({
+          status: { code: 200, message: "Запрос выполнен успешно" },
+          data: { message: "Лог успешно записан" },
+          output: { type: "", msg: "" },
+        }),
       };
     } catch (err) {
       return {
         statusCode: 500,
+        headers: corsHeaders,
         body: JSON.stringify({
           error: "Failed to log bug report",
           details: err.message,
@@ -159,6 +226,7 @@ export async function handler(event) {
 
       return {
         statusCode: 200,
+        headers: corsHeaders,
         body: JSON.stringify({ base64boc }),
       };
     }
@@ -189,6 +257,7 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify(response.data),
     };
   } catch (error) {
@@ -201,6 +270,7 @@ export async function handler(event) {
     });
     return {
       statusCode: error.response?.status || 500,
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Failed to connect to backend",
         details: error.message,
