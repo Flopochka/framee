@@ -56,10 +56,27 @@ function verifyTelegramInitData(initData) {
 }
 
 export async function handler(event) {
+  // Обработка CORS preflight запроса
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Max-Age": "86400",
+      },
+      body: "",
+    };
+  }
+
   if (event.httpMethod !== "POST") {
     console.log("Invalid method:", event.httpMethod);
     return {
       statusCode: 405,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({
         error: "Method Not Allowed",
         method: event.httpMethod,
@@ -89,6 +106,9 @@ export async function handler(event) {
     if (!initData || !verifyTelegramInitData(initData)) {
       return {
         statusCode: 403,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         body: JSON.stringify({
           error: "Invalid Telegram signature or data",
           initDataProvided: !!initData,
@@ -104,6 +124,9 @@ export async function handler(event) {
     console.log("Invalid target:", target);
     return {
       statusCode: 400,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({
         error: "Invalid or missing target",
         targetProvided: !!target,
@@ -118,6 +141,9 @@ export async function handler(event) {
     if (!message) {
       return {
         statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         body: JSON.stringify({ error: "No message provided" }),
       };
     }
@@ -132,11 +158,21 @@ export async function handler(event) {
       );
       return {
         statusCode: 200,
-        body: JSON.stringify({ success: true }),
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          status: { code: 200, message: "Запрос выполнен успешно" },
+          data: { message: "Отчет об ошибке успешно записан" },
+          output: { type: "", msg: "" },
+        }),
       };
     } catch (err) {
       return {
         statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         body: JSON.stringify({
           error: "Failed to log bug report",
           details: err.message,
@@ -159,6 +195,9 @@ export async function handler(event) {
 
       return {
         statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         body: JSON.stringify({ base64boc }),
       };
     }
@@ -189,6 +228,9 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify(response.data),
     };
   } catch (error) {
@@ -201,6 +243,9 @@ export async function handler(event) {
     });
     return {
       statusCode: error.response?.status || 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({
         error: "Failed to connect to backend",
         details: error.message,
