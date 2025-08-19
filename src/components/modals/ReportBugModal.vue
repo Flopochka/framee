@@ -36,7 +36,7 @@ function addLog(message) {
       console.warn('[ReportBugModal] logs.value is undefined, initializing')
       logs.value = []
     }
-    
+
     logs.value.push(message)
     // Ограничиваем до 1000 логов
     if (logs.value.length > 1000) {
@@ -52,6 +52,23 @@ function addLog(message) {
 function captureConsole() {
   try {
     addLog('[capture] Starting console capture')
+
+    // Создаем безопасную функцию логирования, которая не вызывает рекурсию
+    const safeLog = (type, message) => {
+      // Используем прямую запись в массив, минуя addLog
+      try {
+        if (logs.value && Array.isArray(logs.value)) {
+          logs.value.push(message)
+          if (logs.value.length > 1000) {
+            logs.value = logs.value.slice(-1000)
+          }
+        }
+      } catch (e) {
+        // Fallback - записываем в оригинальный console
+        console.warn('[ReportBugModal] Safe logging failed:', e.message)
+      }
+    }
+
     ['log', 'error', 'warn', 'info'].forEach(type => {
       originalConsole[type] = console[type]
       console[type] = function (...args) {
@@ -62,7 +79,15 @@ function captureConsole() {
           logMessage += `\nStack: ${args[0].stack}`
         }
 
-        addLog(logMessage)
+        // Используем безопасное логирование
+        safeLog(type, logMessage)
+
+        // Специальная обработка для base64img ошибок
+        if (type === 'error' && logMessage.includes('[base64img]')) {
+          safeLog('base64img-error', logMessage)
+        }
+
+        // Вызываем оригинальный метод
         originalConsole[type].apply(console, args)
       }
     })
@@ -75,7 +100,7 @@ function captureConsole() {
 function captureNetworkErrors() {
   try {
     addLog('[capture] Starting network errors capture')
-    
+
     // Перехватываем сетевые ошибки
     window._originalFetch = window.fetch
     window.fetch = function(...args) {
@@ -125,7 +150,7 @@ function captureNetworkErrors() {
       })
       return XMLHttpRequest.prototype._originalSend.apply(this, args)
     }
-    
+
     addLog('[capture] Network errors capture completed successfully')
   } catch (error) {
     addLog(`[capture-error] Error in captureNetworkErrors: ${error.message}`)
@@ -135,7 +160,7 @@ function captureNetworkErrors() {
 function captureGlobalErrors() {
   try {
     addLog('[capture] Starting global errors capture')
-    
+
     // Перехватываем необработанные ошибки JavaScript
     window.addEventListener('error', (event) => {
       addLog(`[js-error] ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`)
@@ -186,15 +211,8 @@ function captureGlobalErrors() {
       }
     }, true)
 
-    // Перехватываем ошибки base64img
-    const originalConsoleError = console.error
-    console.error = function(...args) {
-      const message = args.join(' ')
-      if (message.includes('[base64img]')) {
-        addLog(`[base64img-error] ${message}`)
-      }
-      originalConsoleError.apply(console, args)
-    }
+    // НЕ переопределяем console.error здесь - это уже сделано в captureConsole!
+    // base64img ошибки теперь обрабатываются в captureConsole
 
     // Перехватываем изменения в URL
     const originalPushState = history.pushState
@@ -225,7 +243,7 @@ function captureGlobalErrors() {
     }
 
     // Перехватываем ошибки валидации форм
-    window.addEventListener('invalid', (event) => {
+    window.addEventListener('error', (event) => {
       const target = event.target
       if (target && target.tagName) {
         addLog(`[validation-error] Form validation failed for ${target.tagName}: ${target.name || target.id || 'unnamed'}`)
@@ -251,7 +269,7 @@ function captureGlobalErrors() {
         addLog(`[media-error] Failed to load ${event.target.tagName.toLowerCase()}: ${event.target.src}`)
       }
     }, true)
-    
+
     addLog('[capture] Global errors capture completed successfully')
   } catch (error) {
     addLog(`[capture-error] Error in captureGlobalErrors: ${error.message}`)
@@ -280,6 +298,9 @@ function restoreNetworkCapture() {
 
 onMounted(() => {
   try {
+    // Сначала устанавливаем флаг готовности, чтобы показать модальное окно
+    isModalReady.value = true
+
     addLog('[system] ReportBugModal mounted successfully')
     
     // Добавляем глобальный обработчик ошибок Vue
@@ -293,33 +314,11 @@ onMounted(() => {
         return originalErrorHandler.apply(this, arguments)
       }
     }
-    
-    // Добавляем информацию о браузере и системе
+
+    // Добавляем базовую информацию о системе
     addLog(`[system] User Agent: ${navigator.userAgent}`)
     addLog(`[system] Platform: ${navigator.platform}`)
-    addLog(`[system] Language: ${navigator.language}`)
-    addLog(`[system] Screen: ${screen.width}x${screen.height}`)
-    addLog(`[system] Viewport: ${window.innerWidth}x${window.innerHeight}`)
-    
-    // Добавляем информацию о производительности
-    if ('performance' in window) {
-      const perf = performance.getEntriesByType('navigation')[0]
-      if (perf) {
-        addLog(`[performance] Page load time: ${perf.loadEventEnd - perf.loadEventStart}ms`)
-        addLog(`[performance] DOM content loaded: ${perf.domContentLoadedEventEnd - perf.domContentLoadedEventStart}ms`)
-      }
-    }
-
-    // Добавляем информацию о памяти (если доступно)
-    if ('memory' in performance) {
-      addLog(`[memory] Used: ${Math.round(performance.memory.usedJSHeapSize / 1024 / 1024)}MB`)
-      addLog(`[memory] Total: ${Math.round(performance.memory.totalJSHeapSize / 1024 / 1024)}MB`)
-      addLog(`[memory] Limit: ${Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024)}MB`)
-    }
-
-    // Добавляем информацию о времени
     addLog(`[system] Current time: ${new Date().toISOString()}`)
-    addLog(`[system] Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`)
 
     // Проверяем Telegram WebView
     if (window.Telegram && window.Telegram.WebView) {
@@ -330,20 +329,32 @@ onMounted(() => {
       addLog('[telegram] Telegram WebView not detected')
     }
 
-    // Проверяем состояние модального окна
     addLog('[modal] Modal state check completed')
 
-    captureConsole()
-    captureNetworkErrors()
-    captureGlobalErrors()
-    
+    // Инициализируем перехватчики по очереди с проверкой ошибок
+    try {
+      captureConsole()
+    } catch (e) {
+      addLog(`[error] Console capture failed: ${e.message}`)
+    }
+
+    try {
+      captureNetworkErrors()
+    } catch (e) {
+      addLog(`[error] Network capture failed: ${e.message}`)
+    }
+
+    try {
+      captureGlobalErrors()
+    } catch (e) {
+      addLog(`[error] Global errors capture failed: ${e.message}`)
+    }
+
     addLog('[system] All capture functions initialized successfully')
-    isModalReady.value = true
   } catch (error) {
-    addLog(`[error] Error during modal initialization: ${error.message}`)
+    addLog(`[error] Critical error during modal initialization: ${error.message}`)
     addLog(`[error] Stack trace: ${error.stack}`)
-    // Даже при ошибке пытаемся показать модальное окно
-    isModalReady.value = true
+    // Модальное окно уже показано, продолжаем работу
   }
 })
 
@@ -361,22 +372,22 @@ onUnmounted(() => {
 async function sendReport() {
   try {
     if (!message.value.trim()) return
-    
+
     addLog('[report] Starting bug report submission')
     loading.value = true
     error.value = false
     success.value = false
-    
+
     const reportData = {
       user: useUserStore().getUserId(),
       message: message.value,
       log_text: logs.value.join('\n')
     }
-    
+
     addLog(`[report] Sending report with ${logs.value.length} logs`)
-    
+
     await sendToBackend('/log', reportData)
-    
+
     addLog('[report] Report sent successfully')
     success.value = true
     message.value = ''
